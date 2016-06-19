@@ -1,0 +1,263 @@
+% Tipo de documento
+\documentclass[12pt, twoside, a4paper, openany, bibliography=totoc, numbers=noenddot]{scrbook}
+
+% Añadir caracteres no anglosajones como tildes, ñ, ¿, ¡, etc.
+\usepackage[utf8]{inputenc}
+\usepackage[spanish]{babel}
+ 
+% Añadir gráficos
+\usepackage{graphicx}
+% Carpeta donde se encuentran las imágenes
+\graphicspath{ {figs/} }
+\usepackage[labelfont=bf]{caption}
+\usepackage{subcaption}
+\DeclareGraphicsExtensions{.pdf,.png,.jpg}
+\usepackage{chngcntr}
+\counterwithout{figure}{chapter}
+
+% Listas con corchetes tipo [1], [2]...
+\usepackage{enumitem}
+
+% Permite usar hipervínculos
+\usepackage[hidelinks]{hyperref}
+
+\usepackage{afterpage}
+
+\newcommand\blankpage{
+    \null
+    \thispagestyle{empty}
+    \newpage}
+
+% Floating options
+\usepackage{float}
+\restylefloat{figure}
+
+% Márgenes
+\usepackage[left=2.5cm,right=2.5cm,bindingoffset=0.5cm]{geometry}
+\setlength{\headheight}{20pt}
+
+% Estilo de los titulos de los capítulos
+\usepackage{titlesec}
+\titleformat{\chapter}[display]
+{\normalfont\huge\bfseries}{\chaptertitlename\ \thechapter}{20pt}{\Huge}[\vspace{2ex}\titlerule]
+
+% Fuente utilizada para el cuerpo
+\usepackage[bitstream-charter]{mathdesign}
+
+% Permite usar frames (cajas)
+\usepackage{framed}
+
+% Permite usar colores
+\usepackage[usenames,dvipsnames,svgnames,table]{xcolor}
+
+% Permite el uso de cabeceras y pies de página
+\usepackage{fancyhdr}
+
+% Biblatex
+\usepackage[backend=bibtex,style=numeric,natbib=true]{biblatex}
+\addbibresource{bibliography.bib}
+
+% Permite realizar rotaciones
+\usepackage{rotating}
+
+% Opciones de tablas
+% Para crear líneas más gruesas
+\usepackage{tabu}
+\counterwithout{table}{chapter}
+
+\captionsetup[figure]{font=bf,position=below}
+
+% Prevents placing floats before the section 
+\usepackage{placeins}
+\makeatletter
+\AtBeginDocument{%
+  \expandafter\renewcommand\expandafter\subsection\expandafter
+    {\expandafter\@fb@secFB\subsection}%
+  \newcommand\@fb@secFB{\FloatBarrier
+    \gdef\@fb@afterHHook{\@fb@topbarrier \gdef\@fb@afterHHook{}}}%
+  \g@addto@macro\@afterheading{\@fb@afterHHook}%
+  \gdef\@fb@afterHHook{}%
+}
+\makeatother
+
+\PassOptionsToPackage{usenames,dvipsnames}{xcolor}
+
+\usepackage[usenames,dvipsnames]{xcolor}
+\usepackage[draft]{pgf}
+\usepackage{listings}
+\usepackage[svgnames]{xcolor}
+
+% Bordes en imágenes
+\usepackage[export]{adjustbox}
+
+% Múltiples líneas en una misma celda de una tabla => \specialcell{}
+\newcommand{\specialcell}[2][c]{%
+  \begin{tabular}[#1]{@{}c@{}}#2\end{tabular}}
+
+\lstset{
+     language        = php,
+     basicstyle      = \small\ttfamily,
+     keywordstyle    = \color{blue},
+     stringstyle     = \color{red},
+     identifierstyle = \color{ForestGreen},
+     commentstyle    = \color{gray},
+     emph            =[1]{php},
+     emphstyle       =[1]\color{black},
+     emph            =[2]{if,and,or,else},
+     showstringspaces=false,
+     emphstyle       =[2]\color{yellow},
+     backgroundcolor=\color{gray!10},
+     breaklines=true,
+     numbers=left,
+     numberstyle=\footnotesize,
+     showspaces = false,
+     showstringspaces = false,
+     tabsize = 2,
+     %numbers=left,
+     %numbersyle=\tiny
+     frame=single,
+     xleftmargin=5pt,
+     xrightmargin=3pt,
+     aboveskip = 20pt,
+     rulecolor=\color{black},
+     escapechar=|
+}
+     
+\renewcommand{\lstlistingname}{Código}
+\DeclareCaptionFormat{listing}{\rule{\dimexpr\textwidth\relax}{0.4pt}\par\vskip1pt#1#2#3}
+\captionsetup[lstlisting]{format=listing,singlelinecheck=false, margin=0pt, font={sf},labelsep=space,labelfont=bf}
+
+\begin{document}
+
+\fancyhead[R]{\slshape \rightmark}
+\fancyfoot[C]{\thepage}
+
+% Permite escoger la profundidad de las secciones (1.1, 1.1.1.2...)
+\setcounter{secnumdepth}{2}
+
+%----------------------------------------------------%
+%                      PORTADA                       %
+%----------------------------------------------------%
+
+\input{plantilla/portada.tex}
+\frontmatter
+\pagestyle{plain}
+\cleardoublepage
+
+%----------------------------------------------------%
+%                  AGRADECIMIENTOS                   %
+%----------------------------------------------------%
+
+\input{plantilla/agradecimientos.tex}
+\cleardoublepage
+
+%----------------------------------------------------%
+%                      RESUMEN                       %
+%----------------------------------------------------%
+
+% Castellano
+%\input{plantilla/resumen/resumen.tex}
+%\cleardoublepage
+
+%----------------------------------------------------%
+%                    INDICE GENERAL                  %
+%----------------------------------------------------%
+
+%\tableofcontents
+%\newpage
+
+%----------------------------------------------------%
+%                    INDICE FIGURAS                  %
+%----------------------------------------------------%
+
+%\listoffigures
+%\newpage
+
+%----------------------------------------------------%
+%                    INDICE TABLAS                   %
+%----------------------------------------------------%
+
+%\listoftables
+%\cleardoublepage
+
+%----------------------------------------------------%
+%                    INTRODUCCION                    %
+%----------------------------------------------------%
+
+%\mainmatter
+%\fancyhead[LE,RO]{\itshape \nouppercase \rightmark}
+%\fancyhead[LO,RE]{\itshape \nouppercase Capítulo \arabic{chapter}}
+
+%\input{capitulos/1-introduccion.tex}
+
+%----------------------------------------------------%
+%                     OBJETIVOS                      %
+%----------------------------------------------------%
+
+%\cleardoublepage
+%\input{capitulos/2-objetivos.tex}
+
+%----------------------------------------------------%
+%                GESTIÓN DEL PROYECTO                %
+%----------------------------------------------------%
+
+%\cleardoublepage
+%\input{capitulos/3-gestion.tex}
+
+%----------------------------------------------------%
+%              ANALISIS DE REQUISITOS                %
+%----------------------------------------------------%
+
+%\cleardoublepage
+%\input{capitulos/4-analisis-de-requisitos.tex}
+
+%----------------------------------------------------%
+%              DISEÑO E IMPLEMENTACIÓN               %
+%----------------------------------------------------%
+
+%\cleardoublepage
+%\input{capitulos/5-diseno-e-implementacion.tex}
+
+%----------------------------------------------------%
+%                     CONCLUSIONES                   %
+%----------------------------------------------------%
+
+%\cleardoublepage
+%\input{capitulos/6-conclusiones.tex}
+
+%----------------------------------------------------%
+%                    BIBLIOGRAFIA                    %
+%----------------------------------------------------%
+
+%\cleardoublepage
+%\nocite{*}
+%\printbibliography[heading=bibintoc,title={Bibliografía y Referencias}]
+
+%----------------------------------------------------%
+%                    APENDICES                       %
+%----------------------------------------------------%
+
+% Reiniciamos el contador de capítulos y hacemos que Capítulo pase a ser Apédice
+%\setcounter{chapter}{0}
+%\renewcommand{\chaptername}{Apéndice } % dejar el espacio es importante
+%\renewcommand{\thechapter}{\Alph{chapter}}
+
+% Cambiamos el titulo para que ponga Apéndice en lugar de Capítulo tal y como acabamos de definir
+%\titleformat{\chapter}[display]
+%{\normalfont\huge\bfseries}{\chaptername \thechapter}{20pt}{\Huge}[\vspace{2ex}\titlerule]
+
+%\fancyhead[LE,RO]{\itshape \nouppercase \rightmark}
+%\fancyhead[LO,RE]{\itshape \nouppercase \chaptername \Alph{chapter}}
+
+%\cleardoublepage
+%\input{apendices/a-actas-reuniones.tex}
+
+%\cleardoublepage
+%\input{apendices/b-actas-pruebas.tex}
+
+%\cleardoublepage
+%\input{apendices/c-base-de-datos.tex}
+
+%\backmatter
+
+\end{document}
