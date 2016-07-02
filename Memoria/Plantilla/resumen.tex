@@ -2,7 +2,13 @@
 
 Proyecto Final del Máster en Sistemas Informáticos Avanzados. Estudio comparativo de carácter empírico realizado sobre el rendimiento ofrecido por varias tecnologías emergentes en el área del Big Data a la hora de operar en escenarios que requieren un almacenamiento y procesamiento eficaz de volúmenes masivos de datos.\\
 
-Se ha construido un clúster compuesto por tres nodos virtuales y en él se han instalado y configurado  MySQL Cluster  las bases de datos distribuidas MySQL Cluster y Apache Cassandra, objetos de análisis en el presente proyecto. 
+Se ha construido un clúster compuesto por tres nodos virtuales que operan sobre Linux. Tras haber instalado y configurado las bases de datos distribuidas MySQL Cluster \cite{mysqlcluster} y Apache Cassandra \cite{apachecassandra} sobre dicha infraestructura y poblarlas utilizando un data-set público de aproximadamente 25GB, un conjunto de consultas diseñadas con anterioridad se han ejecutado sobre ambos sistemas de almacenamiento. El uso de Apache Spark \cite{apachespark} ha posibilitado la distribución de la carga computacional entre los nodos que componen el clúster. A su vez, se ha llevado a cabo el mismo procedimiento sobre una base de datos MySQL tradicional.\\
+
+El estudio evidencia que, entre las tecnologías comparadas, Apache Cassandra es la mejor alternativa a la hora de tratar volúmenes masivos de dato con eficacia. No obstante, MySQL CLuster es una opción muy a tener en cuenta, ya que aún no ofreciendo resultados tan buenos como el primero, ofrece una estructuración de datos mas flexible.
+
+
+
+
 
 
 %%%%%%%%%%%%%
