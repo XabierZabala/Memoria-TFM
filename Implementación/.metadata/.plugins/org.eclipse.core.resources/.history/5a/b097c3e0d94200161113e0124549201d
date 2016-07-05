@@ -1,0 +1,5 @@
+package sia.tfm.dbtester.ConfigManager;
+
+public class ConfigFile {
+
+}
