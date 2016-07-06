@@ -1,9 +1,11 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <qualifiedTypeNameHistroy>
-<fullyQualifiedTypeName name="java.io.File"/>
 <fullyQualifiedTypeName name="java.util.regex.Pattern"/>
 <fullyQualifiedTypeName name="java.util.regex.Matcher"/>
+<fullyQualifiedTypeName name="sia.tfm.dbtester.ConfigManager.ConfigFile"/>
+<fullyQualifiedTypeName name="java.io.File"/>
 <fullyQualifiedTypeName name="java.io.FileReader"/>
 <fullyQualifiedTypeName name="java.io.BufferedReader"/>
-<fullyQualifiedTypeName name="sia.tfm.dbtester.ConfigManager.ConfigFile"/>
+<fullyQualifiedTypeName name="sia.tfm.dbtester.FileManager.FileManager"/>
+<fullyQualifiedTypeName name="sia.tfm.dbtester.Classes.FileRead"/>
 </qualifiedTypeNameHistroy>

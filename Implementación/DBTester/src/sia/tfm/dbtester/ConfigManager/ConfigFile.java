@@ -1,9 +1,10 @@
 package sia.tfm.dbtester.ConfigManager;
 
-import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileReader;
 import java.util.regex.Pattern;
+
+import sia.tfm.dbtester.Classes.FileRead;
+import sia.tfm.dbtester.FileManager.FileManager;
 
 /**
  * Esta clase engloba los métodos necesarios para gestionar
@@ -36,8 +37,8 @@ public class ConfigFile {
 	}
 	
 	/**
-	 * Método que comprueba si el fichero de configuración
-	 * esta formado correctamente.
+	 * Método que comprueba si todas las líneas del fichero
+	 * de configuración cumplen con el formato requerido.
 	 * @param path Directorio del fichero de configuración.
 	 * @return boolean Devuelve true si el fichero está 
 	 * correctamente configurado o vacío, en caso contrario,
@@ -47,57 +48,55 @@ public class ConfigFile {
 	public static boolean configFileValidFormat(String path){
 		
 		File f = new File(path);
-		FileReader fr = null;
-	    BufferedReader br = null;
-	    
+		
 		if(f.length() == 0){
 			return true;
 		}else{	
 			try {
 		         
-	         fr = new FileReader (f);
-	         br = new BufferedReader(fr);
+			 FileRead fr = FileManager.accessFileRead(f);
 	
 	         String linea;
-	         while((linea=br.readLine())!=null){
+	         while((linea = fr.getBr().readLine())!=null){
 	        	 if(!lineValidFormat(linea)){
-	        		 br.close();
-	        		 fr.close();
+	        		 
+	        		 FileManager.closeFileRead(fr);
 	        		 return false;
 	        	 }
 	         }
-	         	br.close();
-	         	fr.close();
+	         	FileManager.closeFileRead(fr);
 	         	return true;
 		     }
 		     catch(Exception e){
-		        e.printStackTrace();
-		        try{
-		        	br.close();
-	        		fr.close();
-		        }catch(Exception e2){
-		        	e.printStackTrace();
-		        }
+		    	 
+		        e.printStackTrace(); 
 		        return false; 
 		     }	
 		}
 	}
 	
 	/**
-	 * Método privado que comprueba si el string obtenido 
-	 * cumple con el formato exigido para ser parte del
-	 * fichero de configuración. Se aceptan las expresiones
-	 * cuya clave y valor sean valores alfanuméricos y 
-	 * estén separados por ':' 
-	 * @param linea Línea que forma parte del fichero de
-	 * configuración.
+	 * Método privado que comprueba si una línea de fichero 
+	 * cumple con el formato requerido:
+	 * <ul>
+  		<li>Cadenas de caracteres en formato clave:valor
+  		<li>Línea vacía
+  		<li>Comentario empezado por #
+	   <p>
+	 * @param linea Cada una de las líneas que forman 
+	 * parte del fichero de configuración.
 	 * @return boolean Devuelve true si la línea cumple con
 	 * el formato exigido, en caso contrario devuelve false.
 	 */
 	
 	private static boolean lineValidFormat(String linea){
-		Pattern r = Pattern.compile("^[a-zA-Z0-9]+[:][a-zA-Z0-9]+$");
-		return r.matcher(linea).find();	
+		
+		Pattern item = Pattern.compile("^[a-zA-Z0-9]+[:][a-zA-Z0-9.]+$");
+		Pattern empty = Pattern.compile("^\\s*$");
+		Pattern comment = Pattern.compile("^#.*$");
+		
+		return item.matcher(linea).find() || empty.matcher(linea).find() ||
+			   comment.matcher(linea).find();	
 	}
 	
 
