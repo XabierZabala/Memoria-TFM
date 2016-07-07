@@ -4,9 +4,12 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
+import java.io.PrintWriter;
 
 import sia.tfm.dbtester.Classes.FileRead;
+import sia.tfm.dbtester.Classes.FileWrite;
 
 public class FileManager {
 	
@@ -23,7 +26,7 @@ public class FileManager {
 	 * Método que accede a un fichero y devuelve el buffer
 	 * de lectura
 	 * @param File Fichero que se desea leer.
-	 * @return BufferedReader Devuelve el buffer de lectura 
+	 * @return FileRead Devuelve el buffer de lectura 
 	 * del fichero accedido.
 	 */
 	
@@ -57,8 +60,46 @@ public class FileManager {
 		} catch (IOException e) {
 			e.printStackTrace();
 		}
+	}
+	
+	/**
+	 * Método que accede a un fichero y devuelve el buffer
+	 * de escritura
+	 * @param File Fichero en el que se desea escribir.
+	 * @return BufferedReader Devuelve el buffer de lectura 
+	 * del fichero accedido.
+	 */
+	
+	public static FileWrite accessFileWrite(File file){
 		
+		try {
+			
+			FileWriter fw = new FileWriter (file);
+			PrintWriter pw = new PrintWriter(fw);
+			
+			return new FileWrite(fw, pw);
+			
+		} catch (IOException e) {
+			
+			e.printStackTrace();
+			return null;
+		}	
+	}
+	
+	/**
+	 * Método que cierra a un fichero de escritura
+	 * @param FileWrite Objeto que contine la información
+	 * del escritor de ficheros y buffer.
+	 */
+	
+	public static void closeFileRead(FileWrite fileWrite){
 		
+		try {
+			fileWrite.getPw().close();
+			fileWrite.getFw().close();
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
 	}
 
 }

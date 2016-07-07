@@ -1,0 +1,16 @@
+package sia.tfm.dbtester.Launcher;
+
+import sia.tfm.dbtester.ConfigManager.ConfigFile;
+
+public class Launcher {
+
+	public static void main(String[] args) {
+		
+		String config = "../DBTester/config/config.txt";
+		
+		
+		
+
+	}
+
+}

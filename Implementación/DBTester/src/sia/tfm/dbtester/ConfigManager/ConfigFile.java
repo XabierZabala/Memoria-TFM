@@ -1,6 +1,7 @@
 package sia.tfm.dbtester.ConfigManager;
 
 import java.io.File;
+import java.util.HashMap;
 import java.util.regex.Pattern;
 
 import sia.tfm.dbtester.Classes.FileRead;
@@ -18,6 +19,10 @@ public class ConfigFile {
 	/**
 	 * Constructor privado de la clase {@link} ConfigFile
 	 */
+	
+	private static Pattern item = Pattern.compile("^[a-zA-Z0-9]+[:][a-zA-Z0-9.]+$");
+	private static Pattern empty = Pattern.compile("^\\s*$");
+	private static Pattern comment = Pattern.compile("^#.*$");
 	
 	private ConfigFile(){}
 	
@@ -41,7 +46,7 @@ public class ConfigFile {
 	 * de configuración cumplen con el formato requerido.
 	 * @param path Directorio del fichero de configuración.
 	 * @return boolean Devuelve true si el fichero está 
-	 * correctamente configurado o vacío, en caso contrario,
+	 * correctamente formado o vacío, en caso contrario,
 	 * devuelve false.
 	 */
 	
@@ -91,12 +96,69 @@ public class ConfigFile {
 	
 	private static boolean lineValidFormat(String linea){
 		
-		Pattern item = Pattern.compile("^[a-zA-Z0-9]+[:][a-zA-Z0-9.]+$");
+		/*Pattern item = Pattern.compile("^[a-zA-Z0-9]+[:][a-zA-Z0-9.]+$");
 		Pattern empty = Pattern.compile("^\\s*$");
-		Pattern comment = Pattern.compile("^#.*$");
+		Pattern comment = Pattern.compile("^#.*$");*/
 		
 		return item.matcher(linea).find() || empty.matcher(linea).find() ||
 			   comment.matcher(linea).find();	
+	}
+	
+	/**
+	 * Método que genera una mapa de los atributos y valores
+	 * obtenidos del fichero de configuración
+	 * @param path Directorio del fichero de configuración.
+	 * @return HashMap<String, String> Devuelve las pares 
+	 * clave/valor estructuradas en una HashMap
+	 */
+	
+	public static HashMap<String, String> pairFromConfig(String path){
+		
+		HashMap<String, String> hm = new HashMap<String, String>();
+		File f = new File(path);
+		
+		try {
+	         
+			 FileRead fr = FileManager.accessFileRead(f);
+	         String linea;
+	         
+	         while((linea = fr.getBr().readLine())!=null){
+	        	 if(item.matcher(linea).find()){
+	        		 hm = lineToMap(hm, linea);
+	        	 } 
+	         }
+	         
+         	FileManager.closeFileRead(fr);
+         	return hm;
+		     }
+		     catch(Exception e){
+		    	 
+		        e.printStackTrace(); 
+		        return null; 
+		     }
+	}
+	
+	/**
+	 * Método que mapea una línea del fichero de configuración.
+	 * @param HashMap<String, String> Contenedor de las clave/valor.
+	 * @param linea Línea a insertar en el contenedor.
+	 * @return HashMap<String, String> Devuelve el contenedor 
+	 * una vez añadido la línea obtenido como parametro.
+	 */
+	
+	private static HashMap<String, String> lineToMap(HashMap<String, String> configPair, String linea){
+		
+		String[] pairArray = linea.split(":");
+		
+		if(configPair.containsKey(pairArray[0])){
+			System.out.println("Atributo repetido en la configuración");
+			System.exit(0);
+			return null;
+		}else{
+			configPair.put(pairArray[0], pairArray[1]);
+			return configPair;
+		}
+		
 	}
 	
 

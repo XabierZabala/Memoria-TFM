@@ -1,0 +1,12 @@
+package sia.tfm.dbtester.Classes;
+
+public class FileWrite {
+	
+	/**
+	 * Esta clase gestiona los elementos necesarios para abrir
+	 * un fichero en modo escritura y cerrarlo al final del proceso.
+	 * @version: 07/07/2016
+	 * @author Xabier Zabala
+	 */
+
+}

@@ -1,0 +1,159 @@
+package sia.tfm.dbtester.ConfigManager;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.regex.Pattern;
+
+import sia.tfm.dbtester.Classes.FileRead;
+import sia.tfm.dbtester.FileManager.FileManager;
+
+/**
+ * Esta clase engloba los métodos necesarios para gestionar
+ * el fichero de configuración.
+ * @version: 05/07/2016
+ * @author Xabier Zabala
+ */
+
+public class ConfigFile {
+	
+	/**
+	 * Constructor privado de la clase {@link} ConfigFile
+	 */
+	
+	private ConfigFile(){}
+	
+	/**
+	 * Método que comprueba la existencia del fichero
+	 * de configuración.
+	 * @param path Directorio del fichero de configuración.
+	 * @return boolean Devuelve true si el fichero existe,
+	 * false en caso contrario.
+	 */
+	
+	public static boolean configFileExists(String path){
+		
+		File f = new File(path);
+		return f.exists() && !f.isDirectory();
+		
+	}
+	
+	/**
+	 * Método que comprueba si todas las líneas del fichero
+	 * de configuración cumplen con el formato requerido.
+	 * @param path Directorio del fichero de configuración.
+	 * @return boolean Devuelve true si el fichero está 
+	 * correctamente configurado o vacío, en caso contrario,
+	 * devuelve false.
+	 */
+	
+	public static boolean configFileValidFormat(String path){
+		
+		File f = new File(path);
+		
+		if(f.length() == 0){
+			return true;
+		}else{	
+			try {
+		         
+			 FileRead fr = FileManager.accessFileRead(f);
+	
+	         String linea;
+	         while((linea = fr.getBr().readLine())!=null){
+	        	 if(!lineValidFormat(linea)){
+	        		 
+	        		 FileManager.closeFileRead(fr);
+	        		 return false;
+	        	 }
+	         }
+	         	FileManager.closeFileRead(fr);
+	         	return true;
+		     }
+		     catch(Exception e){
+		    	 
+		        e.printStackTrace(); 
+		        return false; 
+		     }	
+		}
+	}
+	
+	/**
+	 * Método privado que comprueba si una línea de fichero 
+	 * cumple con el formato requerido:
+	 * <ul>
+  		<li>Cadenas de caracteres en formato clave:valor
+  		<li>Línea vacía
+  		<li>Comentario empezado por #
+	   <p>
+	 * @param linea Cada una de las líneas que forman 
+	 * parte del fichero de configuración.
+	 * @return boolean Devuelve true si la línea cumple con
+	 * el formato exigido, en caso contrario devuelve false.
+	 */
+	
+	private static boolean lineValidFormat(String linea){
+		
+		Pattern item = Pattern.compile("^[a-zA-Z0-9]+[:][a-zA-Z0-9.]+$");
+		Pattern empty = Pattern.compile("^\\s*$");
+		Pattern comment = Pattern.compile("^#.*$");
+		
+		return item.matcher(linea).find() || empty.matcher(linea).find() ||
+			   comment.matcher(linea).find();	
+	}
+	
+	/** ALDATUUUUUUUU
+	 * Método que genera una mapa hash con los atributos y valores
+	 * obtenidos del fichero de configuración
+	 * @param path Directorio del fichero de configuración.
+	 * @return HashMap<String, String> Devuelve las pares clave/valor
+	 * estructuradas en una HashMap
+	 */
+	
+	public static HashMap<String, String> pairFromConfig(String path){
+		
+		HashMap<String, String> hm = new HashMap<String, String>();
+		File f = new File(path);
+		
+		try {
+	         
+			 FileRead fr = FileManager.accessFileRead(f);
+	         String linea;
+	         
+	         while((linea = fr.getBr().readLine())!=null){
+	        	 hm = lineToMap(hm, linea);
+	         }
+	         	FileManager.closeFileRead(fr);
+	         	return hm;
+		     }
+		     catch(Exception e){
+		    	 
+		        e.printStackTrace(); 
+		        return null; 
+		     }
+	}
+	
+	/** ALDATUUUUUUUU
+	 * Método que comprueba si todas las líneas del fichero
+	 * de configuración cumplen con el formato requerido.
+	 * @param path Directorio del fichero de configuración.
+	 * @return boolean Devuelve true si el fichero está 
+	 * correctamente configurado o vacío, en caso contrario,
+	 * devuelve false.
+	 */
+	
+	private static HashMap<String, String> lineToMap(HashMap<String, String> configPair,String linea){
+		
+		String[] pairArray = linea.split(":");
+		
+		if(configPair.containsKey(pairArray[0])){
+			System.out.println("Atributo repetido en la configuración");
+			System.exit(0);
+			return null;
+		}else{
+			configPair.put(pairArray[0], pairArray[1]);
+			return configPair;
+		}
+		
+	}
+	
+
+}
