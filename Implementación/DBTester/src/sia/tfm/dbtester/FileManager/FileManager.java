@@ -23,6 +23,21 @@ public class FileManager {
 	private FileManager(){}
 	
 	/**
+	 * Método que comprueba la existencia de un fichero
+	 * en la ruta especificada
+	 * @param path Ruta del fichero.
+	 * @return boolean Devuelve true si el fichero existe,
+	 * false en caso contrario.
+	 */
+	
+	public static boolean fileExists(String path){
+		
+		File f = new File(path);
+		return f.exists() && !f.isDirectory();
+		
+	}
+	
+	/**
 	 * Método que accede a un fichero y devuelve el buffer
 	 * de lectura
 	 * @param File Fichero que se desea leer.

@@ -1,0 +1,14 @@
+# Base de datos seleccionada
+#	0: MySQL
+#	1: Apache Cassandra
+#	2: MySQL Cluster
+
+selectedDB:0
+
+# Directorios de almacenamiento de resultados
+
+resultFolder:../DBTester/result
+
+# IP de las máquinas 
+
+ipMySQL:192.168.1.101

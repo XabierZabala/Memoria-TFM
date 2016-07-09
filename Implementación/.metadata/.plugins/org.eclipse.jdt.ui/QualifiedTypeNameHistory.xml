@@ -8,4 +8,11 @@
 <fullyQualifiedTypeName name="java.io.BufferedReader"/>
 <fullyQualifiedTypeName name="sia.tfm.dbtester.FileManager.FileManager"/>
 <fullyQualifiedTypeName name="sia.tfm.dbtester.Classes.FileRead"/>
+<fullyQualifiedTypeName name="java.io.FileWriter"/>
+<fullyQualifiedTypeName name="java.io.PrintWriter"/>
+<fullyQualifiedTypeName name="sia.tfm.dbtester.Classes.FileWrite"/>
+<fullyQualifiedTypeName name="sia.tfm.dbtester.Classes.ConfigPair"/>
+<fullyQualifiedTypeName name="java.util.HashMap"/>
+<fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="java.util.Set"/>
 </qualifiedTypeNameHistroy>

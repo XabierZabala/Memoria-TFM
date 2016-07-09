@@ -20,26 +20,11 @@ public class ConfigFile {
 	 * Constructor privado de la clase {@link} ConfigFile
 	 */
 	
-	private static Pattern item = Pattern.compile("^[a-zA-Z0-9]+[:][a-zA-Z0-9.]+$");
+	private static Pattern item = Pattern.compile("^[a-zA-Z0-9]+[:][a-zA-Z0-9./]+$");
 	private static Pattern empty = Pattern.compile("^\\s*$");
 	private static Pattern comment = Pattern.compile("^#.*$");
 	
 	private ConfigFile(){}
-	
-	/**
-	 * Método que comprueba la existencia del fichero
-	 * de configuración.
-	 * @param path Directorio del fichero de configuración.
-	 * @return boolean Devuelve true si el fichero existe,
-	 * false en caso contrario.
-	 */
-	
-	public static boolean configFileExists(String path){
-		
-		File f = new File(path);
-		return f.exists() && !f.isDirectory();
-		
-	}
 	
 	/**
 	 * Método que comprueba si todas las líneas del fichero
@@ -140,7 +125,7 @@ public class ConfigFile {
 	
 	/**
 	 * Método que mapea una línea del fichero de configuración.
-	 * @param HashMap<String, String> Contenedor de las clave/valor.
+	 * @param configPair Contenedor de las clave/valor.
 	 * @param linea Línea a insertar en el contenedor.
 	 * @return HashMap<String, String> Devuelve el contenedor 
 	 * una vez añadido la línea obtenido como parametro.
@@ -158,8 +143,6 @@ public class ConfigFile {
 			configPair.put(pairArray[0], pairArray[1]);
 			return configPair;
 		}
-		
 	}
-	
 
 }

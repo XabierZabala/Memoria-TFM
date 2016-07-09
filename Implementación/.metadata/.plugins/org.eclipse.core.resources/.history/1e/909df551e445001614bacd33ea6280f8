@@ -1,0 +1,31 @@
+package sia.tfm.dbtester.ResultManager;
+
+import java.io.File;
+
+public class ResultManager {
+	
+	/**
+	 * Esta clase engloba los métodos necesarios para gestionar
+	 * los resultados de las pruebas realizadas.
+	 * @version: 09/07/2016
+	 * @author Xabier Zabala
+	 */
+	
+	private ResultManager(){};
+	
+	/**
+	 * Método que comprueba la existencia de un directorio
+	 * en la ruta especificada
+	 * @param path Ruta del directorio.
+	 * @return boolean Devuelve true si el directorio existe,
+	 * false en caso contrario.
+	 */
+	
+	public static boolean directoryExists(String path){
+		
+		File f = new File(path);
+		return f.exists() && f.isDirectory();
+		
+	}
+
+}
