@@ -1,0 +1,31 @@
+# Base de datos seleccionada
+#	0: MySQL
+#	1: Apache Cassandra
+#	2: MySQL Cluster
+
+selectedDB:0
+
+# Operaciones
+
+importData:importar
+query1:consulta1
+query2:consulta2
+query3:consulta3
+
+# Operacion seleccionada
+#	0: importar datos
+#	1: consulta1
+#	2: Consulta3
+#	3: Consulta3
+
+selectedOp:0
+
+# Directorios de almacenamiento de resultados
+
+mysqlResults:../DBTester/results/mysql
+cassandraResults:../DBTester/results/cassandra
+mysqlClusterResults:../DBTester/results/mysqlCluster
+
+# IP de las máquinas 
+
+ipMySQL:192.168.1.101

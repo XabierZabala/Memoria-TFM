@@ -1,0 +1,5 @@
+package sia.tfm.dbtester.db;
+
+public class MySQL {
+
+}

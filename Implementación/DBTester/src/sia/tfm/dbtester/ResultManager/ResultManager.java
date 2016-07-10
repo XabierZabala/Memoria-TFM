@@ -1,6 +1,11 @@
 package sia.tfm.dbtester.ResultManager;
 
 import java.io.File;
+import java.io.PrintWriter;
+
+import sia.tfm.dbtester.Classes.FileWrite;
+import sia.tfm.dbtester.Facade.Facade;
+import sia.tfm.dbtester.FileManager.FileManager;
 
 public class ResultManager {
 	
@@ -26,19 +31,37 @@ public class ResultManager {
 	}
 	
 	/**
+	 * Método que genera un array con operaciones descritas en la configuración.
+	 * @param ops Conjunto de operaciones que se realizarán durante las pruebas.
+	 * @return String[] Arreglo de operaciones en formato String
+	 */
+	
+	public static String[] operationArray(String... ops){
+		
+		return ops.clone();
+	
+	}
+	
+	/**
 	 * Método que comprueba la existencia de los directorios donde se
 	 * almacenan los resultados de los test y en caso no existir los crea.
 	 * @param paths Listado de rutas donde se almacenan los resultados de los test.
+	 * @param ops Listado de operaciones que se van a realizar durante las pruebas
 	 */
 	
-	public static void configureDirectories(String[] paths){
+	public static void configureDirectories(String[] paths, String[] ops){
 		
 		for(String path: paths){
 			
-			File dir = new File(path);
-			if(!dir.exists() || !dir.isDirectory()){
-				dir.mkdirs();
-			}
+			for(String operation: ops){
+				
+				String filename = path + "/" + operation; 
+				
+				File dir = new File(filename);
+				if(!dir.exists() || !dir.isDirectory()){
+					dir.mkdirs();
+				}
+			}	
 		}	
 	}
 	
@@ -49,14 +72,15 @@ public class ResultManager {
 	 * @return File El fichero de resultados.
 	 */
 	
-	public static File createResultFile(String bd, String[] dirs){
+	public static File createResultFile(String bd, String[] dirs, String op, String[] ops){
 		
 		int selectedDB = Integer.parseInt(bd);
+		int selectedOp = Integer.parseInt(op);
 		Long now = System.currentTimeMillis();
 		
 		try{
 			
-			String filePath = dirs[selectedDB] + '/' + "result_" + now + ".txt";
+			String filePath = dirs[selectedDB] + '/' + ops[selectedOp] + "/" + "result_" + now + ".txt";
 			File f = new File(filePath);
 			f.createNewFile();
 			
@@ -66,10 +90,25 @@ public class ResultManager {
 			System.out.println("La base de datos seleccionada no existe");
 			System.exit(0);
 			return null;
-		}
+		}	
+	}
+	
+	/**
+	 * Método que escribe los resultados obtenidos por la operación seleccionada en el fichero
+	 * correspondiente a la base de datos sobre el cual ha ejecutado.
+	 * @param file Fichero donde se han de escribir los resultados
+	 * @param bd Identificador de la base de datos seleccionada.
+	 * @param op Identificador de la operación seleccionada.
+	 */
+	
+	public static void resultWriter(File file, String bd, String op){
 		
+		FileWrite fw = FileManager.accessFileWrite(file);
+		PrintWriter pw = fw.getPw();
 		
+		Facade.actionResolver(bd, op); // Devuelve un string
 		
+		FileManager.closeFileWrite(fw);
 		
 	}
 

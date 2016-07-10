@@ -3,16 +3,20 @@
 <fullyQualifiedTypeName name="java.util.regex.Pattern"/>
 <fullyQualifiedTypeName name="java.util.regex.Matcher"/>
 <fullyQualifiedTypeName name="sia.tfm.dbtester.ConfigManager.ConfigFile"/>
-<fullyQualifiedTypeName name="java.io.File"/>
 <fullyQualifiedTypeName name="java.io.FileReader"/>
 <fullyQualifiedTypeName name="java.io.BufferedReader"/>
-<fullyQualifiedTypeName name="sia.tfm.dbtester.FileManager.FileManager"/>
 <fullyQualifiedTypeName name="sia.tfm.dbtester.Classes.FileRead"/>
 <fullyQualifiedTypeName name="java.io.FileWriter"/>
 <fullyQualifiedTypeName name="java.io.PrintWriter"/>
 <fullyQualifiedTypeName name="sia.tfm.dbtester.Classes.FileWrite"/>
 <fullyQualifiedTypeName name="sia.tfm.dbtester.Classes.ConfigPair"/>
-<fullyQualifiedTypeName name="java.util.HashMap"/>
 <fullyQualifiedTypeName name="java.util.List"/>
+<fullyQualifiedTypeName name="sia.tfm.dbtester.FileManager.FileManager"/>
+<fullyQualifiedTypeName name="sia.tfm.dbtester.ResultManager.ResultManager"/>
+<fullyQualifiedTypeName name="java.util.Collection"/>
 <fullyQualifiedTypeName name="java.util.Set"/>
+<fullyQualifiedTypeName name="java.util.ArrayList"/>
+<fullyQualifiedTypeName name="java.util.HashMap"/>
+<fullyQualifiedTypeName name="java.nio.file.Path"/>
+<fullyQualifiedTypeName name="java.io.File"/>
 </qualifiedTypeNameHistroy>

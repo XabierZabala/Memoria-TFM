@@ -15,7 +15,7 @@ public class FileManager {
 	
 	/**
 	 * Esta clase engloba los métodos necesarios para gestionar
-	 * el acceso a ficheros.
+	 * el acceso a ficheros y directorios.
 	 * @version: 06/07/2016
 	 * @author Xabier Zabala
 	 */
@@ -107,7 +107,7 @@ public class FileManager {
 	 * del escritor de ficheros y buffer.
 	 */
 	
-	public static void closeFileRead(FileWrite fileWrite){
+	public static void closeFileWrite(FileWrite fileWrite){
 		
 		try {
 			fileWrite.getPw().close();

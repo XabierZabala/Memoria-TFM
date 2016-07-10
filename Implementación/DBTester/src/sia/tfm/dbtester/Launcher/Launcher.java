@@ -23,16 +23,25 @@ public class Launcher {
 			
 			HashMap<String, String> hm = ConfigFile.pairFromConfig(config);
 			String selectedDB = hm.get("selectedDB");
+			String selectedOp = hm.get("selectedOp");
 			
 			// Generar array con directorios donde se almacenan los resultados
-			String []paths = ResultManager.directoryArray(hm.get("mysqlResults"),
+			String[] paths = ResultManager.directoryArray(hm.get("mysqlResults"),
 					hm.get("cassandraResults"), hm.get("mysqlClusterResults"));
 			
+			// Generar array con operaciones disponibles
+			String[] operations = ResultManager.operationArray(hm.get("importData"),
+					hm.get("query1"), hm.get("query2"));
+			
 			// Crear directorios para almacenar los resultados
-			ResultManager.configureDirectories(paths);
+			ResultManager.configureDirectories(paths, operations);
 			
 			// Obtener el fichero de resultados segun la DB seleccionada
-			File resultFile = ResultManager.createResultFile(selectedDB, paths);
+			File resultFile = ResultManager.createResultFile(selectedDB, paths, selectedOp, operations);
+			ResultManager.resultWriter(resultFile, selectedDB, selectedOp);
+			
+			// Calcular el tiempo necesario para realizar la operación en la DB seleccionada
+			
 			
 			
 			

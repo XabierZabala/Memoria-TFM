@@ -81,10 +81,6 @@ public class ConfigFile {
 	
 	private static boolean lineValidFormat(String linea){
 		
-		/*Pattern item = Pattern.compile("^[a-zA-Z0-9]+[:][a-zA-Z0-9.]+$");
-		Pattern empty = Pattern.compile("^\\s*$");
-		Pattern comment = Pattern.compile("^#.*$");*/
-		
 		return item.matcher(linea).find() || empty.matcher(linea).find() ||
 			   comment.matcher(linea).find();	
 	}

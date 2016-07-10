@@ -5,6 +5,19 @@
 
 selectedDB:0
 
+# Operaciones
+
+importData:import
+query1:query1
+query2:query2
+
+# Operacion seleccionada
+#	0: importar datos
+#	1: consulta1
+#	2: Consulta3
+
+selectedOp:0
+
 # Directorios de almacenamiento de resultados
 
 mysqlResults:../DBTester/results/mysql
