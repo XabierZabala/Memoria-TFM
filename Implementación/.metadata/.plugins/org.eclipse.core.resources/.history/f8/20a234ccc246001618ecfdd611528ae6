@@ -1,5 +1,0 @@
-package sia.tfm.dbtester.DB;
-
-public class MySQLCluster {
-
-}

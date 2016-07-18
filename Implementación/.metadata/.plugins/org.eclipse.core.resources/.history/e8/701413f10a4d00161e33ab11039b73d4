@@ -1,0 +1,45 @@
+package sia.tfm.dbtester.Facade;
+
+import java.util.ArrayList;
+
+import sia.tfm.dbtester.DB.Cassandra;
+import sia.tfm.dbtester.DB.MySQL;
+
+
+public class Facade {
+	
+	/**
+	 * Clase intermediaria entre la lógica de la aplicación y
+	 * las bases de datos
+	 * @version: 10/07/2016
+	 * @author Xabier Zabala
+	 */
+	
+	private Facade(){}
+	
+	/**
+	 * Método que resuelve el destino de la petición realizada desde la lógica
+	 * de la aplicación
+	 * @param bd Identificador de la base de datos seleccionada.
+	 * @param op Identificador de la operación seleccionada.
+	 * @return Array<String> Arreglo de String que representan el tiempo
+	 * necesitado para realizar cada accion
+	 */
+	
+	public static ArrayList<String> dbResolver(String db, String op){
+		
+		
+		if(db.equals("0")){
+			// MySQL
+			return MySQL.operationResolver(op);
+		}else if(db.equals("1")){
+			// Cassandra
+			return Cassandra.operationResolver(op);	
+		}else{
+			System.out.println("La base de datos seleccionada no existe");
+			System.exit(0);
+			return null;
+		}
+	}
+
+}

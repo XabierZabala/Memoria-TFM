@@ -1,0 +1,27 @@
+# Base de datos seleccionada
+#	0: MySQL
+#	1: Apache Cassandra
+
+selectedDB:0
+
+# Operaciones
+
+query0:query0
+query1:query1
+query2:query2
+
+# Operacion seleccionada
+#	0: Consulta0
+#	1: Consulta1
+#	2: Consulta2
+
+selectedOp:1
+
+# Directorios de almacenamiento de resultados
+
+mysqlResults:../DBTester/results/mysql
+cassandraResults:../DBTester/results/cassandra
+
+# IP de las máquinas 
+
+ipMySQL:192.168.1.101

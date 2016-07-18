@@ -20,7 +20,7 @@ public class ConfigFile {
 	 * Constructor privado de la clase {@link} ConfigFile
 	 */
 	
-	private static Pattern item = Pattern.compile("^[a-zA-Z0-9]+[:][a-zA-Z0-9./]+$");
+	private static Pattern item = Pattern.compile("^[a-zA-Z0-9]+[!][a-zA-Z0-9./:]+$");
 	private static Pattern empty = Pattern.compile("^\\s*$");
 	private static Pattern comment = Pattern.compile("^#.*$");
 	
@@ -129,7 +129,7 @@ public class ConfigFile {
 	
 	private static HashMap<String, String> lineToMap(HashMap<String, String> configPair, String linea){
 		
-		String[] pairArray = linea.split(":");
+		String[] pairArray = linea.split("!");
 		
 		if(configPair.containsKey(pairArray[0])){
 			System.out.println("Atributo repetido en la configuración");

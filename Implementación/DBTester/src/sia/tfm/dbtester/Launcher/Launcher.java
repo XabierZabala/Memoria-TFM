@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.HashMap;
 
 import sia.tfm.dbtester.ConfigManager.ConfigFile;
+import sia.tfm.dbtester.Facade.Facade;
 import sia.tfm.dbtester.FileManager.FileManager;
 import sia.tfm.dbtester.ResultManager.ResultManager;
 
@@ -11,7 +12,7 @@ public class Launcher {
 
 	public static void main(String[] args) {
 		
-		// Ruta del ficherode configuración
+		// Ruta del fichero de configuración
 		final String config = "../DBTester/config/config.txt";
 		
 		// Comprobar la existencia y el formato del fichero de configuración
@@ -21,29 +22,27 @@ public class Launcher {
 			errorMessage("Formato incorrecto del fichero de configuración");
 		}else{
 			
+			// Mapea los pares parametro/valor del fichero de configuración	
 			HashMap<String, String> hm = ConfigFile.pairFromConfig(config);
-			String selectedDB = hm.get("selectedDB");
-			String selectedOp = hm.get("selectedOp");
+			String dataPath = hm.get("dataPath");
 			
 			// Generar array con directorios donde se almacenan los resultados
-			String[] paths = ResultManager.directoryArray(hm.get("mysqlResults"),
-					hm.get("cassandraResults"), hm.get("mysqlClusterResults"));
+			String[] paths = ResultManager.directoryArray(hm);
 			
 			// Generar array con operaciones disponibles
-			String[] operations = ResultManager.operationArray(hm.get("importData"),
-					hm.get("query1"), hm.get("query2"));
+			String[] operations = ResultManager.operationArray(hm);
 			
 			// Crear directorios para almacenar los resultados
 			ResultManager.configureDirectories(paths, operations);
 			
-			// Obtener el fichero de resultados segun la DB seleccionada
-			File resultFile = ResultManager.createResultFile(selectedDB, paths, selectedOp, operations);
-			ResultManager.resultWriter(resultFile, selectedDB, selectedOp);
-			
+			// Obtener el fichero de resultados segun la DB  y operación seleccionada
+			File resultFile = ResultManager.createResultFile(hm, paths, operations);
+				
 			// Calcular el tiempo necesario para realizar la operación en la DB seleccionada
+			//ArrayList<String> opElapsedTime = Facade.dbResolver(selectedDB, selectedOp, dataPath);
 			
-			
-			
+			// Escribir los tiempos obtenidos en el fichero correspondiente
+			//ResultManager.resultWriter(resultFile, opElapsedTime);
 			
 		}
 		

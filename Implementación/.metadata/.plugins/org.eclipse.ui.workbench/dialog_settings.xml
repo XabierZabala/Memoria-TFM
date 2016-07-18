@@ -6,7 +6,7 @@
 	</section>
 	<section name="org.eclipse.ui.internal.QuickAccess">
 		<item value="533" key="dialogHeight"/>
-		<item value="1025" key="dialogWidth"/>
+		<item value="768" key="dialogWidth"/>
 		<list key="textEntries">
 		</list>
 		<list key="orderedElements">
@@ -17,5 +17,19 @@
 		</list>
 	</section>
 	<section name="NewWizardAction">
+	</section>
+	<section name="ImportExportAction">
+		<item value="org.eclipse.ui.wizards.import.FileSystem" key="ImportExportPage.STORE_SELECTED_IMPORT_WIZARD_ID"/>
+		<list key="ImportExportPage.STORE_EXPANDED_IMPORT_CATEGORIES">
+			<item value="org.eclipse.ui.Basic"/>
+		</list>
+	</section>
+	<section name="FileSystemImportWizard">
+		<item value="false" key="WizardFileSystemResourceImportPage1.STORE_CREATE_CONTAINER_STRUCTURE_ID"/>
+		<item value="false" key="WizardFileSystemResourceImportPage1.STORE_OVERWRITE_EXISTING_RESOURCES_ID"/>
+		<list key="WizardFileSystemResourceImportPage1.STORE_SOURCE_NAMES_ID">
+			<item value="C:\Users\xabi\Desktop\NYCTaxi\mysql-connector-java-5.1.39"/>
+			<item value="C:\Users\xabi\Desktop\NYCTaxi\mysql-connector-java-3.0.17-ga"/>
+		</list>
 	</section>
 </section>

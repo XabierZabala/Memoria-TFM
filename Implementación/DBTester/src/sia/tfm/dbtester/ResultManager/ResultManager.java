@@ -2,9 +2,10 @@ package sia.tfm.dbtester.ResultManager;
 
 import java.io.File;
 import java.io.PrintWriter;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import sia.tfm.dbtester.Classes.FileWrite;
-import sia.tfm.dbtester.Facade.Facade;
 import sia.tfm.dbtester.FileManager.FileManager;
 
 public class ResultManager {
@@ -20,25 +21,36 @@ public class ResultManager {
 	
 	/**
 	 * Método que genera un array con directorios donde se almacenan los resultados.
-	 * @param dirs Conjunto de directorios donde se almacenaran los resultados.
+	 * @param hm Mapa de pares parametro/valor obtenidos del fichero de configuración.
 	 * @return String[] Arreglo de directorios en formato String
 	 */
 	
-	public static String[] directoryArray(String... dirs){
+	public static String[] directoryArray(HashMap<String, String> hm){
 		
-		return dirs.clone();
+		String[] result = new String[2];
+		
+		result[0] = hm.get("mysqlResults");
+		result[1] = hm.get("cassandraResults");
+		
+		return result;
 	
 	}
 	
 	/**
 	 * Método que genera un array con operaciones descritas en la configuración.
-	 * @param ops Conjunto de operaciones que se realizarán durante las pruebas.
+	 * @param hm Mapa de pares parametro/valor obtenidos del fichero de configuración.
 	 * @return String[] Arreglo de operaciones en formato String
 	 */
 	
-	public static String[] operationArray(String... ops){
+	public static String[] operationArray(HashMap<String, String> hm){
 		
-		return ops.clone();
+		String[] result = new String[3];
+		
+		result[0] = hm.get("query0");
+		result[1] = hm.get("query1");
+		result[2] = hm.get("query2");
+		
+		return result;
 	
 	}
 	
@@ -68,14 +80,16 @@ public class ResultManager {
 	/**
 	 * Método que crea el fichero de resultados correspondiente a la BD
 	 * seleccionada
-	 * @param bd Identificador de la base de datos seleccionada.
+	 * @param hm Mapa de pares parametro/valor obtenidos del fichero de configuración.
+	 * @param dirs Arreglo de directorios en formato String
+	 * @param ops Arreglo de operaciones en formato String
 	 * @return File El fichero de resultados.
 	 */
 	
-	public static File createResultFile(String bd, String[] dirs, String op, String[] ops){
+	public static File createResultFile(HashMap<String, String> hm, String[] dirs,String[] ops){
 		
-		int selectedDB = Integer.parseInt(bd);
-		int selectedOp = Integer.parseInt(op);
+		int selectedDB = Integer.parseInt(hm.get("selectedDB"));
+		int selectedOp = Integer.parseInt(hm.get("selectedOp"));
 		Long now = System.currentTimeMillis();
 		
 		try{
@@ -101,12 +115,26 @@ public class ResultManager {
 	 * @param op Identificador de la operación seleccionada.
 	 */
 	
-	public static void resultWriter(File file, String bd, String op){
+	public static void resultWriter(File file, ArrayList<String> opElapsedTime){
 		
 		FileWrite fw = FileManager.accessFileWrite(file);
 		PrintWriter pw = fw.getPw();
+		int iter = 0;
 		
-		Facade.actionResolver(bd, op); // Devuelve un string
+		if(opElapsedTime.size() > 1){
+			
+			for(String et: opElapsedTime){
+				iter++;
+				pw.println("Tiempo transcurrido en importar el fichero " 
+				+ iter + ": " + et);
+			}
+			
+		}else{
+			
+			pw.println("Tiempo transcurrido en finalizar el" +
+			"proceso: " + opElapsedTime.get(0));
+			
+		}
 		
 		FileManager.closeFileWrite(fw);
 		

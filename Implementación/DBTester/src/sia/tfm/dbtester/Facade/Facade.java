@@ -1,8 +1,10 @@
 package sia.tfm.dbtester.Facade;
 
+import java.util.ArrayList;
+
 import sia.tfm.dbtester.DB.Cassandra;
 import sia.tfm.dbtester.DB.MySQL;
-import sia.tfm.dbtester.DB.MySQLCluster;
+
 
 public class Facade {
 	
@@ -20,29 +22,25 @@ public class Facade {
 	 * de la aplicación
 	 * @param bd Identificador de la base de datos seleccionada.
 	 * @param op Identificador de la operación seleccionada.
+	 * @param dp Ruta del directorio donde se encuentran los datos.
 	 * @return Array<String> Arreglo de String que representan el tiempo
 	 * necesitado para realizar cada accion
 	 */
 	
-	public static String actionResolver(String db, String op){
+	public static ArrayList<String> dbResolver(String db, String op, String dp){
 		
 		
 		if(db.equals("0")){
 			// MySQL
-			MySQL mysql = new MySQL(op);
+			return MySQL.operationResolver(op, dp);
 		}else if(db.equals("1")){
 			// Cassandra
-			Cassandra css = new Cassandra(op);	
-		}else if(db.equals("2")){
-			// MySQL Cluster
-			MySQLCluster mysqlCluster = new MySQLCluster(op);
+			//return Cassandra.operationResolver(op, dp);
+			return null; // EZABATZEKO
 		}else{
 			System.out.println("La base de datos seleccionada no existe");
 			System.exit(0);
+			return null;
 		}
-		
-		return null; // FALTAR SEGUIR IMPLEMENTANDO
-		
 	}
-
 }
