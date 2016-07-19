@@ -44,11 +44,12 @@ public class ResultManager {
 	
 	public static String[] operationArray(HashMap<String, String> hm){
 		
-		String[] result = new String[3];
+		String[] result = new String[4];
 		
 		result[0] = hm.get("query0");
 		result[1] = hm.get("query1");
 		result[2] = hm.get("query2");
+		result[3] = hm.get("query3");
 		
 		return result;
 	

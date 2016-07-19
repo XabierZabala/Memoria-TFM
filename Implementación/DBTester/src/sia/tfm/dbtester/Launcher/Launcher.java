@@ -1,6 +1,7 @@
 package sia.tfm.dbtester.Launcher;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 import sia.tfm.dbtester.ConfigManager.ConfigFile;
@@ -24,7 +25,6 @@ public class Launcher {
 			
 			// Mapea los pares parametro/valor del fichero de configuración	
 			HashMap<String, String> hm = ConfigFile.pairFromConfig(config);
-			String dataPath = hm.get("dataPath");
 			
 			// Generar array con directorios donde se almacenan los resultados
 			String[] paths = ResultManager.directoryArray(hm);
@@ -39,10 +39,10 @@ public class Launcher {
 			File resultFile = ResultManager.createResultFile(hm, paths, operations);
 				
 			// Calcular el tiempo necesario para realizar la operación en la DB seleccionada
-			//ArrayList<String> opElapsedTime = Facade.dbResolver(selectedDB, selectedOp, dataPath);
+			ArrayList<String> opElapsedTime = Facade.dbResolver(hm);
 			
 			// Escribir los tiempos obtenidos en el fichero correspondiente
-			//ResultManager.resultWriter(resultFile, opElapsedTime);
+			ResultManager.resultWriter(resultFile, opElapsedTime);
 			
 		}
 		
