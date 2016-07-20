@@ -3,16 +3,12 @@ package sia.tfm.dbtester.DB;
 import java.io.File;
 import java.sql.Connection;
 import java.sql.DriverManager;
-import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.HashMap;
 
-import sia.tfm.dbtester.Classes.FileRead;
-import sia.tfm.dbtester.FileManager.FileManager;
 
 
 
@@ -88,9 +84,7 @@ public class MySQL {
         	st = con.createStatement();
         	
         	System.out.println("Conexión establecida con la DB");
-        	
-        	////////////// Ficheros
-        	
+        	    	
         	File f = new File(hm.get("dataPath"));
     		
     		if(f.exists() && !f.isDirectory()){
@@ -107,83 +101,32 @@ public class MySQL {
     			for(File file: listOfFiles){
     				String name = file.getName();
     				if (name.endsWith(".csv") || name.endsWith(".CSV")){
-                        
-    					// Acceder a cada uno de los ficheros
-    					FileRead fr = FileManager.accessFileRead(file);
+    					
+                        System.out.println("Insertando " + name + " ...");
+                       
     					Long start_time = System.currentTimeMillis();
     					
-    					String line = null;
-    					int count = 0;
-    			        while((line = fr.getBr().readLine())!=null){
-    			        	
-    			        	// Para ignorar el header de los ficheros CSV
-    			        	if(count > 0){
-    			        		
-    			        		// Parsear linea e insertarlo en la DB
-        			        	String[] data = line.replace(",.", ",0.").split(",");
-        			        	
-        			        	String query = " INSERT INTO trips (vendor_id, tpep_pickup_datetime,"
-        			        			+ "tpep_dropoff_datetime, passanger_count, trip_distance, pickup_latitude,"
-        			        			+ "pickup_longitude, rate_code_id, store_fwd, dropoff_latitude,"
-        			        			+ "dropoff_longitude, payment_type, fare_amount, extra, mta_tax,"
-        			        			+ "improvement_surcharge, tip_amount, tolls_amount, total_amount) "
-        			        			+ "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
-        			        	
-		        			        	PreparedStatement preparedStmt = con.prepareStatement(query);
-		        			            preparedStmt.setInt(1, new Integer(data[0]));
-		        			            preparedStmt.setTimestamp(2, Timestamp.valueOf(data[1])); 
-		        			            preparedStmt.setTimestamp(3, Timestamp.valueOf(data[2]));
-		        			            preparedStmt.setInt(4, new Integer(data[3]));
-		        			            preparedStmt.setFloat(5, new Float(data[4]));
-		        			            preparedStmt.setFloat(6, new Float(data[5]));
-		        			            preparedStmt.setFloat(7, new Float(data[6]));
-		        			            preparedStmt.setInt(8, new Integer(data[7]));
-		        			            preparedStmt.setString(9, data[8]);
-		        			            preparedStmt.setFloat(10, new Float(data[9]));
-		        			            preparedStmt.setFloat(11, new Float(data[10]));
-		        			            preparedStmt.setInt(12, new Integer(data[11]));
-		        			            preparedStmt.setFloat(13, new Float(data[12]));
-		        			            preparedStmt.setFloat(14, new Float(data[13]));
-		        			            preparedStmt.setFloat(15, new Float(data[14]));
-		        			            preparedStmt.setFloat(15, new Float(data[14]));
-		        			            preparedStmt.setFloat(16, new Float(data[15]));
-		        			            preparedStmt.setFloat(17, new Float(data[16]));
-		        			            preparedStmt.setFloat(18, new Float(data[17]));
-		        			            preparedStmt.setFloat(19, new Float(data[18]));
-		        			            
-		        			            preparedStmt.execute();
-        			        	
-    			        	} 
-    			        	
-    			        	count++;
-    			        	System.out.println(count);
-    			        }
-    			         
-    			         Long end_time = System.currentTimeMillis();
-    			         FileManager.closeFileRead(fr);
-    			         
-    			         results.add(name + " -> " + (end_time - start_time)/1000 + "seg");
+    					String sql = 
+    							"LOAD DATA LOCAL INFILE '" + file.getAbsolutePath().replace("\\", "/") + "' "+
+    							" INTO TABLE trips" +
+    							" FIELDS TERMINATED BY ','" +
+    							" LINES TERMINATED BY '\n'" +
+    							" IGNORE 1 LINES" + 
+    							" (vendor_id, tpep_pickup_datetime,"
+			        			+ "tpep_dropoff_datetime, passanger_count, trip_distance, pickup_latitude,"
+			        			+ "pickup_longitude, rate_code_id, store_fwd, dropoff_latitude,"
+			        			+ "dropoff_longitude, payment_type, fare_amount, extra, mta_tax,"
+			        			+ "improvement_surcharge, tip_amount, tolls_amount, total_amount)";
     					
+    					st.execute(sql);
+    					
+    			        Long end_time = System.currentTimeMillis(); 
+    			        results.add(name + " -> " + (end_time - start_time)/1000 + "seg");		
                     }
     			}
-
     			releaseMemory(rs, st, con);
     			return results;
     		}
-        	
-        	/////////////////////////
-    		
-    		/*
-    		 * rs = st.executeQuery("SELECT * from trips");
-
-            if (rs.next()) {
-                
-                System.out.println(rs.getString(1) + " "
-                + rs.getString(2));
-            }
-    		 * */
-        	
-
         } catch (Exception ex) {
         	
             ex.printStackTrace();
