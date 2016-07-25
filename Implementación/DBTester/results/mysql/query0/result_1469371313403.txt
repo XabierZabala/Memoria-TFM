@@ -1,0 +1,13 @@
+Tiempo transcurrido en importar el fichero 1: yellow_tripdata_2015-01_000001.csv -> 63seg
+Tiempo transcurrido en importar el fichero 2: yellow_tripdata_2015-01_000002.csv -> 76seg
+Tiempo transcurrido en importar el fichero 3: yellow_tripdata_2015-01_000003.csv -> 73seg
+Tiempo transcurrido en importar el fichero 4: yellow_tripdata_2015-01_000004.csv -> 66seg
+Tiempo transcurrido en importar el fichero 5: yellow_tripdata_2015-01_000005.csv -> 68seg
+Tiempo transcurrido en importar el fichero 6: yellow_tripdata_2015-01_000006.csv -> 79seg
+Tiempo transcurrido en importar el fichero 7: yellow_tripdata_2015-01_000007.csv -> 86seg
+Tiempo transcurrido en importar el fichero 8: yellow_tripdata_2015-01_000008.csv -> 91seg
+Tiempo transcurrido en importar el fichero 9: yellow_tripdata_2015-01_000009.csv -> 88seg
+Tiempo transcurrido en importar el fichero 10: yellow_tripdata_2015-01_000010.csv -> 85seg
+Tiempo transcurrido en importar el fichero 11: yellow_tripdata_2015-01_000011.csv -> 92seg
+Tiempo transcurrido en importar el fichero 12: yellow_tripdata_2015-01_000012.csv -> 86seg
+Tiempo transcurrido en importar el fichero 13: yellow_tripdata_2015-01_000013.csv -> 59seg
