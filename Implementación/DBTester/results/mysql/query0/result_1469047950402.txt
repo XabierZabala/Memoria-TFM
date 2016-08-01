@@ -1,1 +1,0 @@
-Tiempo transcurrido en finalizar elproceso: yellow_tripdata_2015-01_000001.csv -> 38seg
