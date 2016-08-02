@@ -19,30 +19,52 @@ El mundo empresarial, por su parte, no se ha mantenido al margen de esta gran re
  
 Datik Información Inteligente S.L. es una empresa tecnológica perteneciente al Grupo Irizar  que desarrolla soluciones ITS destinadas a la gestión del trasporte, tanto ferroviario como por carretera y movilidad ciudadana.\\
 
-Uno de los productos estrella de la entidad es el denominado iPanel, concentrador de  información que ofrece al operador de transporte servicios de valor añadido en la gestión de la información generada por su flota. El funcionamiento de este servicio se puede resumir mediante la figura \ref{fig:ipanel}:\\
+Uno de los productos estrella de la entidad es el denominado iPanel, concentrador de  información que ofrece al operador de transporte servicios de valor añadido en la gestión de la información generada por su flota. El funcionamiento de este servicio se puede resumir mediante la Figura \ref{fig:ipanel}:\\
 
 \begin{figure}[h]
 	\centering
 	\includegraphics[width=1\textwidth]{Ilustraciones/ipanel_infraesctructure.png}
-	\caption{a nice plot}
+	\caption{Funcionamiento resumido de iPanel}
 	\label{fig:ipanel}
 \end{figure}
 
-El incesante aumento en el número de vehículos equipados genera un crecimiento exponencial de los datos que se han de almacenar y procesar en una base de datos MySQL. Aunque a día de hoy la situación se encuentra bajo control y no conlleve peligro alguno para el funcionamiento del servicio, Datik tiene identificados varios peligros que en un futuro cercano podrían comprometer dicho funcionamiento.\\
+El incesante aumento en el número de vehículos equipados genera un crecimiento exponencial de los elementos que se han de almacenar y procesar en una base de datos MySQL. Aunque el volumen de datos con el que se trabaja hoy en día no supone riesgo alguno para el funcionamiento del servicio, Datik tiene identificados varios escenarios en los que esto podría cambiar, dando pie al afloramiento de graves problemas.\\
 
-El primero de todos, es el tiempo de procesado requerido para llevar a cabo el calculo de los indicadores. Se trata de un proceso que se ejecuta una vez al día y que atendiendo a los datos recopilados en las últimas 24 hora vuelve a calcular todos los indicadores de iPanel. Ello implica realizar operaciones aritméticas sobre diferentes campos como la velocidad y el consumo de combustible entre otros y agruparlos por diferentes parámetros como cliente, flota, vehículo o un espacio temporal. Actualmente, se necesitan varias horas para finalizar la computación, pero al necesitar cada vez más tiempo debido a la creciente cantidad de datos a tratar, es posible que se llegue a bloquear la base de datos para otros procesos o incluso no ser capaz de realizar el calculo en menos de 24 horas, invalidando así la funcionalidad de ofrecer los indicadores del último día.
+El primero de todos, es el tiempo necesario para realizar el cálculo de los indicadores. Se trata de un proceso ejecutado una vez al día que atendiendo los datos recopilados en las últimas 24 hora vuelve a calcular todos los indicadores de iPanel. Ello implica realizar operaciones aritméticas sobre diferentes campos como la velocidad y el consumo de combustible y agrupar los resultados por cliente, flota, vehículo o un espacio temporal. Actualmente, se necesitan varias horas para finalizar la computación, pero, debido al aumento de los datos a tratar, es posible que en un futuro existan graves dificultades para realizar el calculo en menos de 24 horas, invalidando así la funcionalidad de ofrecer los indicadores del último día.\\
 
-Otro de los problemas,intrínseco al uso de una base de datos centralizada como MySQL, es el operar sobre un único punto de fallo. Muchos procesos, además de iPanel, operan sobre la misma máquina física el cual se podría saturar y dejar de dar servicio o incluso caerse del todo
+Otro de los problemas, intrínseco al uso de una base de datos centralizada, es el operar sobre un único punto de fallo. Debido a que la mayoría de procesos pasan por dicho punto, existe un alto riesgo de sufrir el denominado efecto dominó, esto es, que la caída provocada por un servicio acarree la del resto. Actualmente, Datik dispone un servidor de réplica capacitado para suplir al primario en caso de que ocurra algo así. No obstante, esta práctica condenar una máquina al ostracismo ya que sus recursos quedan desaprovechados en el 99,95\% del tiempo.\\
 
-Data corruption! It can happen. Maybe because of a bug or storage problem that you didn’t expect, or MySQL crashes when a page checksum’s result is different from what it expected. Either way, corrupted data can and does occur
-
-(Problemas que ha identificado datik en un futuro cercano)
-
-El aumento de número de flotas acarrea un crecimiento exponencial en la cantidad de datos a tratar, convirtiendo el procesamiento a tiempo real de estos datos en un problema  de Big Data. 
+EL último, es la corrupción de datos. Este fenómeno puede suceder (y sucede) debido a un bug, fallo de almacenamiento inesperado, o una caída de MySQL cuando el resultado del checksum de una página es diferente al esperado. Como resultado, podría comprometer seriamente la información que Datik ofrece a sus clientes mediante la aplicación web.\\
 
 \section{Propuesta}
 
+Para solventar los problemas que Datik prevé, se propone implantar las tecnologías Apache Cassandra y Apache Spark en la empresa y migrar tanto las tablas como los procesos que son parte en el cálculo de los indicadores.\\
 
+
+Apache Cassandra es una base de datos distribuida no-sql. Gracias a naturaleza distribuida ayuda a resolver, 
+
+
+
+
+
+
+Diseñar un plan de migración que defina aspectos tales como: 
+
+\begin{itemize}
+	\item Listado de las tablas MySQL que deben ser migradas a Cassandra priorizando las que más rápido crecen y mayor número de consultas intensivas reciben. Por ejemplo, las tablas que contienen la información para el calculo de los indicadores.
+	\item Listado tablas "frontera"
+	\item Ver por cada ejercicio su estado de realización: quiénes lo han terminado, quiénes tienen duda y quiénes no han respondido nada.
+	\item Editar cualquier detalle de un ejercicio en cualquier momento.
+	\item Valorar la realización de un ejercicio a un alumno concreto.
+\end{itemize}
+
+el traspaso de las tablas MySQL que mayor velocidad crecen  y mayor número de consultas pesadas reciban a estas nuevas tecnologías. empezando por las que tienen estrecha realción con el calculo de indicadores, ya que, como se ha indicado con anterioridad, es  
+
+Por su parte, Apache Cassandra
+
+Por Apache Spark por otra,
+
+Debido a la falta de datos se ha utilizado un dataset publico para emular las condiciones de futuro con las que se va a encontrar datik
 
 \section{Organización del documento}
 
