@@ -2,3 +2,7 @@
 \BOOKMARK [1][-]{section.1.1}{Contexto}{chapter.1}% 2
 \BOOKMARK [1][-]{section.1.2}{Propuesta}{chapter.1}% 3
 \BOOKMARK [1][-]{section.1.3}{Organizaci\363n del documento}{chapter.1}% 4
+\BOOKMARK [0][-]{chapter.2}{An\341lisis de las tecnolog\355as propuestas}{}% 5
+\BOOKMARK [1][-]{section.2.1}{Apache Cassandra}{chapter.2}% 6
+\BOOKMARK [1][-]{section.2.2}{Apache Spark}{chapter.2}% 7
+\BOOKMARK [2][-]{subsection.2.2.1}{Funcionamiento}{section.2.2}% 8
