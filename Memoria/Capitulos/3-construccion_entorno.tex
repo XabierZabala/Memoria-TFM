@@ -1,0 +1,157 @@
+%----------------------------------------------------%
+%          ENTORNO DE PRUEBAS: CONSTRUCCION          %
+%----------------------------------------------------%
+
+\pagestyle{fancy}
+
+\chapter{Entorno de pruebas: Construcción}
+\label{entorno_pruebas}
+
+indicaran las directrices seguidas en la construcción de los entornos de prueba que se desean construir
+ambos entornos en la maquina fisica nueva
+
+\section{Entorno centralizado}
+
+emular el entorno que actualmente datik posee y el rendimiento que da
+
+
+\section{Entorno distribuido}
+
+En el presente capítulo se muestran los pasos a seguir para instalar y configurar un cluster de múltiples nodos. Una vez que la infraestructura esté operativa, se pasará a describir el funcionamiento de sus componentes y se realizarán varias pruebas comprobando que esto se cumple. 
+
+Cabe recordar que los pilares del cluster, tecnológicamente hablando, han sido Apache Cassandra y Apache Spark, los cuales operan en todos los nodos que lo componen. Al finalizar este capítulo se espera poder gozar de una infraestructura  que permita procesar una cantidad ingente de datos de forma distribuida.
+
+4.1 CONSTRUCCIÓN DEL CLUSTER
+
+A continuación se detallarán los pasos más relevantes llevados a cabo a la hora de construir y configurar el cluster. Instalar las máquinas virtuales que operan cual nodos y dotarlos de un sistema operativo se ha considerado un procedimiento trivial y carente de interés por lo cual estos pasos han sido omitidos. 
+
+Asignar IP estática a los nodos
+
+Para empezar es recomendable asignar una IP estática a todos los nodos que conforman el cluster por varios motivos. Conviene aclarar que este cambio no es intrínseco al funcionamiento del mismo, ya que, existen clusters que operan con IP dinámica. El primer motivo radica de la necesidad de conocer la dirección IP del nodo maestro para ejecutar aplicaciones mediante Spark. La segunda, no tan crítica pero igual de importante, tiene relación con el propósito de acceder a los nodos esclavos desde el portátil. Al haber instalado dos nodos en el servidor, cada vez que estos son reiniciados, habría que acceder manualmente para conocer la IP y asi, después, poder conectar a dichas máquinas mediante SSH, lo cual no es una práctica muy recomendable .  
+
+Para asignar una IP estática, habrá que realizar ciertas modificaciones en el fichero /etc/network/interfaces, siendo su contenido final el presentado a continuación:
+
+auto lo
+iface lo inet loopback
+
+iface eth0 inet static
+address 192.168.1.20X
+gateway 192.168.1.1
+netmask 255.255.255.0
+dns-nameservers 8.8.8.8 8.8.4.4
+
+Aplicando la clausula static al arrancar el nodo se le asigna la IP especificada en el campo address. El valor de este último será el único en cambiar  de la configuración de un nodo a otro. Es de vital importancia especificar la dirección de un servidor DNS, porque sin este, será imposible establecer conexión con las demás máquinas del cluster. En este caso el servidor DNS elegido ha sido el de Google. 
+Los nodos se conectarán a internet mediante un cable Ethernet, pero al tratarse de máquinas virtuales es necesario configurar cada una de ellas indicando el adaptador pertinente para el tipo de conexión elegido. Seleccionando la opción Red en el apartado de Configuraciones y realizando los siguientes cambios se obtendrá la efecto deseado:
+
+1.	Cambiar de NAT a Adaptador de Puente
+2.	Avanzado -> Modo Promiscuo -> Permitir
+3.	Seleccionar el adaptador Ethernet pertinente en la lista desplegable que se encuentra lado de la etiqueta Nombre 
+
+Cambiar los hostname de las máquinas
+
+Asignar nombre univoco a cada máquina es otro de los pasos que ha de realizarse. Ello se logra modificando el fichero /etc/hostname y cambiando el valor que tiene por defecto (ubuntu) por el nombre con el que se quiera bautizar. Es importante diferenciar entre el nombre que se le ha asignado a la máquina virtual y el hostname ya que no representan un mismo concepto. Más adelante se podrá entender el motivo de este cambio.
+
+En el siguiente recuadro se pueden observar el hostname que se le ha asignado a cada una de las máquinas virtuales.
+
+BigData_Master : master
+BigData_Slave1 : slave1
+BigData_Slave2 : slave2
+
+Acceso mediante las claves RSA
+
+Como ya se ha mencionado al comienzo de este capítulo, la idea es poder acceder a todos los nodos del cluster desde el portátil de Xabier Zabala mediante SSH sin que haga falta una identificación mediante contraseñas. Para posibilitar este acceso se hará uso de las claves RSA.
+
+RSA es un sistema de encriptado que utiliza un algoritmo imposible de solucionar a día de hoy, el cual permite la identificación entre máquinas sin intercambiar las claves por la red. Consta de dos claves; una privada que se encuentra en la máquina cliente y se usa para desencriptar, y otra pública que se puede repartir sin miedo y se usa para encriptar. Lo que se haya encriptado con la clave pública solo puede ser desencriptado con la clave privada correspondiente.
+
+Gracias a la par de claves RSA, se podrá permitir que el nodo del portátil de Xabier, el nodo maestro que tendrá almacenado la clave privada, acceda directamente a los dos nodos esclavos residentes en el servidor que poseerán la clave pública, y asi, controlar cualquier nodo del cluster desde el portátil.
+
+Una vez generadas ambas claves, la pública ha de ser distribuida a los nodos esclavos y almacenada en la carpeta /root/.ssh. Para terminar,  habrá que copiar la clave pública repartida desde el nodo maestro en el fichero authorized_keys del este mismo nodo, además de modificar los permisos de las carpeta .ssh y el fichero authorized_keys, asignándole al propietario de estos, todos los permisos sobre el primero y  los permisos de lectura y escritura sobre el segundo.
+
+Configuración de los fichero etc/hosts
+
+Para finalizar, es indispensable que cada máquinas conozca a las otras que componen el cluster para que estos actúen de forma  cooperativa. Dicha información les será transmitida mediante el fichero /etc/hosts.
+
+En el siguiente recuadro se puede apreciar la apariencia que han de tener los ficheros /etc/hosts de todas las máquinas del cluster:
+
+192.168.1.201 master
+192.168.1.202 slave1
+192.168.1.203 slave2
+
+El motivo por el cual unos pasos atrás se ha asignado un hostname a cada máquina virtual sido para, mediante este fichero, relacionar cada host con su respectiva IP. A priori, no parece que sea estrictamente necesario realizar esta configuración, ya que una dirección IP es elemento suficiente para identificar un terminal en la red, pero a la larga ofrece diversas ventajas. Por un lado  ventajas operativas: un nombre es más fácil de relacionar a un nodo gracias a la semántica inherente a el, algo que no pasa con una IP, que a la postre, cambia si el nodo es trasladado de una red a otra. Por otro lado, las ventajas funcionales como las que se van a poder observar en el siguiente apartado; por ejemplo, que algunas variables de Apache Cassandra, en caso de no ser configurados, recurren a este fichero para conocer la IP de una máquina.  
+
+\subsection{Configuración de Apache Cassandra}
+
+Cassandra puede ser instalada mediante paquetes deb o rpm pero en este proyecto no se ha optado por ninguna de esa vía. Al haber elegido la instalación manual, será necesario crear los siguientes directorios en cada uno de los nodos para que el archivo de configuración cassandra.yaml pueda guardar y acceder a la información generada durante la ejecución:
+
+•	/var/lib/cassandra/data
+•	/var/lib/cassandra/commitlog
+•	/var/lib/cassandra/saved_caches
+•	/var/log/cassandra
+
+
+A su vez, para asegurar un correcto funcionamiento será vital que los directorios recién creados posean todos los permisos existentes. 
+
+Tal y como se ha mencionado anteriormente, la configuración de Apache Cassandra se encuentra descrita en el fichero cassandra.yaml. Los valores que poseen ciertos atributos de este fichero han de ser reasignadas en cada uno de los nodos para que Cassandra opere correctamente. Antes de mostrar la tabla XXX que agrupa dichos valores en cada nodo, se procederá a definirlos con la intención de entender la importancia que tienen en Cassandra.
+
+cluster_name
+
+El nombre del cluster; usado para que las máquinas de un cluster lógico no se mezclen con otro. Todos los nodos del cluster deben de tener el mismo valor.
+
+initial_token
+
+Se utiliza cuando el nodo tiene un rango contiguo en el anillo. Existen herramientas que especificando el número de nodos que componen el cluster calculan el valor del token para cada uno de estos.
+
+seed_provider
+
+Una lista de direcciones IP delimitados por coma que se utilizan como punto de contacto para cuando un nodo se une al cluster. Cassandra también utiliza esta lista para aprender la topología del anillo.
+
+listen_address
+
+La dirección IP que utilizan otros nodos para conectarse a una máquina especifica. Si no se indica nada, el nombre de la máquina tiene que conducir a su IP utilizando el fichero etc/hostname.
+
+rpc_address
+
+La dirección IP de escucha para conexiones de cliente. El valor por defecto es localhost y sus valores posibles son:
+
+•	0.0.0.0: Escucha en todas la interfaces configuradas
+•	Dirección IP
+•	Nombre de máquina
+•	Sin especificar: el nombre de la máquina tiene que conducir a su IP utilizando el fichero etc/hostname
+
+endpoint_snitch
+
+Establece el modo en el que Cassandra localiza nodos y envía peticiones de enrutamiento. Los más utilizados son los siguientes y a la hora de configurar los nodos, todos han de tener un mismo valor:
+
+•	SimpleSnitch: Se utiliza solo para la implementación de centro de datos únicos.
+
+•	RackInferredSnitch: Determina la ubicación de los nodos por rack o por data center. 
+
+Dichos atributos han sido configurados de la siguiente manera en el fichero cassandra.yaml de cada nodo del cluster: 
+
+BigData_Master	BigData_Slave1	BigData_Slave2
+cluster_name	BigDataCluster	BigDataCluster	BigDataCluster
+initial_token	0	3074457345618258602	6148914691236517205
+seed_provider	192.168.1.201	192.168.1.201	192.168.1.201
+listen_address	192.168.1.201	192.168.1.202	192.168.1.203
+rpc_address	0.0.0.0	0.0.0.0	0.0.0.0
+endpoint_snitch	RackInferringSnitch	RackInferringSnitch	RackInferringSnitch
+Tabla 5. Configuración de los nodos Cassandra
+
+Para terminar con la configuración de Cassandra, es conveniente entender los valores asignados a los atributos initial_token y seed_provider. 
+
+El valor del token asignado a cada nodo está estrechamente relacionado con el número de nodos que componen el cluster y la topología lógica de este. Por este motivo, si se quiere añadir un nuevo nodo es indispensable recalcular al valor de los token de todos los nodos del cluster. La reasignación del token ha de realizarse con sumo cuidado,  ya que, asignando dos valores muy próximo a máquinas geográficamente distantes genera una topología lógica muy distorsionada, desencadenando en un mal funcionamiento de la infraestructura. Agraciadamente, este último problema no concierne al presente proyecto porque todos los nodos operan en la oficina central de Datik. 
+
+En cuanto al seed_provider se refiere, no parece lógico elegir un solo nodo como punto de acceso al cluster, ya que, si este nodo falla, ningún otro podrá unirse a la infraestructura. Es más pueden surgir dudas como: ¿Siendo Cassandra totalmente homogéneo por qué se ha elegido ese nodo en concreto para este cometido? La respuesta no reside en Cassandra, si no en Spark. Al contrario que Cassandra, Spark opera siguiendo la arquitectura maestro/esclavo, por lo que si el maestro cae, el procesamiento se ve detenido. Suponiendo que el nodo maestro nunca se cae,  es lógico asignar el mismo nodo como punto de acceso de Cassandra. Esta premisa es válida para un entorno de pruebas como en el que se enmarca el presente proyecto, pero en la realidad se puede no cumplir. Este problema será abordado en el capítulo 6. Conclusiones y Trabajos Relacionados.
+
+Cassandra ofrece herramientas como nodetool para comprobar que este ha sido instalado de forma correcta a través del cluster.
+
+
+\subsection{Configuración de Apache Spark}
+
+La configuración de Apache Spark puede ser realizada tanto de forma manual como automática, pero por la sencillez y comodidad de ofrece esta vez se ha elegido configurarlo de la segunda manera.
+
+Apache Spark ofrece una serie de scripts como start-all y stop-all que ejecutados en el nodo maestro permiten poner en marcha o parar Spark en todos los nodos del cluster.
+
+Para que estos scripts funcionen de forma correcta será necesario hacer una pequeña configuración. Dentro de la carpeta conf de todos los nodos de la infraestructura se ha de crear un fichero llamado slaves, y dentro, especificar el hostname de las maquinas que vayan a trabajar como tal.
+
+

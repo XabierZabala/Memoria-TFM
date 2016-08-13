@@ -14,6 +14,10 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {2.1}Apache Cassandra}{7}{section.2.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {section}{\numberline {2.2}Apache Spark}{9}{section.2.2}
+\contentsline {subsection}{\numberline {2.1.1}Funcionamiento}{8}{subsection.2.1.1}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.2.1}Funcionamiento}{9}{subsection.2.2.1}
+\contentsline {subsection}{\numberline {2.1.2}Cassandra Query Lenguage (CQL)}{10}{subsection.2.1.2}
+\defcounter {refsection}{0}\relax 
+\contentsline {section}{\numberline {2.2}Apache Spark}{11}{section.2.2}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsection}{\numberline {2.2.1}Funcionamiento}{12}{subsection.2.2.1}
