@@ -16,5 +16,62 @@
   {}
 \endgroup
 
-\sortlist[entry]{nty/global/}\endsortlist
+\sortlist[entry]{nty/global/}
+  \entry{rabl2012solving}{article}{}
+    \name{author}{6}{}{%
+      {{hash=RT}{%
+         family={Rabl},
+         family_i={R\bibinitperiod},
+         given={Tilmann},
+         given_i={T\bibinitperiod},
+      }}%
+      {{hash=GVS}{%
+         family={G{\'o}mez-Villamor},
+         family_i={G\bibinitperiod-V\bibinitperiod},
+         given={Sergio},
+         given_i={S\bibinitperiod},
+      }}%
+      {{hash=SM}{%
+         family={Sadoghi},
+         family_i={S\bibinitperiod},
+         given={Mohammad},
+         given_i={M\bibinitperiod},
+      }}%
+      {{hash=MMV}{%
+         family={Munt{\'e}s-Mulero},
+         family_i={M\bibinitperiod-M\bibinitperiod},
+         given={Victor},
+         given_i={V\bibinitperiod},
+      }}%
+      {{hash=JHA}{%
+         family={Jacobsen},
+         family_i={J\bibinitperiod},
+         given={Hans-Arno},
+         given_i={H\bibinitperiod-A\bibinitperiod},
+      }}%
+      {{hash=MS}{%
+         family={Mankovskii},
+         family_i={M\bibinitperiod},
+         given={Serge},
+         given_i={S\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {VLDB Endowment}%
+    }
+    \strng{namehash}{RT+1}
+    \strng{fullhash}{RTGVSSMMMVJHAMS1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{R}
+    \field{sortinithash}{R}
+    \field{number}{12}
+    \field{pages}{1724\bibrangedash 1735}
+    \field{title}{Solving big data challenges for enterprise application
+  performance management}
+    \field{volume}{5}
+    \field{journaltitle}{Proceedings of the VLDB Endowment}
+    \field{year}{2012}
+  \endentry
+\endsortlist
 \endinput

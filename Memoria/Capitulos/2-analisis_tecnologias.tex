@@ -9,9 +9,9 @@
 
 \section{Apache Cassandra}
 
-Apache Cassandra es una base de datos NoSQL distribuida desarrollada por DataStax bajo la licencia de Apache que permite operar con grandes volúmenes de datos del tipo clave/valor. Las principales ventajas que ofrece respecto a bases de datos homologas son una mayor escalabilidad lineal y disponibilidad total de los datos. Para lograr dichas ventajas se basa en una serie de nodos homogéneos que se comunican entre ellos mediante un protocolo P2P de replicación asincrónica, lo cual permite realizar operaciones de baja latencia para todos los clientes sin necesidad de un servidor maestro.\\
+Apache Cassandra es una base de datos distribuida desarrollada por DataStax\footnote{\url{http://www.datastax.com/}} bajo la licencia de Apache\footnote{\url{http://www.apache.org/}} que permite operar sobre grandes volúmenes de datos del tipo clave/valor. Se caracteriza por ofrecer una  disponibilidad total y mayor escalabilidad lineal en comparación a otras bases de datos NoSQL, utilizando, para ello, una serie de nodos homogéneos que se comunican mediante un protocolo P2P de replicación asincrónica, lo cual permite realizar operaciones de baja latencia para todos los clientes sin necesidad de un servidor maestro.\\
 
-En 2012, investigadores de la Universidad de Toronto que estudian los sistemas NoSQL concluyeron que "En términos de escalabilidad, hay un claro ganador a través de nuestros experimentos. Cassandra logra el más alto rendimiento para el número máximo de nodos en todos los experimentos"[].\\
+En 2012, investigadores de la Universidad de Toronto que estudian los sistemas NoSQL concluyeron que "En términos de escalabilidad, hay un claro ganador a través de nuestros experimentos. Cassandra logra el mejor rendimiento para el número máximo de nodos en todos los experimentos" \cite{rabl2012solving}.\\
 
 Actualmente está siendo utilizada por muchas de las aplicaciones en negocios modernos, siendo la base de datos elegida por un cuarto de las empresas de la Fortune 100[]. Claro ejemplo de ello son empresas mundialmente conocidas como Apple, Facebook o NetFlix, los cuales utilizan Cassandra como parte de su entramado tecnológico desde hace ya unos años. Cabe destacar que su uso no se limita al mundo empresarial. Muestra de ello es la acogida que ha tenido en el ámbito de la investigación, formando parte en experimentos punteros a nivel mundial como algunos de los realizados en el CERN[].\\
 
@@ -39,37 +39,40 @@ Será \textbf{recomendable} utilizar Cassandra si:
 
 \subsection{Funcionamiento}
 
-Debido al modelo distribuido sobre el cual esta desarrollado, el primer paso para comprender el funcionamiento de Apache Cassandra es familiarizarse con los conceptos básicos de los sistemas distribuidos y entender como se aplican sobre esta tecnología en concreto.\\
+Debido al modelo distribuido sobre el cual esta desarrollado, el primer paso para comprender el funcionamiento de Apache Cassandra es familiarizarse con los conceptos básicos de los sistemas distribuidos.\\
 
 El Teorema de Brewer[], también conocido como Teorema CAP , enuncia que es imposible para un sistema de cómputo distribuido garantizar simultáneamente las tres propiedades que se presentan a continuación, solo pudiendo cumplir dos de ellas al mismo tiempo, y acabar cumpliendo el restante tarde o temprano.\\
 
 \begin{itemize}
 	\item \textbf{Consistencia}(Consistency): Todos los nodos ven la misma información al mismo tiempo.
 	\item \textbf{Disponibilidad}(Availability): La garantía de que cada petición a un nodo reciba una confirmación de si ha sido o no resuelta satisfactoriamente.
-	\item \textbf{Tolerancia al Particionado}(Partition Tolerance): El sistema sigue funcionando a pesar de que haya sido partido por fallo de red.
+	\item \textbf{Tolerancia al Particionado}(Partition Tolerance): El sistema sigue funcionando a pesar de que haya sido partido por un fallo de red.
 \end{itemize}
 
-Para una base de datos distribuida que promete la disponibilidad completa, como lo es Cassandra, el Teorema de Brewer implica la imposibilidad de garantizar la consistencia total en el sistema y la necesidad de esperar un tiempo indeterminado para que las réplicas de un registro modificado se actualicen correctamente.\\
+Para una base de datos distribuida que promete la disponibilidad completa, como lo es Cassandra, el Teorema de Brewer implica la imposibilidad de garantizar la consistencia total de los datos y la necesidad de esperar un tiempo indeterminado para que las réplicas de un registro modificado se actualicen correctamente.\\
 
-No obstante, existen formas de minimizar el tiempo necesario para alcanzar un estado consistente. La primera, es proveer la infraestructura de medios físicos necesarios para acelerar el intercambio de datos entre los nodos y evitar que la red se congestione en el proceso. La segunda, trata sobre la posibilidad que Cassandra ofrece de elegir el nivel de consistencia() con el que se ejecuta cada consulta.\\
+Dicha actualización corre a cargo de un protocolo Gossip(), encargado del funcionamiento coordinado de la infraestructura. Mediante paso de mensajes periódicos da a conocer el estado de un nodo al resto de sus vecinos, posibilitando de esa manera, que cada nodo pueda mantener actualizadas sus réplicas, además de conocer en cada instante qué nodo esta caído y cual no.\\
 
-Otra de las características heredada de bebido a su naturaleza distribuida es el uso de un protocolo Gossip para lograr que todo el entramado funcione de manera coordinada. Mediante paso de mensajes periódicamente se da a conocer el estado de un nodo al resto de sus vecinos, posibilitando de esa manera, que cada nodo pueda mantener actualizadas sus réplicas.\\
+No obstante, existen formas de minimizar el tiempo que hace falta para alcanzar un estado consistente. La primera, es proveer la infraestructura de medios físicos necesarios para acelerar el intercambio de datos entre los nodos y evitar que la red se congestione en el proceso. La segunda, trata sobre la posibilidad que Cassandra ofrece de elegir el nivel de consistencia() con el que se ejecuta cada consulta.\\
 
-Pasando a las caracteristicas propias de Cassandra...
+Analizando las características propias de Cassandra y en concreto su estructura, la Keyspace es un espacio de nombres para un conjunto de ColumFamily. Por lo general, se utiliza uno por aplicación y es considerado como el equivalente a una base de datos del modelo relacional. El ColumFamily, a su vez, es capaz de almacenar diferentes columnas, siendo el homólogo de una tabla del modelo relacional. Para finalizar, una columna está compuesta por clave y valor, además de un campo del tipo timestamp gracias al cual se actualizan las réplicas obsoletas.\\
 
-%En una base de datos relacional como MySQL, las tablas son diseñadas con el objetivo de minimizar la redundancia de los datos que, a la poste, se almacenarán en ella, siguiendo para lograr dicho objetivo un proceso de normalización[] estandarizado desde hace ya décadas. Al operar con Cassandra, en cambio, las tablas se construyen buscando una respuesta rápida a las consultas que se realizan sobre ella, hecho que afecta de forma directa
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.5\textwidth]{Ilustraciones/cassandra_infraestructure.png}
+	\caption{Estructura de Cassandra}
+	\label{fig:cassandra_infraestructure}
+\end{figure}
 
-tablas orientadas a consultas
+A la hora de definir un keyspace dos atributos estrechamente relacionados han de ser especificados: Replication Factor y Replica Placement Strategy(). El primero, consiste en un número que indica cuantas copias de un mismo registro se han de almacenar en la infraestructura. Cada nodo posee una réplica para un cierto rango de datos y si uno de ellos falla, otro que posea dicha réplica puede responder a la petición sin tener que interrumpir el servicio. El segundo, define cómo se han de repartir los registros replicados por el anillo, ofreciendo distintas opciones dependiendo si los nodos del clúster se encuentran alojados en un único datacenter o repartidos entre varios.\\
+
+El atributo Replica Placement Strategy cobra especial interés al operar sobre un clúster cuyos nodos están distribuidos en punto geográficos lejanos, ya que permite almacenar cada réplica en diferentes puntos del globo. De esa manera, se consigue minimizar la latencia de las peticiones recibidas desde diferentes puntos del plantea y además, proteger la base de datos de una posible caída a nivel de datacenter debido a diversos catástrofes.\\ 
+
+Si un componente de Cassandra tiene especial importancia en su funcionamiento es el ColumFamily. En una base de datos relacional como MySQL, las tablas son diseñadas con el objetivo de minimizar la redundancia de los datos almacenados en ella, siguiendo para lograr dicho objetivo un proceso de normalización[]. En cambio, al operar con Cassandra, ocurre exactamente lo contrario. Las tablas se construyen buscando una respuesta rápida a las consultas sin importar que ello implique tener que almacenar datos redundante en la base de datos.\\
 
 patition key etc
 
-Ilustración 5. Estructura de Cassandra
 
-Apache Cassandra posibilita almacenar réplicas de un mismo registro en diferentes nodos del clúster. Al crear un keyspace, homólogo de una base de datos en MySQL, permite especificar el factor de replicado, número entero que representa la cantidad de copias que se desean almacenar en la infraestructura. Cada nodo posee una réplica para un cierto rango de datos y si uno de ellos falla, otro que posea dicha réplica puede responder a la petición sin tener que interrumpir el servicio.\\ 
-
-Otro de los atributos que se debe especificar a la hora de crear un keyspace es el denominado Replica Placemente Startegy, atributo que indica cómo se han de repartir los registros replicados por el anillo. Ofrece la posibilidad de 
-
-implicaciones que tiene todo ello
 
 \begin{figure}[h]
 	\centering
@@ -78,14 +81,7 @@ implicaciones que tiene todo ello
 	\label{fig:cassandra_token}
 \end{figure}
 
-
-
-
-%En cuanto a la estructura se refiere, un keyspace es un espacio de nombres para un conjunto de ColumFamily. Por lo general se utiliza uno por aplicación y es considerado el equivalente a una base de datos del modelo relacional. El ColumFamily, a su vez, es capaz de almacenar diferentes columnas, siendo el homologo de una tabla del modelo relacional. Para finalizar, una columna seria una estructura compuesta por clave, valor y timestamp.
-
-%Cabe mencionar que el almacenamiento de las columnas en a base de datos no es aleatoria. Cassandra almacena los datos dependiendo del primer atributo especificado en la clausula primary_key a la hora de crear el ColumFamily, guardando en el mismo nodo las columnas que comparten el valor de dicho atributo. Por ejemplo, si se especificarán las dos siguientes claves primarias:
-
-%En ambos casos la clave primaria vendría a ser la misma, la combinación de los tres atributos que aparecen entre paréntesis. No obstante, Cassandra no almacenaría los datos de igual forma en ambos casos. En el primero, los datos con un mismo username serían almacenados en el mismo nodo o en nodos vecinos a este, mientras que en la segundo, los datos almacenados siguiendo ese criterio de proximidad serían los que coincidiesen en username e interaction_date.
+consecuencia: restriccion en las consultas que se pueden realizar
 
 \subsection{Cassandra Query Lenguage (CQL)}
 
@@ -96,7 +92,6 @@ Apache Cassandra posee su propio lenguaje de consultas, el denominado Cassandra 
 Aún siendo sintácticamente  tan parecido a SQL, presenta ciertas restricciones debido a que es un lenguaje de consultas de una base de datos distribuida. Por ejemplo, no ofrece la posibilidad de realizar operaciones como JOIN y es totalmente necesario especificar todas los atributos que componen la clave primaria a la hora de realizar cualquier consulta de filtrado o de actualización en la tabla. La única operación que no cumple esta restricción es un select que contenga la clausula where, ya que, al definir la clave primaria Cassandra indexa de forma automática todos sus componente, posibilitando más tarde  hacer uso de ellos en este caso concreto.
 
 Otra de las peculiaridades que presenta CQL es el hecho de ofrecer dos modos distintos de realizar un update. El primero de todos es el mencionado en el párrafo anterior. El segundo posibilita actualizar una columna realizando un insert repitiendo el valor de las claves primarias de una columna ya existente en la base de datos. Esta segunda forma es cómoda a la par de peligrosa porque Cassandra no notifica si una clave primaria ya existe en la base de datos o no, pudiendo un insert desencadenar en un update no deseado.  
-
 
 \section{Apache Spark}
 
