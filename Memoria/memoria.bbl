@@ -17,6 +17,57 @@
 \endgroup
 
 \sortlist[entry]{nty/global/}
+  \entry{lakshman2010cassandra}{article}{}
+    \name{author}{2}{}{%
+      {{hash=LA}{%
+         family={Lakshman},
+         family_i={L\bibinitperiod},
+         given={Avinash},
+         given_i={A\bibinitperiod},
+      }}%
+      {{hash=MP}{%
+         family={Malik},
+         family_i={M\bibinitperiod},
+         given={Prashant},
+         given_i={P\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {ACM}%
+    }
+    \strng{namehash}{LAMP1}
+    \strng{fullhash}{LAMP1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{L}
+    \field{sortinithash}{L}
+    \field{number}{2}
+    \field{pages}{35\bibrangedash 40}
+    \field{title}{Cassandra: a decentralized structured storage system}
+    \field{volume}{44}
+    \field{journaltitle}{ACM SIGOPS Operating Systems Review}
+    \field{year}{2010}
+  \endentry
+
+  \entry{nambiartowards}{article}{}
+    \name{author}{1}{}{%
+      {{hash=NR}{%
+         family={Nambiar},
+         family_i={N\bibinitperiod},
+         given={Raghunath},
+         given_i={R\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{NR1}
+    \strng{fullhash}{NR1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{N}
+    \field{sortinithash}{N}
+    \field{title}{Towards an Industry Standard for Benchmarking Big Data
+  Workloads}
+  \endentry
+
   \entry{rabl2012solving}{article}{}
     \name{author}{6}{}{%
       {{hash=RT}{%
@@ -72,6 +123,64 @@
     \field{volume}{5}
     \field{journaltitle}{Proceedings of the VLDB Endowment}
     \field{year}{2012}
+  \endentry
+
+  \entry{bdes:2013}{misc}{}
+    \list{publisher}{1}{%
+      {NewVantage Partners LLC}%
+    }
+    \field{labeltitlesource}{title}
+    \field{sortinit}{T}
+    \field{sortinithash}{T}
+    \field{howpublished}{Big Data Executive Survey 2013 Boston}
+    \field{title}{The State of Big Data in the Large Corporate World}
+    \field{year}{2013}
+  \endentry
+
+  \entry{zaharia2010spark}{article}{}
+    \name{author}{5}{}{%
+      {{hash=ZM}{%
+         family={Zaharia},
+         family_i={Z\bibinitperiod},
+         given={Matei},
+         given_i={M\bibinitperiod},
+      }}%
+      {{hash=CM}{%
+         family={Chowdhury},
+         family_i={C\bibinitperiod},
+         given={Mosharaf},
+         given_i={M\bibinitperiod},
+      }}%
+      {{hash=FMJ}{%
+         family={Franklin},
+         family_i={F\bibinitperiod},
+         given={Michael\bibnamedelima J},
+         given_i={M\bibinitperiod\bibinitdelim J\bibinitperiod},
+      }}%
+      {{hash=SS}{%
+         family={Shenker},
+         family_i={S\bibinitperiod},
+         given={Scott},
+         given_i={S\bibinitperiod},
+      }}%
+      {{hash=SI}{%
+         family={Stoica},
+         family_i={S\bibinitperiod},
+         given={Ion},
+         given_i={I\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{ZM+1}
+    \strng{fullhash}{ZMCMFMJSSSI1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{Z}
+    \field{sortinithash}{Z}
+    \field{pages}{10\bibrangedash 10}
+    \field{title}{Spark: cluster computing with working sets.}
+    \field{volume}{10}
+    \field{journaltitle}{HotCloud}
+    \field{year}{2010}
   \endentry
 \endsortlist
 \endinput
