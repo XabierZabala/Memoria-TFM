@@ -28,24 +28,37 @@ Uno de los productos estrella de la entidad es el denominado iPanel, concentrado
 	\label{fig:ipanel}
 \end{figure}
 
-La incesante integración de nuevos vehículos al sistema ha generado un crecimiento exponencial en el número de registros almacenados en ciertas tablas de MySQL. Aunque el volumen actual no suponga riesgo alguno para el funcionamiento del servicio, Datik tiene identificados varios escenarios en los que la situación se podría revertir, causando graves problemas en el sistema.\\ 
+La incesante integración de nuevos vehículos a iPanel ha generado un crecimiento exponencial en el número de registros almacenados en ciertas tablas de MySQL. Aunque el volumen actual no suponga riesgo alguno para el funcionamiento del servicio, Datik tiene identificados varios escenarios en los que la situación se podría revertir, causando graves problemas en el sistema.\\
 
-la escalabilidad vertical de la máquina no es la solucion viable a largo plazo
+El primero de todos, es la corrupción de datos. Este fenómeno sucede debido a un bug, fallo de almacenamiento inesperado, o una caída de MySQL cuando el resultado del checksum de una página es diferente al esperado. Aunque ocurre de forma esporádica, compromete seriamente la información que Datik ofrece a sus clientes mediante la aplicación web.\\ 
 
-El primero de todos y el que más preocupa, es el referente al proceso denominado Cálculo de Indicadores. Se trata de un proceso ejecutado una vez al día que atendiendo los datos recopilados en las últimas 24 hora vuelve a calcular todos los indicadores de iPanel. Ello implica realizar operaciones aritméticas sobre diferentes campos como la velocidad y el consumo de combustible y agrupar los resultados por cliente, flota, vehículo o un espacio temporal. Actualmente, se necesitan varias horas para finalizar la computación, pero, debido al aumento de los datos a tratar, es posible que en un futuro existan graves dificultades para realizar el calculo en menos de 24 horas, invalidando así la funcionalidad de ofrecer los indicadores del último día.\\
+Otro de los problemas, intrínseco a depender de una base de datos centralizada, es el operar sobre un único punto de fallo. Debido a que la mayoría de procesos confluyen en ella, el bloqueo o la caída causada por un servicio puede acarrear la de otros, a priori, totalmente independientes. Para solventar el problema Datik ha optado por migrar su infraestructura a una basada en Microservicios \cite{newman2015building}, logrando de esa manera, el aislamiento total de los componentes que conforman su ecosistema.\\ 
 
-Otro de los problemas, intrínseco al uso de una base de datos centralizada, es el operar sobre un único punto de fallo. Debido a que la mayoría de procesos pasan por dicho punto, existe un alto riesgo de sufrir el denominado efecto dominó, esto es, que la caída provocada por un servicio acarree la del resto. Actualmente, Datik dispone un servidor de réplica capacitado para suplir al primario en caso de que ocurra algo así. No obstante, esta práctica condenar una máquina al ostracismo ya que sus recursos quedan desaprovechados en el 99,95\% del tiempo.\\
+El último problema, es el referente al proceso denominado Cálculo de Indicadores, el cual se ejecuta una vez al día para realizar operaciones aritméticas sobre diversas tablas y después agrupa los resultados en base a diferentes criterios dependiendo del cliente. Siendo dichas tablas las que mayor crecimiento experimentan, el aumento del volumen de las mismas incrementa de forma desorbitada el tiempo necesario para finalizar el cálculo, pudiendo, en un futuro, llegar a tardar mas de 24 horas y cancelar los indicadores que ofrecen información del último día.\\
 
-EL último, es la corrupción de datos. Este fenómeno puede sucede debido a un bug, fallo de almacenamiento inesperado, o una caída de MySQL cuando el resultado del checksum de una página es diferente al esperado. Como resultado, podría comprometer seriamente la información que Datik ofrece a sus clientes mediante la aplicación web.\\
+Siendo los indicadores parte vital de la información que se despliega vía iPanel, el presente proyecto ofrece una solución tecnológica para poder escalar horizontalmente la infraestructura solventando así el problema de almacenamiento y ...   
+
+En las proximas lineas se (buscar solucion a los problemas mencionados, sobre todo el ultimo que se encuentra sin solucion visible)
 
 \section{Propuesta}
+
+*la escalabilidad vertical de la máquina no es la solucion viable a largo plazo
+*algunos de esos problemas ya empiezan a ser palpables
+* problema en el que nos centramos en este proyecto
+* requiere de una respuesta tecnologica
+* requiere de tecnologia que datik no cuenta
+
+* Palabras de henry ford
+* esfuerzo enorme en tunear mysql, no conviene
+
+* Diseccionar el problema: almacenamiento y procesamiento
 
 Para solventar los problemas que Datik prevé, se propone implantar las tecnologías Apache Cassandra y Apache Spark en la empresa y migrar tanto las tablas como los procesos que son parte en el cálculo de los indicadores.\\
 
 
 Apache Cassandra es una base de datos distribuida no-sql. Gracias a naturaleza distribuida ayuda a resolver, 
 
-
+Funcionalidades nuevas que trabajan con videos etc
 
 
 
