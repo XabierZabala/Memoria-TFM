@@ -34,24 +34,31 @@ El primero de todos, es la corrupción de datos. Este fenómeno sucede debido a 
 
 Otro de los problemas, intrínseco a depender de una base de datos centralizada, es el operar sobre un único punto de fallo. Debido a que la mayoría de procesos confluyen en ella, el bloqueo o la caída causada por un servicio puede acarrear la de otros, a priori, totalmente independientes. Para solventar el problema Datik ha optado por migrar su infraestructura a una basada en Microservicios \cite{newman2015building}, logrando de esa manera, el aislamiento total de los componentes que conforman su ecosistema.\\ 
 
-El último problema, es el referente al proceso denominado Cálculo de Indicadores, el cual se ejecuta una vez al día para realizar operaciones aritméticas sobre diversas tablas y después agrupa los resultados en base a diferentes criterios dependiendo del cliente. Siendo dichas tablas las que mayor crecimiento experimentan, el aumento del volumen de las mismas incrementa de forma desorbitada el tiempo necesario para finalizar el cálculo, pudiendo, en un futuro, llegar a tardar mas de 24 horas y cancelar los indicadores que ofrecen información del último día.\\
+El último problema, es el referente al proceso denominado Cálculo de Indicadores, el cual se ejecuta una vez al día para realizar operaciones aritméticas sobre diversas tablas y después, agrupar los resultados en base a diferentes criterios. Siendo dichas tablas las que mayor crecimiento experimentan, el aumento del volumen de las mismas incrementa de forma desorbitada el tiempo necesario para finalizar el cálculo, pudiendo, en un futuro, llegar a tardar mas de 24 horas y cancelar los indicadores que ofrecen información del último día.\\
 
-Siendo los indicadores parte vital de la información que se despliega vía iPanel, el presente proyecto ofrece una solución tecnológica para poder escalar horizontalmente la infraestructura solventando así el problema de almacenamiento y ...   
-
-En las proximas lineas se (buscar solucion a los problemas mencionados, sobre todo el ultimo que se encuentra sin solucion visible)
+El objetivo del presente proyecto es proponer soluciones a los problemas planteados en este apartado, haciendo especial hincapié en el proceso Cálculo de Indicadores, ya que afecta de forma directa a la información que consumen los clientes de Datik vía iPanel.\\
 
 \section{Propuesta}
 
+La problemática que envuelve al proceso Cálculo de Indicadores tiene un claro origen en el aumento exponencial del número de registros a tratar. No sería descabellado pensar que la solución pasa por escalar la máquina verticalmente y afinar la configuración de MySQL. No obstante, se trata de una solución muy limitada, ya que, una máquina escala hasta el punto que le permite su placa base y cuanto más afine la configuración de MySQL, menos mejoras se notarán. Mientras, el volumen de los datos seguirá en aumento inexorablemente, volviendo, tarde o temprano, al mismo punto de partida.\\
+
+Analisis de datos
+
+en este caso se estima conveniente
+
+Tal y como se ha mencionado en el apartado anterior, Datik ha identificado varios que pueden afectar seriamente en un futuro cercano los servicio que ofrece. Puede ser resulto a corto plazo aumentando los recursos de la máquina
+
 *la escalabilidad vertical de la máquina no es la solucion viable a largo plazo
-*algunos de esos problemas ya empiezan a ser palpables
-* problema en el que nos centramos en este proyecto
-* requiere de una respuesta tecnologica
 * requiere de tecnologia que datik no cuenta
 
 * Palabras de henry ford
-* esfuerzo enorme en tunear mysql, no conviene
+* esfuerzo enorme en tunear/afinar mysql, no conviene
 
 * Diseccionar el problema: almacenamiento y procesamiento
+* diseccionandno el problema / dos vertientes
+datos no relacionales, nosql parece buena alternativa
+
+Analizando el escenario presentado, 
 
 Para solventar los problemas que Datik prevé, se propone implantar las tecnologías Apache Cassandra y Apache Spark en la empresa y migrar tanto las tablas como los procesos que son parte en el cálculo de los indicadores.\\
 
