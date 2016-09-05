@@ -68,6 +68,28 @@
   Workloads}
   \endentry
 
+  \entry{newman2015building}{book}{}
+    \name{author}{1}{}{%
+      {{hash=NS}{%
+         family={Newman},
+         family_i={N\bibinitperiod},
+         given={Sam},
+         given_i={S\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {" O'Reilly Media, Inc."}%
+    }
+    \strng{namehash}{NS1}
+    \strng{fullhash}{NS1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{N}
+    \field{sortinithash}{N}
+    \field{title}{Building Microservices}
+    \field{year}{2015}
+  \endentry
+
   \entry{rabl2012solving}{article}{}
     \name{author}{6}{}{%
       {{hash=RT}{%
