@@ -7,13 +7,13 @@
 \chapter{Introducción}
 \label{introduccion}
 
-Desde Aristóteles y su libro Segundos Analíticos \footnote{\href{https://docs.google.com/a/datik.es/file/d/0By4kcbi6MzzdUHhVQnUtcTNUdk0/view}{Órganon II de Aristóteles: Segundo Analíticos se encuentra recopilado en él}} hasta Galileo, padre de la ciencia moderna, adalides del conocimiento han proclamado que un método de investigación basado en lo empírico y en la medición, sujeto a los principios específicos de las pruebas de razonamiento es el camino para conocer la verdad.\\
+Desde Aristóteles y su libro Segundos Analíticos \footnote{\href{https://docs.google.com/a/datik.es/file/d/0By4kcbi6MzzdUHhVQnUtcTNUdk0/view}{Órganon II de Aristóteles: Recopilación de obras Aristotélicas que incluye el libro Segundo Analíticos}} hasta Galileo, padre de la ciencia moderna, adalides del conocimiento han proclamado que un método de investigación basado en lo empírico y en la medición, sujeto a los principios específicos de las pruebas de razonamiento es el camino para conocer la verdad.\\
 
-Hoy en día, época en la que los avances tecnológico han posibilitado observar y medir de forma exhaustiva un gran abanico de fenómenos, la ingente cantidad de datos que se genera en el proceso es, a veces, intratable para las tecnologías convencionales, y por ende, es imposible extraer todo el conocimiento que atesoran. El problema, lejos de atenuarse, se acrecienta con el paso del tiempo. Estudios como el realizado por McKinsey Global Institute estiman que el volumen de datos que se genera crece un 40\% cada año y auguran que entre 2009 y 2020 se verá multiplicado por 44 \cite{nambiartowards}.\\
+Hoy en día, época en la que los avances tecnológicos han posibilitado observar y medir de forma exhaustiva un gran abanico de fenómenos, la ingente cantidad de datos que se genera en el proceso es, a veces, intratable mediante las tecnologías convencionales, y por ende, es imposible extraer todo el conocimiento que atesoran. El problema, lejos de atenuarse, se acrecienta con el paso del tiempo. Estudios como el realizado por McKinsey Global Institute \footnote{\href{http://www.mckinsey.com/mgi/overview}{McKinsey Global Institute}} estiman que el volumen de datos que se genera crece un 40\% cada año y auguran que entre 2009 y 2020 se verá multiplicado por 44 \cite{nambiartowards}.\\
 
-Por ello, en los últimos años ha irrumpido la necesidad de hallar nuevas metodologías y tecnologías que permitan procesar y extraer el conocimiento que atesora el torrente de información en la cual se encuentra envuelta la sociedad, dando como resultado el nacimiento del Big Data.\\
+Por ello, en los últimos años ha irrumpido la necesidad de desarrollar nuevas metodologías y tecnologías que permitan procesar y extraer el conocimiento que fluye dentro del torrente informativo en la cual se encuentra sumergida la sociedad moderna, dando como resultado el nacimiento del Big Data\cite{manyika2011big}.\\
 
-El mundo empresarial, por su parte, no se ha mantenido al margen de esta gran revolución. Conscientes de los beneficios que les puede reportar en diferentes aspectos de su negocio, la gran mayoría de las empresas se han interesado en este fenómeno. De un estudio realizado entre los altos ejecutivos de las firmas que lideran el Wall Street se desprende que el 96\% tiene planeadas ciertas iniciativas relacionadas con el Big Data, y el 80\% ya tiene finalizada alguna \cite{bdes:2013}. 
+Empresas de renombre mundial, conscientes de los beneficios que les puede reportar en diferentes aspectos de su negocio, ya se han interesado en este fenómeno. De un estudio realizado entre los altos ejecutivos de las firmas que lideran el Wall Street se desprende que el 96\% tiene planeadas ciertas iniciativas relacionadas con el Big Data, y el 80\% ya tiene finalizada alguna \cite{bdes:2013}. 
 
 \section{Contexto}
  
@@ -28,11 +28,13 @@ Uno de los productos estrella de la entidad es el denominado iPanel, concentrado
 	\label{fig:ipanel}
 \end{figure}
 
-La incesante integración de nuevos vehículos a iPanel ha generado un crecimiento exponencial en el número de registros almacenados en ciertas tablas MySQL. Aunque el volumen actual no suponga riesgo alguno para el funcionamiento del servicio, Datik tiene identificados varios escenarios en los que la situación se podría revertir, causando graves problemas en el sistema.\\
+La incesante integración de nuevos vehículos en iPanel ha generado un crecimiento exponencial del número de registros almacenados en ciertas tablas MySQL. Aunque el volumen actual no suponga riesgo alguno para el funcionamiento del servicio, Datik tiene identificados varios escenarios en los que la situación se podría revertir, causando graves problemas en el sistema.\\
 
-Un problema, intrínseco a depender de una base de datos centralizada, es el operar sobre un único punto de fallo. Debido a que la mayoría de procesos confluyen en ella, el bloqueo o la caída causada por un servicio puede acarrear la de otros, a priori, totalmente independientes. Para solventar el problema Datik ha optado por migrar su infraestructura a una basada en Microservicios \cite{newman2015building}, logrando de esa manera, el aislamiento total de los componentes que conforman su ecosistema.\\ 
+Uno de los problemas, intrínseco a operar sobre una base de datos centralizada, es el riesgo de que ésta se convierta en cuello de botella. Al ser el punto donde todos los procesos confluyen, el bloqueo o la caída causada por uno de ellos puede afectar al resto. Para solventarlo, Datik ha optado por migrar su infraestructura a otra basada en Microservicios \cite{newman2015building}, logrando de esa manera, el aislamiento total de los procesos que conforman su servicios.\\ 
 
-Otro problema, es el referente al proceso denominado Cálculo de Indicadores, el cual se ejecuta una vez al día para realizar operaciones aritméticas sobre diversas tablas y después, agrupar los resultados en base a diferentes criterios. Siendo dichas tablas las que mayor crecimiento experimentan, el aumento del volumen de las mismas incrementa de forma desorbitada el tiempo necesario para finalizar el cálculo, pudiendo, en un futuro, llegar a tardar mas de 24 horas y cancelar los indicadores que ofrecen información del último día.\\
+Otro problema, es el referente al Cálculo de Indicadores: proceso de ejecución diaria que realiza operaciones aritméticas sobre datos almacenados en diversas tablas para después, agrupar los resultados en base a diferentes criterios. Siendo dichas tablas las que mayor crecimiento experimentan, el aumento del volumen de las mismas incrementa de forma desorbitada el tiempo necesario para finalizar el cálculo, pudiendo, en un futuro, llegar a tardar mas de 24 horas y cancelar los indicadores que ofrecen información del último día.\\
+
+// Aun separando en microservicios se aisla del resto de procesos pero él mismo muere
 
 El objetivo del presente proyecto es proponer soluciones a los problemas planteados en este apartado, prestando especial atención al proceso Cálculo de Indicadores, ya que afecta de forma directa a la información que consumen los clientes de Datik vía iPanel.\\
 
@@ -42,9 +44,11 @@ La problemática que envuelve al Cálculo de Indicadores es originado por el inc
 
 Siendo imposible reconducir la situación usando las tecnologías tradicionales, en el presente proyecto se propone realizar un cambio de paradigma que implica migrar las tablas relacionadas con los indicadores a un modelo distribuido que posibilite escalar la infraestructura horizontalmente. A su vez, se sugiere dividir el problema en dos apartados, almacenamiento y procesado, dotando la infraestructura de tecnología adecuada para ofrecer una respuesta eficaz a cada una de las partes.\\
 
-Los datos consultados por el proceso Cálculo de Indicadores no presentan relación alguna con el resto de las entidades del esquema, por ello, se propone utilizar una base de datos no relacional para almacenarlos. Dentro de la extensa gama de sistemas de almacenamiento NoSQL que existen hoy en día, se ha considerado que Apache Cassandra \cite{lakshman2010cassandra} es el idóneo para solventar el problema. Se trata de una base de datos distribuida de alta disponibilidad que opera sin un único punto de fallo gracias a la replicación asíncrona peer-to-peer. Lo que le diferencia de sus homólogos que, además, se diferencia del resto por ser el que mejores ratios ecrituras/seg ofrece ha sido optimizada para  escrituras lo cual posibilita  (caracteristoca que viene como anillo al dedo)
+Los datos consultados por el proceso Cálculo de Indicadores no presentan relación alguna con el resto de las entidades del esquema, por ello, se propone utilizar una base de datos no relacional para almacenarlos. Dentro de la extensa gama de sistemas de almacenamiento NoSQL que existen hoy en día, se ha considerado que Apache Cassandra \cite{lakshman2010cassandra} es el idóneo para solventar el problema. Se trata de una base de datos distribuida de alta disponibilidad que opera sin un único punto de fallo gracias a la replicación asíncrona peer-to-peer. Lo que le diferencia de sus homólogos es que, además, se diferencia del resto por ser el que mejores ratios ecrituras/seg ofrece ha sido optimizada para  escrituras lo cual posibilita  (caracteristoca que viene como anillo al dedo)
 
+// Hablar de Apache Spark
 
+// Hablar tambien de los datos
 
 Analizando el escenario presentado, 
 
