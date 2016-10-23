@@ -17,6 +17,38 @@
 \endgroup
 
 \sortlist[entry]{nty/global/}
+  \entry{dean2008mapreduce}{article}{}
+    \name{author}{2}{}{%
+      {{hash=DJ}{%
+         family={Dean},
+         family_i={D\bibinitperiod},
+         given={Jeffrey},
+         given_i={J\bibinitperiod},
+      }}%
+      {{hash=GS}{%
+         family={Ghemawat},
+         family_i={G\bibinitperiod},
+         given={Sanjay},
+         given_i={S\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {ACM}%
+    }
+    \strng{namehash}{DJGS1}
+    \strng{fullhash}{DJGS1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{D}
+    \field{sortinithash}{D}
+    \field{number}{1}
+    \field{pages}{107\bibrangedash 113}
+    \field{title}{MapReduce: simplified data processing on large clusters}
+    \field{volume}{51}
+    \field{journaltitle}{Communications of the ACM}
+    \field{year}{2008}
+  \endentry
+
   \entry{lakshman2010cassandra}{article}{}
     \name{author}{2}{}{%
       {{hash=LA}{%

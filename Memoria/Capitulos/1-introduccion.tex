@@ -38,13 +38,14 @@ El objetivo del presente proyecto es proponer una solución tecnológica que sol
 
 \section{Propuesta}
 
-Tal y como se ha mencionado en apartados anteriores, la problemática que envuelve al Cálculo de Indicadores es originado por el incremento exponencial de datos que dicho proceso ha de tratar. No sería descabellado pensar que la solución pudiera pasar por escalar la máquina verticalmente y afinar la configuración de MySQL. No obstante, ambas mejoras son limitadas, mientras que el volumen de los datos seguirá en aumento de forma inexorable, volviendo, tarde o temprano, a tener que lidiar con los mismos problemas del principio.\\
+Tal y como se ha mencionado en apartados anteriores, la problemática que envuelve al Cálculo de Indicadores es originado por el incremento exponencial de datos que dicho proceso ha de tratar. No sería descabellado pensar que la solución podría pasar por escalar la máquina verticalmente y afinar la configuración de MySQL. No obstante, ambas mejoras son limitadas, mientras que el volumen de los datos seguirá en aumento de forma inexorable, volviendo, tarde o temprano, a tener que lidiar con los mismos problemas del principio.\\
 
 Siendo imposible reconducir la situación usando las tecnologías tradicionales, en el presente proyecto se propone realizar un cambio de paradigma que implica migrar las tablas relacionadas con los indicadores a un modelo distribuido que posibilite escalar la infraestructura horizontalmente. A su vez, se sugiere dividir el problema en dos apartados, almacenamiento y procesado, dotando la infraestructura de tecnología adecuada para ofrecer una respuesta eficaz a cada una de las partes.\\
 
-En cuanto a almacenamiento se refiere, teniendo en cuenta que los datos a tratar no presentan relación alguna con el resto de las entidades, se propone utilizar una base de datos no relacional. Dentro de la extensa gama de sistemas de almacenamiento NoSQL\footnote{\url{http://nosql-database.org/}} que existen hoy en día, se ha considerado que Apache Cassandra\cite{lakshman2010cassandra} es el idóneo para solventar este problema debido a que ofrece un ratio de escrituras por segundo sustancialmente superior en comparación a sus homólogos\cite{rabl2012solving}.
+En cuanto a almacenamiento se refiere, teniendo en cuenta que los datos a tratar no presentan relación alguna con el resto de las entidades, se propone utilizar una base de datos no relacional. Dentro de la extensa gama de sistemas de almacenamiento NoSQL\footnote{\url{http://nosql-database.org/}} que existen hoy en día, se ha considerado que Apache Cassandra\cite{lakshman2010cassandra} es el idóneo para solventar afrontar el problema debido a que ofrece un ratio de escrituras por segundo sustancialmente superior en comparación a sus homólogos\cite{rabl2012solving}.\\
 
-// Hablar de Apache Spark
+Por su parte, la tecnología seleccionada para lidiar con el procesamiento de los datos ha sido Apache Spark\cite{zaharia2010spark}. Se trata de una plataforma de computación en clúster que ofrece una interfaz para programar operaciones paralelizadas y tolerantes a fallo que ha irrumpido con fuerza en el último lustro, desbancando a tecnologías homólogas como MapReduce\cite{dean2008mapreduce} gracias a la capacidad de almacenar en memoria los resultados intermedios del cómputo posibilitando acelerar el procesamiento hasta 100 veces\cite{xin2013shark} en determinados escenarios.\\
+
 
 // Hablar tambien de los datos
 
@@ -55,8 +56,6 @@ Analizando el escenario presentado,
 Apache Cassandra es una base de datos distribuida no-sql. Gracias a naturaleza distribuida ayuda a resolver, 
 
 Funcionalidades nuevas que trabajan con videos etc
-
-
 
 (testear las tecnologias con dataset publico, los datos de la empresa son confidenciales) Debido a la falta de datos se ha utilizado un dataset publico para emular las condiciones de futuro con las que se va a encontrar datik
 
