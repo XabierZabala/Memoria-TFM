@@ -17,6 +17,80 @@
 \endgroup
 
 \sortlist[entry]{nty/global/}
+  \entry{chang2008bigtable}{article}{}
+    \name{author}{9}{}{%
+      {{hash=CF}{%
+         family={Chang},
+         family_i={C\bibinitperiod},
+         given={Fay},
+         given_i={F\bibinitperiod},
+      }}%
+      {{hash=DJ}{%
+         family={Dean},
+         family_i={D\bibinitperiod},
+         given={Jeffrey},
+         given_i={J\bibinitperiod},
+      }}%
+      {{hash=GS}{%
+         family={Ghemawat},
+         family_i={G\bibinitperiod},
+         given={Sanjay},
+         given_i={S\bibinitperiod},
+      }}%
+      {{hash=HWC}{%
+         family={Hsieh},
+         family_i={H\bibinitperiod},
+         given={Wilson\bibnamedelima C},
+         given_i={W\bibinitperiod\bibinitdelim C\bibinitperiod},
+      }}%
+      {{hash=WDA}{%
+         family={Wallach},
+         family_i={W\bibinitperiod},
+         given={Deborah\bibnamedelima A},
+         given_i={D\bibinitperiod\bibinitdelim A\bibinitperiod},
+      }}%
+      {{hash=BM}{%
+         family={Burrows},
+         family_i={B\bibinitperiod},
+         given={Mike},
+         given_i={M\bibinitperiod},
+      }}%
+      {{hash=CT}{%
+         family={Chandra},
+         family_i={C\bibinitperiod},
+         given={Tushar},
+         given_i={T\bibinitperiod},
+      }}%
+      {{hash=FA}{%
+         family={Fikes},
+         family_i={F\bibinitperiod},
+         given={Andrew},
+         given_i={A\bibinitperiod},
+      }}%
+      {{hash=GRE}{%
+         family={Gruber},
+         family_i={G\bibinitperiod},
+         given={Robert\bibnamedelima E},
+         given_i={R\bibinitperiod\bibinitdelim E\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {ACM}%
+    }
+    \strng{namehash}{CF+1}
+    \strng{fullhash}{CFDJGSHWCWDABMCTFAGRE1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{C}
+    \field{sortinithash}{C}
+    \field{number}{2}
+    \field{pages}{4}
+    \field{title}{Bigtable: A distributed storage system for structured data}
+    \field{volume}{26}
+    \field{journaltitle}{ACM Transactions on Computer Systems (TOCS)}
+    \field{year}{2008}
+  \endentry
+
   \entry{dean2008mapreduce}{article}{}
     \name{author}{2}{}{%
       {{hash=DJ}{%
@@ -47,6 +121,80 @@
     \field{volume}{51}
     \field{journaltitle}{Communications of the ACM}
     \field{year}{2008}
+  \endentry
+
+  \entry{decandia2007dynamo}{article}{}
+    \name{author}{9}{}{%
+      {{hash=DG}{%
+         family={DeCandia},
+         family_i={D\bibinitperiod},
+         given={Giuseppe},
+         given_i={G\bibinitperiod},
+      }}%
+      {{hash=HD}{%
+         family={Hastorun},
+         family_i={H\bibinitperiod},
+         given={Deniz},
+         given_i={D\bibinitperiod},
+      }}%
+      {{hash=JM}{%
+         family={Jampani},
+         family_i={J\bibinitperiod},
+         given={Madan},
+         given_i={M\bibinitperiod},
+      }}%
+      {{hash=KG}{%
+         family={Kakulapati},
+         family_i={K\bibinitperiod},
+         given={Gunavardhan},
+         given_i={G\bibinitperiod},
+      }}%
+      {{hash=LA}{%
+         family={Lakshman},
+         family_i={L\bibinitperiod},
+         given={Avinash},
+         given_i={A\bibinitperiod},
+      }}%
+      {{hash=PA}{%
+         family={Pilchin},
+         family_i={P\bibinitperiod},
+         given={Alex},
+         given_i={A\bibinitperiod},
+      }}%
+      {{hash=SS}{%
+         family={Sivasubramanian},
+         family_i={S\bibinitperiod},
+         given={Swaminathan},
+         given_i={S\bibinitperiod},
+      }}%
+      {{hash=VP}{%
+         family={Vosshall},
+         family_i={V\bibinitperiod},
+         given={Peter},
+         given_i={P\bibinitperiod},
+      }}%
+      {{hash=VW}{%
+         family={Vogels},
+         family_i={V\bibinitperiod},
+         given={Werner},
+         given_i={W\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {ACM}%
+    }
+    \strng{namehash}{DG+1}
+    \strng{fullhash}{DGHDJMKGLAPASSVPVW1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{D}
+    \field{sortinithash}{D}
+    \field{number}{6}
+    \field{pages}{205\bibrangedash 220}
+    \field{title}{Dynamo: amazon's highly available key-value store}
+    \field{volume}{41}
+    \field{journaltitle}{ACM SIGOPS Operating Systems Review}
+    \field{year}{2007}
   \endentry
 
   \entry{lakshman2010cassandra}{article}{}
@@ -235,6 +383,54 @@
     \field{year}{2012}
   \endentry
 
+  \entry{sicoe2012persistent}{report}{}
+    \name{author}{5}{}{%
+      {{hash=SAD}{%
+         family={SICOE},
+         family_i={S\bibinitperiod},
+         given={Alexandru\bibnamedelima Dan},
+         given_i={A\bibinitperiod\bibinitdelim D\bibinitperiod},
+      }}%
+      {{hash=SI}{%
+         family={SOLOVIEV},
+         family_i={S\bibinitperiod},
+         given={I},
+         given_i={I},
+      }}%
+      {{hash=LMG}{%
+         family={LEHMANN\bibnamedelima MIOTTO},
+         family_i={L\bibinitperiod\bibinitdelim M\bibinitperiod},
+         given={G},
+         given_i={G},
+      }}%
+      {{hash=KS}{%
+         family={KOLOS},
+         family_i={K\bibinitperiod},
+         given={S},
+         given_i={S},
+      }}%
+      {{hash=ML}{%
+         family={MAGNONI},
+         family_i={M\bibinitperiod},
+         given={L},
+         given_i={L},
+      }}%
+    }
+    \strng{namehash}{SAD+1}
+    \strng{fullhash}{SADSILMGKSML1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{S}
+    \field{sortinithash}{S}
+    \field{title}{A Persistent Back-End for the ATLAS Online Information
+  Service (P-BEAST)}
+    \list{institution}{1}{%
+      {ATL-COM-DAQ-2012-010}%
+    }
+    \field{type}{techreport}
+    \field{year}{2012}
+  \endentry
+
   \entry{bdes:2013}{misc}{}
     \list{publisher}{1}{%
       {NewVantage Partners LLC}%
@@ -244,6 +440,61 @@
     \field{sortinithash}{T}
     \field{howpublished}{Big Data Executive Survey 2013 Boston}
     \field{title}{The State of Big Data in the Large Corporate World}
+    \field{year}{2013}
+  \endentry
+
+  \entry{xin2013shark}{inproceedings}{}
+    \name{author}{6}{}{%
+      {{hash=XRS}{%
+         family={Xin},
+         family_i={X\bibinitperiod},
+         given={Reynold\bibnamedelima S},
+         given_i={R\bibinitperiod\bibinitdelim S\bibinitperiod},
+      }}%
+      {{hash=RJ}{%
+         family={Rosen},
+         family_i={R\bibinitperiod},
+         given={Josh},
+         given_i={J\bibinitperiod},
+      }}%
+      {{hash=ZM}{%
+         family={Zaharia},
+         family_i={Z\bibinitperiod},
+         given={Matei},
+         given_i={M\bibinitperiod},
+      }}%
+      {{hash=FMJ}{%
+         family={Franklin},
+         family_i={F\bibinitperiod},
+         given={Michael\bibnamedelima J},
+         given_i={M\bibinitperiod\bibinitdelim J\bibinitperiod},
+      }}%
+      {{hash=SS}{%
+         family={Shenker},
+         family_i={S\bibinitperiod},
+         given={Scott},
+         given_i={S\bibinitperiod},
+      }}%
+      {{hash=SI}{%
+         family={Stoica},
+         family_i={S\bibinitperiod},
+         given={Ion},
+         given_i={I\bibinitperiod},
+      }}%
+    }
+    \list{organization}{1}{%
+      {ACM}%
+    }
+    \strng{namehash}{XRS+1}
+    \strng{fullhash}{XRSRJZMFMJSSSI1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{X}
+    \field{sortinithash}{X}
+    \field{booktitle}{Proceedings of the 2013 ACM SIGMOD International
+  Conference on Management of data}
+    \field{pages}{13\bibrangedash 24}
+    \field{title}{Shark: SQL and rich analytics at scale}
     \field{year}{2013}
   \endentry
 
