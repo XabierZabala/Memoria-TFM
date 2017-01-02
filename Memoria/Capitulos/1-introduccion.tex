@@ -48,20 +48,18 @@ Teniendo en cuenta que Datik actualmente almacena una cantidad limitada de datos
 
 \section{Organización del documento}
 
-La presente memoria recoge el estudio empírico realizado sobre el rendimiento ofrecido por varias tecnologías emergentes en el campo del Big Data en comparación a una base de datos tradicional a la hora de operar en escenarios que requieren un almacenamiento y procesamiento eficaz de volúmenes masivos de datos.\\
+El presente documento abarca el estudio empírico realizado sobre el rendimiento ofrecido por varias tecnologías emergentes en el campo del Big Data en comparación a una base de datos tradicional a la hora de operar en escenarios que requieren un almacenamiento y procesamiento eficaz de volúmenes masivos de datos.\\
 
-En este primer capítulo se ha introducido la problemática que ha impulsado la creación del presente proyecto y se ha expuesto la propuesta para dar solución a la misma.\\
+En este primer capítulo, se ha introducido la problemática que ha impulsado la creación del proyecto y expuesto la propuesta tecnológica para dar solución a la misma.\\
 
-En el capítulo 2 se desgrana el funcionamiento de Apache Cassandra y Apache Spark, haciendo especial hincapié en aquellos aspectos que denotan una mejora sustancial en comparación a la arquitectura centralizada.\\
+En el capítulo 2 se desgrana el funcionamiento de la base de datos Apache Cassandra \cite{lakshman2010cassandra} y el software de procesamiento distribuido Apache Spark \cite{zaharia2010spark}, las tecnologías electas para resolver el problema, haciendo especial hincapié en las peculiaridades que les permiten ofrecer una mejora sustancial en comparación a las herramientas tradicional.\\
 
-Una vez en el capítulo 3 se describen los entornos de prueba confeccionados para cuantificar la mejora 
+Una vez en el capítulo 3 se detalla la praxis llevada a cabo para confeccionar los entornos de prueba. Por un lado, se emula un entorno tradicional compuesto por un nodo que alberga una instancia de MySQL y por el otro, el entorno clusterizado, formado por tres nodos homogéneos sobre el cual operan Apache Cassandra y Apache Spark en consonancia.\\ 
 
-explica la gestión llevada a cabo durante el proyecto. Se presentan las metodologías utilizadas: Metodologías Ágiles e InterMod (adaptada a las necesidades de este proyecto). A continuación se detallan cada una de las iteraciones llevadas a cabo (como parte de la metodología InterMod): duración, objetivos y tareas realizadas. Al final del capítulo se muestra la documentación asociada a las iteraciones y los objetivos, además del seguimiento de tiempo realizado.\\
+El almacenamiento y la retribución de los datos constituyen el grueso del 4to capítulo. Primero, se expone la naturaleza de los datos que conforman el data-set de 25GB sobre el cual se opera. Después, se especifican las consultas a ejecutar contra cada sistema de almacenamiento, teniendo presente que estas consultas han de ser estrictamente equivalentes. Para finalizar, se presenta el diseño de las tablas utilizadas para almacenar los datos consultados, haciendo especial hincapié en las correspondientes a Apache Cassandra debido a las peculiaridades que presenta.\\ 
 
-A continuación, en el capítulo 4 se detalla el análisis de requisitos. Primero se detallan los requisitos no-funcionales y luego los funcionales (prototipos en papel llevados a cabo durante las primeras iteraciones que dan una visión global del proyecto).\\
+En el capítulo 5 se exponen los resultados obtenidos una vez habiendo ejecutado las consultas anteriormente definidas. Dichos resultados son representados mediante gráficas y analizados posteriormente para observar de forma nítida las diferencias existentes entre ambos entornos en lo que a tiempo de procesamiento se refiere.\\
 
-En el capítulo 5 se explica el diseño e implementación llevados a cabo. Se comienza mostrando la estructura de documentos del proyecto, luego el diseño realizado en base al análisis de requisitos del capítulo 4 y finalmente una visión general de la implementación de la lógica de negocio.\\
+Para finalizar, en el capítulo 6 se presentan las conclusiones y líneas futuras para el proyecto.\\
 
-Para finalizar, en el capítulo 6 se presentan las conclusiones, líneas futuras para el proyecto y las lecciones aprendidas.\\
-
-Fuera de la estructura general de la memoria, tenemos la bibliografia y los apéndices. En estos últimos tenemos las actas de reuniones, las actas de pruebas y la vista de relaciones de la base de datos (de la parte utilizada o creada específicamente para el proyecto).\\
+Fuera de la estructura general de la memoria, se puede encontrar la bibliografía citando todas las fuentes relevantes accedidas en el devenir de la presente tesina.\\
