@@ -16,10 +16,18 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {2.1.1}Funcionamiento}{8}{subsection.2.1.1}
 \defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{Base de datos distribuida de alta disponibilidad}{8}{subsection.2.1.1}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{Optimizado para escrituras}{9}{subsection.2.1.1}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{Replicaci\IeC {\'o}n as\IeC {\'\i }ncrona sin maestro}{10}{figure.2.2}
+\defcounter {refsection}{0}\relax 
+\contentsline {subsubsection}{Sin punto \IeC {\'u}nico de fallo}{10}{figure.2.2}
+\defcounter {refsection}{0}\relax 
 \contentsline {subsection}{\numberline {2.1.2}Cassandra Query Lenguage (CQL)}{11}{subsection.2.1.2}
 \defcounter {refsection}{0}\relax 
 \contentsline {section}{\numberline {2.2}Apache Spark}{12}{section.2.2}
 \defcounter {refsection}{0}\relax 
-\contentsline {subsection}{\numberline {2.2.1}Funcionamiento}{12}{subsection.2.2.1}
+\contentsline {subsection}{\numberline {2.2.1}Funcionamiento}{13}{subsection.2.2.1}
 \defcounter {refsection}{0}\relax 
 \contentsline {chapter}{\nonumberline Bibliograf\IeC {\'\i }a y Referencias}{17}{chapter*.4}

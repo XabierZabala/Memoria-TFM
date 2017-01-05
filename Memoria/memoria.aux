@@ -54,9 +54,6 @@
 \@writefile{lot}{\defcounter {refsection}{0}\relax }\@writefile{lot}{\addvspace {10\p@ }}
 \@writefile{lol}{\defcounter {refsection}{0}\relax }\@writefile{lol}{\addvspace {10\p@ }}
 \newlabel{introduccion}{{1}{1}{Introducción}{chapter.1}{}}
-\citation{newman2015building}
-\abx@aux@cite{newman2015building}
-\abx@aux@segm{0}{0}{newman2015building}
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {section}{\numberline {1.1}Contexto}{2}{section.1.1}}
 \@writefile{lof}{\defcounter {refsection}{0}\relax }\@writefile{lof}{\contentsline {figure}{\numberline {1}{\ignorespaces Funcionamiento resumido de iPanel\relax }}{2}{figure.1.1}}
 \providecommand*\caption@xref[2]{\@setref\relax\@undefined{#1}}
@@ -75,6 +72,10 @@
 \citation{xin2013shark}
 \abx@aux@cite{xin2013shark}
 \abx@aux@segm{0}{0}{xin2013shark}
+\citation{lakshman2010cassandra}
+\abx@aux@segm{0}{0}{lakshman2010cassandra}
+\citation{zaharia2010spark}
+\abx@aux@segm{0}{0}{zaharia2010spark}
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {section}{\numberline {1.3}Organizaci\IeC {\'o}n del documento}{4}{section.1.3}}
 \citation{decandia2007dynamo}
 \abx@aux@cite{decandia2007dynamo}
@@ -93,38 +94,47 @@
 \@writefile{lol}{\defcounter {refsection}{0}\relax }\@writefile{lol}{\addvspace {10\p@ }}
 \newlabel{analisis_tecnologias}{{2}{7}{Análisis de las tecnologías propuestas}{chapter.2}{}}
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {section}{\numberline {2.1}Apache Cassandra}{7}{section.2.1}}
+\citation{gilbert2002brewer}
+\abx@aux@cite{gilbert2002brewer}
+\abx@aux@segm{0}{0}{gilbert2002brewer}
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.1}Funcionamiento}{8}{subsection.2.1.1}}
-\@writefile{lof}{\defcounter {refsection}{0}\relax }\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Estructura de Cassandra\relax }}{10}{figure.2.2}}
-\newlabel{fig:cassandra_infraestructure}{{2}{10}{Estructura de Cassandra\relax }{figure.2.2}{}}
-\@writefile{lof}{\defcounter {refsection}{0}\relax }\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Particionamiento en Cassandra\relax }}{11}{figure.2.3}}
-\newlabel{fig:cassandra_token}{{3}{11}{Particionamiento en Cassandra\relax }{figure.2.3}{}}
+\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsubsection}{Base de datos distribuida de alta disponibilidad}{8}{subsection.2.1.1}}
+\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsubsection}{Optimizado para escrituras}{9}{subsection.2.1.1}}
+\@writefile{lof}{\defcounter {refsection}{0}\relax }\@writefile{lof}{\contentsline {figure}{\numberline {2}{\ignorespaces Almacenamiento de datos en Cassandra\relax }}{9}{figure.2.2}}
+\newlabel{fig:almacenamiento_cassandra}{{2}{9}{Almacenamiento de datos en Cassandra\relax }{figure.2.2}{}}
+\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsubsection}{Replicaci\IeC {\'o}n as\IeC {\'\i }ncrona sin maestro}{10}{figure.2.2}}
+\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsubsection}{Sin punto \IeC {\'u}nico de fallo}{10}{figure.2.2}}
+\@writefile{lof}{\defcounter {refsection}{0}\relax }\@writefile{lof}{\contentsline {figure}{\numberline {3}{\ignorespaces Estructura de Cassandra\relax }}{10}{figure.2.3}}
+\newlabel{fig:cassandra_infraestructure}{{3}{10}{Estructura de Cassandra\relax }{figure.2.3}{}}
+\@writefile{lof}{\defcounter {refsection}{0}\relax }\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Particionamiento en Cassandra\relax }}{11}{figure.2.4}}
+\newlabel{fig:cassandra_token}{{4}{11}{Particionamiento en Cassandra\relax }{figure.2.4}{}}
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {2.1.2}Cassandra Query Lenguage (CQL)}{11}{subsection.2.1.2}}
 \@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {section}{\numberline {2.2}Apache Spark}{12}{section.2.2}}
-\@writefile{lof}{\defcounter {refsection}{0}\relax }\@writefile{lof}{\contentsline {figure}{\numberline {4}{\ignorespaces Ecosistema Spark\relax }}{12}{figure.2.4}}
-\newlabel{fig:ipanel}{{4}{12}{Ecosistema Spark\relax }{figure.2.4}{}}
-\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.1}Funcionamiento}{12}{subsection.2.2.1}}
-\@writefile{lof}{\defcounter {refsection}{0}\relax }\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Arquitectura Spark\relax }}{14}{figure.2.5}}
-\newlabel{fig:spark_architecture}{{5}{14}{Arquitectura Spark\relax }{figure.2.5}{}}
-\@writefile{lof}{\defcounter {refsection}{0}\relax }\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Arquitectura Spark\relax }}{15}{figure.2.6}}
-\newlabel{fig:spark_task_creation}{{6}{15}{Arquitectura Spark\relax }{figure.2.6}{}}
+\@writefile{lof}{\defcounter {refsection}{0}\relax }\@writefile{lof}{\contentsline {figure}{\numberline {5}{\ignorespaces Ecosistema Spark\relax }}{12}{figure.2.5}}
+\newlabel{fig:ipanel}{{5}{12}{Ecosistema Spark\relax }{figure.2.5}{}}
+\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {subsection}{\numberline {2.2.1}Funcionamiento}{13}{subsection.2.2.1}}
+\@writefile{lof}{\defcounter {refsection}{0}\relax }\@writefile{lof}{\contentsline {figure}{\numberline {6}{\ignorespaces Arquitectura Spark\relax }}{14}{figure.2.6}}
+\newlabel{fig:spark_architecture}{{6}{14}{Arquitectura Spark\relax }{figure.2.6}{}}
+\@writefile{lof}{\defcounter {refsection}{0}\relax }\@writefile{lof}{\contentsline {figure}{\numberline {7}{\ignorespaces Arquitectura Spark\relax }}{15}{figure.2.7}}
+\newlabel{fig:spark_task_creation}{{7}{15}{Arquitectura Spark\relax }{figure.2.7}{}}
 \citation{*}
+\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {chapter}{\nonumberline Bibliograf\IeC {\'\i }a y Referencias}{17}{chapter*.4}}
+\@writefile{lof}{\defcounter {refsection}{0}\relax }\@writefile{lof}{\addvspace {10\p@ }}
+\@writefile{lot}{\defcounter {refsection}{0}\relax }\@writefile{lot}{\addvspace {10\p@ }}
+\@writefile{lol}{\defcounter {refsection}{0}\relax }\@writefile{lol}{\addvspace {10\p@ }}
 \abx@aux@refcontextdefaultsdone
 \abx@aux@defaultrefcontext{0}{chang2008bigtable}{nty/global/}
 \abx@aux@defaultrefcontext{0}{dean2008mapreduce}{nty/global/}
 \abx@aux@defaultrefcontext{0}{decandia2007dynamo}{nty/global/}
+\abx@aux@defaultrefcontext{0}{gilbert2002brewer}{nty/global/}
 \abx@aux@defaultrefcontext{0}{lakshman2010cassandra}{nty/global/}
 \abx@aux@defaultrefcontext{0}{manyika2011big}{nty/global/}
 \abx@aux@defaultrefcontext{0}{nambiartowards}{nty/global/}
-\abx@aux@defaultrefcontext{0}{newman2015building}{nty/global/}
 \abx@aux@defaultrefcontext{0}{rabl2012solving}{nty/global/}
 \abx@aux@defaultrefcontext{0}{sicoe2012persistent}{nty/global/}
 \abx@aux@defaultrefcontext{0}{bdes:2013}{nty/global/}
 \abx@aux@defaultrefcontext{0}{xin2013shark}{nty/global/}
 \abx@aux@defaultrefcontext{0}{zaharia2010spark}{nty/global/}
-\@writefile{toc}{\defcounter {refsection}{0}\relax }\@writefile{toc}{\contentsline {chapter}{\nonumberline Bibliograf\IeC {\'\i }a y Referencias}{17}{chapter*.4}}
-\@writefile{lof}{\defcounter {refsection}{0}\relax }\@writefile{lof}{\addvspace {10\p@ }}
-\@writefile{lot}{\defcounter {refsection}{0}\relax }\@writefile{lot}{\addvspace {10\p@ }}
-\@writefile{lol}{\defcounter {refsection}{0}\relax }\@writefile{lol}{\addvspace {10\p@ }}
 \global\@namedef{scr@dte@chapter@lastmaxnumwidth}{12.62068pt}
 \global\@namedef{scr@dte@section@lastmaxnumwidth}{20.62083pt}
 \global\@namedef{scr@dte@subsection@lastmaxnumwidth}{30.22856pt}

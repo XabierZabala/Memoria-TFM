@@ -197,6 +197,39 @@
     \field{year}{2007}
   \endentry
 
+  \entry{gilbert2002brewer}{article}{}
+    \name{author}{2}{}{%
+      {{hash=GS}{%
+         family={Gilbert},
+         family_i={G\bibinitperiod},
+         given={Seth},
+         given_i={S\bibinitperiod},
+      }}%
+      {{hash=LN}{%
+         family={Lynch},
+         family_i={L\bibinitperiod},
+         given={Nancy},
+         given_i={N\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {ACM}%
+    }
+    \strng{namehash}{GSLN1}
+    \strng{fullhash}{GSLN1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{G}
+    \field{sortinithash}{G}
+    \field{number}{2}
+    \field{pages}{51\bibrangedash 59}
+    \field{title}{Brewer's conjecture and the feasibility of consistent,
+  available, partition-tolerant web services}
+    \field{volume}{33}
+    \field{journaltitle}{ACM SIGACT News}
+    \field{year}{2002}
+  \endentry
+
   \entry{lakshman2010cassandra}{article}{}
     \name{author}{2}{}{%
       {{hash=LA}{%
@@ -302,28 +335,6 @@
     \field{sortinithash}{N}
     \field{title}{Towards an Industry Standard for Benchmarking Big Data
   Workloads}
-  \endentry
-
-  \entry{newman2015building}{book}{}
-    \name{author}{1}{}{%
-      {{hash=NS}{%
-         family={Newman},
-         family_i={N\bibinitperiod},
-         given={Sam},
-         given_i={S\bibinitperiod},
-      }}%
-    }
-    \list{publisher}{1}{%
-      {" O'Reilly Media, Inc."}%
-    }
-    \strng{namehash}{NS1}
-    \strng{fullhash}{NS1}
-    \field{labelnamesource}{author}
-    \field{labeltitlesource}{title}
-    \field{sortinit}{N}
-    \field{sortinithash}{N}
-    \field{title}{Building Microservices}
-    \field{year}{2015}
   \endentry
 
   \entry{rabl2012solving}{article}{}

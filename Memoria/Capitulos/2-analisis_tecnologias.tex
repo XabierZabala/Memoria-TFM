@@ -9,39 +9,19 @@
 
 \section{Apache Cassandra}
 
-Apache Cassandra es una base de datos distribuida que permite operar sobre grandes volúmenes de datos del tipo clave/valor. Se caracteriza por ofrecer una  disponibilidad total y mayor escalabilidad lineal en comparación a otras bases de datos NoSQL, utilizando, para ello, una serie de nodos homogéneos que se comunican mediante un protocolo P2P de replicación asincrónica, lo cual permite realizar operaciones de baja latencia para todos los clientes sin necesidad de un servidor maestro.\\
+Apache Cassandra es una base de datos distribuida que permite operar sobre grandes volúmenes de datos del tipo clave/valor. Se caracteriza por ofrecer una  disponibilidad total y mayor escalabilidad lineal en comparación a otras bases de datos NoSQL, utilizando, para ello, una serie de nodos homogéneos que se comunican mediante un protocolo P2P de replicación asíncrona, lo cual permite realizar operaciones de baja latencia para todos los clientes sin necesidad de un servidor maestro.\\
 
 Fue concebida en el 2008 por los ingenieros de Facebook basándose en sistemas de almacenamientos distribuidos como Dynamo (Amazon) \cite{decandia2007dynamo} y BigTable (Google) \cite{chang2008bigtable} con el propósito de mejorar la funcionalidad de búsqueda en la bandeja de entrada. En 2012, investigadores de la Universidad de Toronto que estudian los sistemas NoSQL concluyeron que "En términos de escalabilidad, hay un claro ganador a través de nuestros experimentos. Cassandra logra el mejor rendimiento para el número máximo de nodos en todos los experimentos" \cite{rabl2012solving}. Hoy en día, el mayor impulsor del proyecto es DataStax \footnote{\url{http://www.datastax.com/}}, empresa que operando bajo la licencia de Apache \footnote{\url{http://www.apache.org/}} desarrolla tanto ésta base de datos como una infinidad de herramientas que facilitan el uso de la misma.\\
 
-Actualmente Apache Cassandra es utilizada por infinidad de aplicaciones en negocios modernos, siendo la base de datos elegida por un tercio de las compañías que conforman la Fortune 100 \footnote{\url{http://fortune.com/2015/04/14/datastax-hp-sales-partnership/}}. Claro ejemplo de ello son empresas mundialmente conocidas como Apple, Facebook o NetFlix, los cuales utilizan Cassandra como parte de su entramado tecnológico desde hace ya unos años. Cabe destacar que el uso del mismo no se limita al mundo empresarial. Muestra de ello es la acogida que ha tenido en el ámbito de la investigación, formando parte en experimentos punteros a nivel mundial como algunos de los realizados en el CERN \cite{sicoe2012persistent}.\\
-
-Es indispensable tener en cuenta que no se trata de una base de datos de propósito general, por lo que, es de vital importancia conocer cuando se va a poder exprimir su potencial al máximo y cuando no.\\
-
-Será \textbf{recomendable} utilizar Cassandra si:
-
-\begin{itemize}
-	\item se desea que la configuración, mantenimiento y el código sea sencillo.
-	\item se necesitan velocidades muy altas en lecturas y escrituras aleatorias.
-	\item no se necesitan múltiples índices secundarios
-	\item existe alta flexibilidad en la estructura de los datos
-	\item se busca una escalabilidad masiva
-	\item se busca alta disponibilidad
-\end{itemize}
-
-\textbf{No} será \textbf{recomendable} utilizar Cassandra si:
-
-\begin{itemize}
-	\item se manejan datos relacionales
-	\item hay transacciones de por medio
-	\item se requiere autorización para acceder a datos
-	\item se necesita latencia baja
-\end{itemize}
+Actualmente Apache Cassandra es utilizada por infinidad de aplicaciones en negocios modernos, siendo la base de datos elegida por un tercio de las compañías que conforman la Fortune 100 \footnote{\url{http://fortune.com/2015/04/14/datastax-hp-sales-partnership/}}. Claro ejemplo de ello son empresas mundialmente conocidas como Apple, Facebook o NetFlix, los cuales utilizan Apache Cassandra como parte de su entramado tecnológico desde hace ya unos años. Cabe destacar que el uso del mismo no se limita al mundo empresarial. Muestra de ello es la acogida que ha tenido en el ámbito de la investigación, formando parte en experimentos punteros a nivel mundial como algunos de los realizados en el CERN \cite{sicoe2012persistent}.\\
 
 \subsection{Funcionamiento}
 
-Debido al modelo distribuido sobre el cual esta desarrollado, el primer paso para comprender el funcionamiento de Apache Cassandra es familiarizarse con los conceptos básicos de los sistemas distribuidos.\\
+Las bases de datos NoSQL, en su mayoría, han sido concebidas para lidiar con un conjunto especifico de problemas. Debido a ello, para entender el funcionamiento de Apache Cassandra se ha decidido resaltar las peculiaridades que le distinguen de los demás sistemas de almacenamiento no relacionales.
 
-El Teorema de Brewer[], también conocido como Teorema CAP , enuncia que es imposible para un sistema de cómputo distribuido garantizar simultáneamente las tres propiedades que se presentan a continuación, solo pudiendo cumplir dos de ellas al mismo tiempo, y acabar cumpliendo el restante tarde o temprano.\\
+\subsubsection{Base de datos distribuida de alta disponibilidad}
+
+El Teorema de Brewer \cite{gilbert2002brewer}, también conocido como Teorema CAP , enuncia que un sistema de cómputo distribuido no puede  garantizar simultáneamente las tres propiedades que se presentan a continuación, solo pudiendo cumplir dos de ellas al mismo tiempo, y acabar cumpliendo la restante tarde o temprano:
 
 \begin{itemize}
 	\item \textbf{Consistencia}(Consistency): Todos los nodos ven la misma información al mismo tiempo.
@@ -49,11 +29,62 @@ El Teorema de Brewer[], también conocido como Teorema CAP , enuncia que es impo
 	\item \textbf{Tolerancia al Particionado}(Partition Tolerance): El sistema sigue funcionando a pesar de que haya sido partido por un fallo de red.
 \end{itemize}
 
-Para una base de datos distribuida que promete la disponibilidad completa, como lo es Cassandra, el Teorema de Brewer implica la imposibilidad de garantizar la consistencia total de los datos y la necesidad de esperar un tiempo indeterminado para que las réplicas de un registro modificado se actualicen correctamente.\\
+Para una base de datos distribuida que promete la disponibilidad completa, el Teorema de Brewer implica la incapacidad de garantizar la consistencia total de los datos que almacena y la necesidad de esperar un tiempo indeterminado para que las réplicas de un registro modificado se actualicen correctamente.\\
 
-Dicha actualización corre a cargo de un protocolo Gossip(), encargado del funcionamiento coordinado de la infraestructura. Mediante paso de mensajes periódicos da a conocer el estado de un nodo al resto de sus vecinos, posibilitando de esa manera, que cada nodo pueda mantener actualizadas sus réplicas, además de conocer en cada instante qué nodo esta caído y cual no.\\
+Para lidiar con dicha restricción, Cassandra ofrece la posibilidad de afinar el nivel de consistencia \footnote{\url{https://docs.datastax.com/en/cassandra/2.1/cassandra/dml/dml_config_consistency_c.html}} en cada consulta sacrificando para ello parte de la disponibilidad. Las consultas de mayor disponibilidad responden con el dato ofrecido por la primera réplica en contestar sin siquiera cotejar la existencia de una versión actualizada del mismo, mientras que las consultas de mayor consistencia podrán fallar por la caída de un nodo que alberga una de las réplicas debido a no poder satisfacer el nivel de consistencia requerido. Por tanto, queda en manos del diseñador el trabajo de encontrar el equilibrio entre ambas características, siendo la naturaleza de los datos a tratar un factor determinante para ello.
 
-No obstante, existen formas de minimizar el tiempo que hace falta para alcanzar un estado consistente. La primera, es proveer la infraestructura de medios físicos necesarios para acelerar el intercambio de datos entre los nodos y evitar que la red se congestione en el proceso. La segunda, trata sobre la posibilidad que Cassandra ofrece de elegir el nivel de consistencia() con el que se ejecuta cada consulta.\\
+\subsubsection{Optimizado para escrituras}
+
+Si Cassandra destaca en algo sobre el resto de sistemas de almacenamiento NoSQL es la capacidad que presenta en realizar escrituras.
+
+Cuando se produce una escritura, Cassandra almacena el dato en una estructura de memoria llamada memtable, a la vez que lo añade a un fichero denominado commit log, asegurando la durabilidad de que dicha escritura. La memtable es una de caché que almacena escrituras hasta llegar al límite configurado y entonces los vacía.\\
+
+En el proceso de vaciado, Cassandra ordena las memtable por token y después los escribe secuencialmente en el disco. Si esta operación es interrumpida, se utiliza la información almacenada en el commit log para recuperar las escrituras perdidas (más lento).Los datos del commit log son purgados una vez los datos correspondientes en la memtable hayan sido vaciados a un SSTable en el disco.\\
+
+\begin{figure}[h]
+	\centering
+	\includegraphics[width=0.65\textwidth]{Ilustraciones/cassandra_data_storage.png}
+	\caption{Almacenamiento de datos en Cassandra}
+	\label{fig:almacenamiento_cassandra}
+\end{figure}
+
+Las SSTable no pueden ser sobreescritas (inmutable) una vez se hayan creado. Por lo tanto, una partición es almacenada en múltiples SSTable. (algo de compaction/compactacion)\\
+
+\subsubsection{Replicación asíncrona sin maestro}
+
+//Gossip Protocol (paper?)
+
+Protocolo de comunicación peer-to-peer que intercambia el estado del propio nodo y de aquellos cuyo estado conoce de forma periódica.
+
+El proceso es ejecutado cada segundo e intercambia información con otros tres nodos del cluster. De esa forma, todos los nodos aprenden sobre el resto de manera rapida.
+
+Cada mensaje Gossip tiene una versión asociada a él, gracias al cual el nodo que recibe dicho mensaje puede comparar con la información que tiene y sobreescribir su conocimiento en caso de ser necesario.
+
+//Failure Detector (paper?)
+
+Necesidad de diferenciar un nodo caído con otro en estado transitorio para redireccionar las peticiones solo a los nodos activos.
+
+El detector de fallos es un método que permite determinar localmente si otro nodo del sistema esta caido o en funcionamiento mediante el uso de los estados gossip y el historial.
+
+Cassandra utiliza accrual detection mechanism para calcular un umbral por nodo que tenga en cuenta el rendimiento de red, carga de trabajo, u otras condiciones.
+
+Es posible configurar dicho umbral modificando el valor de la variable phi_convict_threshold para ajustar la sensibilidad del detector de fallos.
+
+// merkle tree (paper?)
+
+Consiste en comparar todas las réplicas de cada dato que existe o debería existir y actualizarlos a la versión más reciente mediante el uso de Merkle Trees.
+
+Un Merkle tree es un árbol de hash donde los nodos padres más altos en el árbol son los hashes de sus respectivos hijos. La ventaja principal de árbol de Merkle es que cada rama del árbol se puede comprobar de forma independiente , sin la necesidad de descargar todo el conjunto de datos.
+
+La implementación de Anti-Entropia de Cassandra genera un Merkle tree por cada column family a la hora de la compactación y se almacenan solo hasta enviarlos a los nodos vecinos. 
+
+Implica enviar un exceso de datos por la red pero ahorra en operaciones I/O del disco local, lo cual es preferible para conjuntos de datos muy grandes.
+
+\subsubsection{Sin punto único de fallo}
+
+//replicacion factor + diapositivas
+
+///
 
 Analizando las características propias de Cassandra y en concreto su estructura, la Keyspace es un espacio de nombres para un conjunto de ColumFamily. Por lo general, se utiliza uno por aplicación y es considerado como el equivalente a una base de datos del modelo relacional. El ColumFamily, a su vez, es capaz de almacenar diferentes columnas, siendo el homólogo de una tabla del modelo relacional. Para finalizar, una columna está compuesta por clave y valor, además de un campo del tipo timestamp gracias al cual se actualizan las réplicas obsoletas.\\
 
