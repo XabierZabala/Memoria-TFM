@@ -54,7 +54,7 @@ En este primer capítulo, se ha introducido la problemática que ha impulsado la
 
 En el capítulo 2 se desgrana el funcionamiento de la base de datos Apache Cassandra \cite{lakshman2010cassandra} y el software de procesamiento distribuido Apache Spark \cite{zaharia2010spark}, las tecnologías electas para resolver el problema, haciendo especial hincapié en las peculiaridades que les permiten ofrecer una mejora sustancial en comparación a las herramientas tradicional.\\
 
-Una vez en el capítulo 3 se detalla la praxis llevada a cabo para confeccionar los entornos de prueba. Por un lado, se emula un entorno tradicional compuesto por un nodo que alberga una instancia de MySQL y por el otro, el entorno clusterizado, formado por tres nodos homogéneos sobre el cual operan Apache Cassandra y Apache Spark en consonancia.\\ 
+Una vez en el capítulo 3 se detalla la praxis llevada a cabo para confeccionar los entornos de prueba. Por un lado, se emula un entorno centralizado compuesto por un nodo que alberga una instancia de MySQL y por el otro, el entorno distribuido, formado por tres nodos homogéneos sobre el cual operan Apache Cassandra y Apache Spark en consonancia.\\ 
 
 El almacenamiento y la retribución de los datos constituyen el grueso del 4to capítulo. Primero, se expone la naturaleza de los datos que conforman el data-set de 25GB sobre el cual se opera. Después, se especifican las consultas a ejecutar contra cada sistema de almacenamiento, teniendo presente que estas consultas han de ser estrictamente equivalentes. Para finalizar, se presenta el diseño de las tablas utilizadas para almacenar los datos consultados, haciendo especial hincapié en las correspondientes a Apache Cassandra debido a las peculiaridades que presenta.\\ 
 

@@ -7,10 +7,16 @@
 \chapter{Entorno de pruebas: Construcción}
 \label{entorno_pruebas}
 
-caracteristicas de la maquina fisica
+En las próximas líneas se detallan las directrices seguidas a la hora de confeccionar los entornos de prueba utilizados para testear el rendimientos de las tecnologías que tenemos entre manos. Medios disponible/utilizada:
 
-indicaran las directrices seguidas en la construcción de los entornos de prueba que se desean construir
-ambos entornos en la maquina fisica nueva
+*
+*
+*
+
+// Varios parrafos explicando las especificacines de las tecnologias (el nodo del portatil actua como cliente, el dela torre como servidor | capacidad del switch | caracteristicas del portatil | caracteristicas de la torre | capacidad de la red (ethernet x mb/s etc))
+
+// No es una guia general, explico como lo he hecho yo
+
 
 \section{Entorno centralizado}
 
@@ -19,17 +25,11 @@ emular el entorno que actualmente datik posee y el rendimiento que da
 
 \section{Entorno distribuido}
 
-En el presente capítulo se muestran los pasos a seguir para instalar y configurar un cluster de múltiples nodos. Una vez que la infraestructura esté operativa, se pasará a describir el funcionamiento de sus componentes y se realizarán varias pruebas comprobando que esto se cumple. 
-
-Cabe recordar que los pilares del cluster, tecnológicamente hablando, han sido Apache Cassandra y Apache Spark, los cuales operan en todos los nodos que lo componen. Al finalizar este capítulo se espera poder gozar de una infraestructura  que permita procesar una cantidad ingente de datos de forma distribuida.
-
-4.1 CONSTRUCCIÓN DEL CLUSTER
-
-A continuación se detallarán los pasos más relevantes llevados a cabo a la hora de construir y configurar el cluster. Instalar las máquinas virtuales que operan cual nodos y dotarlos de un sistema operativo se ha considerado un procedimiento trivial y carente de interés por lo cual estos pasos han sido omitidos. 
+A continuación se detallan los pasos más relevantes llevados a cabo para construir y configurar el clúster. Instalar las máquinas virtuales que operan cual nodos y dotarlos de un sistema operativo se ha considerado un procedimiento trivial y carente de interés por lo cual estos pasos han sido omitidos.\\ 
 
 Asignar IP estática a los nodos
 
-Para empezar es recomendable asignar una IP estática a todos los nodos que conforman el cluster por varios motivos. Conviene aclarar que este cambio no es intrínseco al funcionamiento del mismo, ya que, existen clusters que operan con IP dinámica. El primer motivo radica de la necesidad de conocer la dirección IP del nodo maestro para ejecutar aplicaciones mediante Spark. La segunda, no tan crítica pero igual de importante, tiene relación con el propósito de acceder a los nodos esclavos desde el portátil. Al haber instalado dos nodos en el servidor, cada vez que estos son reiniciados, habría que acceder manualmente para conocer la IP y asi, después, poder conectar a dichas máquinas mediante SSH, lo cual no es una práctica muy recomendable .  
+Para empezar es recomendable \textbf{asignar una IP estática} a todos los nodos que conforman el clúster. Conviene aclarar que este cambio no es intrínseco al funcionamiento del mismo, ya que, existen clústeres que operan con IP dinámica. El primer motivo radica de la necesidad de conocer la dirección IP del nodo maestro para ejecutar aplicaciones mediante Spark.  
 
 Para asignar una IP estática, habrá que realizar ciertas modificaciones en el fichero /etc/network/interfaces, siendo su contenido final el presentado a continuación:
 
@@ -47,7 +47,7 @@ Los nodos se conectarán a internet mediante un cable Ethernet, pero al tratarse
 
 1.	Cambiar de NAT a Adaptador de Puente
 2.	Avanzado -> Modo Promiscuo -> Permitir
-3.	Seleccionar el adaptador Ethernet pertinente en la lista desplegable que se encuentra lado de la etiqueta Nombre 
+3.	Seleccionar el Adaptador Ethernet pertinente en la lista desplegable que se encuentra lado de la etiqueta Nombre 
 
 Cambiar los hostname de las máquinas
 
@@ -58,16 +58,6 @@ En el siguiente recuadro se pueden observar el hostname que se le ha asignado a 
 BigData_Master : master
 BigData_Slave1 : slave1
 BigData_Slave2 : slave2
-
-Acceso mediante las claves RSA
-
-Como ya se ha mencionado al comienzo de este capítulo, la idea es poder acceder a todos los nodos del cluster desde el portátil de Xabier Zabala mediante SSH sin que haga falta una identificación mediante contraseñas. Para posibilitar este acceso se hará uso de las claves RSA.
-
-RSA es un sistema de encriptado que utiliza un algoritmo imposible de solucionar a día de hoy, el cual permite la identificación entre máquinas sin intercambiar las claves por la red. Consta de dos claves; una privada que se encuentra en la máquina cliente y se usa para desencriptar, y otra pública que se puede repartir sin miedo y se usa para encriptar. Lo que se haya encriptado con la clave pública solo puede ser desencriptado con la clave privada correspondiente.
-
-Gracias a la par de claves RSA, se podrá permitir que el nodo del portátil de Xabier, el nodo maestro que tendrá almacenado la clave privada, acceda directamente a los dos nodos esclavos residentes en el servidor que poseerán la clave pública, y asi, controlar cualquier nodo del cluster desde el portátil.
-
-Una vez generadas ambas claves, la pública ha de ser distribuida a los nodos esclavos y almacenada en la carpeta /root/.ssh. Para terminar,  habrá que copiar la clave pública repartida desde el nodo maestro en el fichero authorized_keys del este mismo nodo, además de modificar los permisos de las carpeta .ssh y el fichero authorized_keys, asignándole al propietario de estos, todos los permisos sobre el primero y  los permisos de lectura y escritura sobre el segundo.
 
 Configuración de los fichero etc/hosts
 
@@ -155,5 +145,4 @@ La configuración de Apache Spark puede ser realizada tanto de forma manual como
 Apache Spark ofrece una serie de scripts como start-all y stop-all que ejecutados en el nodo maestro permiten poner en marcha o parar Spark en todos los nodos del cluster.
 
 Para que estos scripts funcionen de forma correcta será necesario hacer una pequeña configuración. Dentro de la carpeta conf de todos los nodos de la infraestructura se ha de crear un fichero llamado slaves, y dentro, especificar el hostname de las maquinas que vayan a trabajar como tal.
-
 

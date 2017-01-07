@@ -35,11 +35,11 @@ Para lidiar con dicha restricción, Cassandra ofrece la posibilidad de afinar el
 
 \subsubsection{Optimizado para escrituras}
 
-Si Cassandra destaca en algo sobre el resto de sistemas de almacenamiento NoSQL es la capacidad que presenta en realizar escrituras.
+Una de las características a destacar de Cassandra es el elevado ratio de escrituras por segundo que es capaz de realizar, superando notoriamente a otras bases de datos NoSQL en este apartado \cite{rabl2012solving}.
 
-Cuando se produce una escritura, Cassandra almacena el dato en una estructura de memoria llamada memtable, a la vez que lo añade a un fichero denominado commit log, asegurando la durabilidad de que dicha escritura. La memtable es una de caché que almacena escrituras hasta llegar al límite configurado y entonces los vacía.\\
+Al ejecutar una consulta que desemboca en una escritura, los registros son almacenados en dos estructuras denominadas CommitLog y Memtable. El primero, es un fichero donde se adjuntan los registros recibidos, mientras que el segundo, es una cache en memoria que apila dichos registros hasta llegar a su capacidad máxima. Sólo cuando ambas estructuras finalizan de guardar los datos, Cassandra considera que la consulta ha sido ejecutado satisfactoriamente pudiendo pasar a procesar otras operaciones.\\
 
-En el proceso de vaciado, Cassandra ordena las memtable por token y después los escribe secuencialmente en el disco. Si esta operación es interrumpida, se utiliza la información almacenada en el commit log para recuperar las escrituras perdidas (más lento).Los datos del commit log son purgados una vez los datos correspondientes en la memtable hayan sido vaciados a un SSTable en el disco.\\
+Cuando la Memtable se llena empieza un proceso de vaciado en el cual, primero, se dilucida el nodo destinatario de cada registro. Después, dichos registros son escritos de forma secuencial en estructuras inmutables denominadas SSTable, ficheros que representan físicamente el contenido de una tabla en Cassandra. Si esta operación es interrumpida, se utiliza la información almacenada en el CommitLog para recuperar las escrituras perdidas. Finalmente, cuando todos los registros han sido transferidos su correspondiente SSTable el CommitLog es purgado.\\
 
 \begin{figure}[h]
 	\centering
@@ -48,7 +48,7 @@ En el proceso de vaciado, Cassandra ordena las memtable por token y después los
 	\label{fig:almacenamiento_cassandra}
 \end{figure}
 
-Las SSTable no pueden ser sobreescritas (inmutable) una vez se hayan creado. Por lo tanto, una partición es almacenada en múltiples SSTable. (algo de compaction/compactacion)\\
+Debido a la naturaleza inmutable de las SSTable, cada vez que la Memtable se vacía un nuevo fichero es generado para representar una misma tabla. Ello puede conllevar problemas de eficiencia a la hora de consultar la información de dicha tabla, ya que será totalmente necesario leer todos los ficheros correspondientes. Para sobreponerse a este inconveniente, Cassandra posee un mecanismo llamado compactación.
 
 \subsubsection{Replicación asíncrona sin maestro}
 
