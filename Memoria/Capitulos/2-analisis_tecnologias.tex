@@ -9,11 +9,9 @@
 
 \section{Apache Cassandra}
 
-Apache Cassandra es una base de datos distribuida que permite operar sobre grandes volúmenes de datos del tipo clave/valor. Se caracteriza por ofrecer una  disponibilidad total y mayor escalabilidad lineal en comparación a otras bases de datos NoSQL, utilizando, para ello, una serie de nodos homogéneos que se comunican mediante un protocolo P2P de replicación asíncrona, lo cual permite realizar operaciones de baja latencia para todos los clientes sin necesidad de un servidor maestro.\\
+Apache Cassandra es una base de datos distribuida que permite operar sobre grandes volúmenes de datos del tipo clave/valor. Concebida en el 2008 por los ingenieros de Facebook basándose en otros sistemas de almacenamientos distribuidos como Dynamo (Amazon) \cite{decandia2007dynamo} y BigTable (Google) \cite{chang2008bigtable}, se caracteriza por ofrecer una  disponibilidad total y mayor escalabilidad lineal en comparación a otras bases de datos NoSQL.  Para ello, se basa en un conjunto de nodos homogéneos dentro de una red en anillo que se comunican mediante un protocolo P2P de replicación asíncrona, lo cual permite realizar operaciones de baja latencia para todos los clientes sin necesidad de un servidor maestro.\\
 
-Fue concebida en el 2008 por los ingenieros de Facebook basándose en sistemas de almacenamientos distribuidos como Dynamo (Amazon) \cite{decandia2007dynamo} y BigTable (Google) \cite{chang2008bigtable} con el propósito de mejorar la funcionalidad de búsqueda en la bandeja de entrada. En 2012, investigadores de la Universidad de Toronto que estudian los sistemas NoSQL concluyeron que "En términos de escalabilidad, hay un claro ganador a través de nuestros experimentos. Cassandra logra el mejor rendimiento para el número máximo de nodos en todos los experimentos" \cite{rabl2012solving}.\\
-
-Actualmente Apache Cassandra es utilizada por infinidad de aplicaciones en negocios modernos, siendo la base de datos elegida por un tercio de las compañías que conforman la Fortune 100 \footnote{\url{http://fortune.com/2015/04/14/datastax-hp-sales-partnership/}}. Claro ejemplo de ello son empresas mundialmente conocidas como Apple, Facebook o NetFlix, los cuales utilizan Apache Cassandra como parte de su entramado tecnológico desde hace ya unos años. Cabe destacar que el uso del mismo no se limita al mundo empresarial. Muestra de ello es la acogida que ha tenido en el ámbito de la investigación, formando parte en experimentos punteros a nivel mundial como algunos de los realizados en el CERN \cite{sicoe2012persistent}.\\
+Hoy en día, es utilizada por infinidad de aplicaciones en negocios modernos, siendo la base de datos elegida por un tercio de las compañías que conforman la Fortune 100 \footnote{\url{http://fortune.com/2015/04/14/datastax-hp-sales-partnership/}}. Claro ejemplo de ello son empresas mundialmente conocidas como Apple, Facebook o NetFlix, los cuales utilizan Apache Cassandra como parte de su entramado tecnológico desde hace ya unos años. Cabe destacar que su uso no se limita al mundo empresarial. Muestra de ello es la acogida que ha tenido en el ámbito de la investigación, formando parte en experimentos punteros a nivel mundial como algunos de los realizados en el CERN \cite{sicoe2012persistent}.\\
 
 \subsection{Funcionamiento}
 
@@ -48,27 +46,27 @@ Cuando la Memtable se llena empieza un proceso de vaciado en el cual, primero, s
 	\label{fig:almacenamiento_cassandra}
 \end{figure}
 
-Debido a la naturaleza inmutable de las SSTable, cada vez que la Memtable se vacía un nuevo fichero es generado para representar una misma tabla. Ello puede acarrear problemas de eficiencia a la hora de consultar la información de dicha tabla, ya que será totalmente necesario leer todos los ficheros correspondientes. Para sobreponerse a este inconveniente, Cassandra posee un mecanismo llamado compactación que unifica las SSTable que representan una misma tabla eliminando los ficheros restantes.
+Debido a la naturaleza inmutable de las SSTable, cada vez que la Memtable se vacía un nuevo fichero es generado para representar una misma tabla. Ello puede acarrear problemas de eficiencia a la hora de consultar la información de dicha tabla, ya que será totalmente necesario leer todos los ficheros correspondientes. Para sobreponerse a este inconveniente, Cassandra posee un mecanismo llamado compactación que unifica las SSTable que representan una misma tabla eliminando los ficheros restantes.\\
 
 \subsubsection{Replicación asíncrona sin maestro}
 
-//Gossip Protocol (paper?)
+Las bases de datos distribuidas ofrecen la posibilidad de replicar los datos que se almacenan en ella, asegurando una respuesta satisfactoria a las peticiones aún habiendo nodos inactivos en la infraestructura. Ello implica la necesidad de conocer el estado de las réplicas y otras maquinas por parte de cada nodo del sistema, que por lo general, se resuelve mediante un modelo maestro-esclavo.\\
 
-Protocolo de comunicación peer-to-peer que intercambia el estado del propio nodo y de aquellos cuyo estado conoce de forma periódica.
+En Cassandra, gracias a un conjunto de mecanismos peer-to-peer, cada nodo es capaz de obtener dicha información de forma local sin depender de un nodo maestro, obteniendo un clúster totalmente homogéneo, en cuanto a funcionamiento se refiere.\\ 
 
-El proceso es ejecutado cada segundo e intercambia información con otros tres nodos del cluster. De esa forma, todos los nodos aprenden sobre el resto de manera rapida.
+\textbf{Gossip Protocol}\cite{demers1987epidemic}: Protocolo de comunicación peer-to-peer que intercambia el estado del propio nodo y de aquellos que conoce de forma periódica.\\
 
-Cada mensaje Gossip tiene una versión asociada a él, gracias al cual el nodo que recibe dicho mensaje puede comparar con la información que tiene y sobreescribir su conocimiento en caso de ser necesario.
+Cada mensaje Gossip tiene una versión asociada a él, gracias al cual el nodo que recibe dicho mensaje puede comparar con la información que tiene de antemano y sobrescribir su conocimiento en caso de ser necesario.\\
 
-//Failure Detector (paper?)
+ En el caso concreto de Cassandra, el intercambio se realiza cada segundo entre los nodos vecinos, logrando así que, al propagarse la información por el anillo, todos los nodos del clúster aprendan sobre el resto de manera rápida.\\
+
+\textbf{Failure Detector}\cite{chandra1996unreliable}
 
 Necesidad de diferenciar un nodo caído con otro en estado transitorio para redireccionar las peticiones solo a los nodos activos.
 
 El detector de fallos es un método que permite determinar localmente si otro nodo del sistema esta caido o en funcionamiento mediante el uso de los estados gossip y el historial.
 
-Cassandra utiliza accrual detection mechanism para calcular un umbral por nodo que tenga en cuenta el rendimiento de red, carga de trabajo, u otras condiciones.
-
-Es posible configurar dicho umbral modificando el valor de la variable phi_convict_threshold para ajustar la sensibilidad del detector de fallos.
+Cassandra utiliza accrual detection mechanism para calcular un umbral por nodo que tenga en cuenta el rendimiento de red, carga de trabajo, u otras condiciones. // uso: redirigir las consultas hacia un nodo que no esta caido
 
 // merkle tree (paper?)
 
@@ -85,15 +83,6 @@ Implica enviar un exceso de datos por la red pero ahorra en operaciones I/O del 
 //replicacion factor + diapositivas
 
 ///
-
-Analizando las características propias de Cassandra y en concreto su estructura, la Keyspace es un espacio de nombres para un conjunto de ColumFamily. Por lo general, se utiliza uno por aplicación y es considerado como el equivalente a una base de datos del modelo relacional. El ColumFamily, a su vez, es capaz de almacenar diferentes columnas, siendo el homólogo de una tabla del modelo relacional. Para finalizar, una columna está compuesta por clave y valor, además de un campo del tipo timestamp gracias al cual se actualizan las réplicas obsoletas.\\
-
-\begin{figure}[h]
-	\centering
-	\includegraphics[width=0.5\textwidth]{Ilustraciones/cassandra_infraestructure.png}
-	\caption{Estructura de Cassandra}
-	\label{fig:cassandra_infraestructure}
-\end{figure}
 
 A la hora de definir un keyspace dos atributos estrechamente relacionados han de ser especificados: Replication Factor y Replica Placement Strategy(). El primero, consiste en un número que indica cuantas copias de un mismo registro se han de almacenar en la infraestructura. Cada nodo posee una réplica para un cierto rango de datos y si uno de ellos falla, otro que posea dicha réplica puede responder a la petición sin tener que interrumpir el servicio. El segundo, define cómo se han de repartir los registros replicados por el anillo, ofreciendo distintas opciones dependiendo si los nodos del clúster se encuentran alojados en un único datacenter o repartidos entre varios.\\
 
