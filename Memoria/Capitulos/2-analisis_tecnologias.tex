@@ -52,21 +52,17 @@ Debido a la naturaleza inmutable de las SSTable, cada vez que la Memtable se vac
 
 Las bases de datos distribuidas ofrecen la posibilidad de replicar los datos que se almacenan en ella, asegurando una respuesta satisfactoria a las peticiones aún habiendo nodos inactivos en la infraestructura. Ello implica la necesidad de conocer el estado de las réplicas y otras maquinas por parte de cada nodo del sistema, que por lo general, se resuelve mediante un modelo maestro-esclavo.\\
 
-En Cassandra, gracias a un conjunto de mecanismos peer-to-peer, cada nodo es capaz de obtener dicha información de forma local sin depender de un nodo maestro, obteniendo un clúster totalmente homogéneo, en cuanto a funcionamiento se refiere.\\ 
+En Cassandra, gracias a un conjunto de mecanismos peer-to-peer, cada nodo es capaz de obtener dicha información de forma local sin depender de un nodo maestro, obteniendo un clúster totalmente homogéneo.\\ 
 
 \textbf{Gossip Protocol}\cite{demers1987epidemic}: Protocolo de comunicación peer-to-peer que intercambia el estado del propio nodo y de aquellos que conoce de forma periódica.\\
 
-Cada mensaje Gossip tiene una versión asociada a él, gracias al cual el nodo que recibe dicho mensaje puede comparar con la información que tiene de antemano y sobrescribir su conocimiento en caso de ser necesario.\\
+Cada mensaje Gossip tiene una versión asociada a él, gracias al cual el nodo que recibe dicho mensaje puede comparar con la información que tiene de antemano y actualizar su conocimiento en caso de ser necesario.\\
 
  En el caso concreto de Cassandra, el intercambio se realiza cada segundo entre los nodos vecinos, logrando así que, al propagarse la información por el anillo, todos los nodos del clúster aprendan sobre el resto de manera rápida.\\
 
-\textbf{Failure Detector}\cite{chandra1996unreliable}
+\textbf{Failure Detector}\cite{chandra1996unreliable}: Conjunto de métodos que usando mensajes Gossip sugieren de forma local si otro nodo del sistema esta caído o en estado transitorio.\\
 
-Necesidad de diferenciar un nodo caído con otro en estado transitorio para redireccionar las peticiones solo a los nodos activos.
-
-El detector de fallos es un método que permite determinar localmente si otro nodo del sistema esta caido o en funcionamiento mediante el uso de los estados gossip y el historial.
-
-Cassandra utiliza accrual detection mechanism para calcular un umbral por nodo que tenga en cuenta el rendimiento de red, carga de trabajo, u otras condiciones. // uso: redirigir las consultas hacia un nodo que no esta caido
+Entre todos los métodos existentes, Cassandra utiliza el Accrual Failure Detector\cite{hayashibara2004spl}. Además ofrece la posibilidad de configurar un umbral por cada nodo que tenga en cuenta el rendimiento de red, carga de trabajo, u otras condiciones. Al cotejar el valor ofrecido por el detector con dicho umbral, Cassandra es capaz de dilucidar si un nodo esta caído, y en caso afirmativo, redireccionar las peticiones a otro activo.\\
 
 // merkle tree (paper?)
 
