@@ -62,53 +62,44 @@ Cada mensaje Gossip tiene una versión asociada a él, gracias al cual el nodo q
 
 \textbf{Failure Detector}\cite{chandra1996unreliable}: Conjunto de métodos que usando mensajes Gossip sugieren de forma local si otro nodo del sistema esta caído o en estado transitorio.\\
 
-Entre todos los métodos existentes, Cassandra utiliza el Accrual Failure Detector\cite{hayashibara2004spl}. Además ofrece la posibilidad de configurar un umbral por cada nodo que tenga en cuenta el rendimiento de red, carga de trabajo, u otras condiciones. Al cotejar el valor ofrecido por el detector con dicho umbral, Cassandra es capaz de dilucidar si un nodo esta caído, y en caso afirmativo, redireccionar las peticiones a otro activo.\\
+Entre todos los métodos existentes, Cassandra utiliza el Accrual Failure Detector\cite{hayashibara2004spl}. Además ofrece la posibilidad de configurar un umbral por cada nodo que tenga en cuenta el rendimiento de red, carga de trabajo, u otras variables. Al cotejar el valor ofrecido por el detector con dicho umbral, Cassandra es capaz de dilucidar si un nodo esta caído, y en caso afirmativo, redireccionar las peticiones a otro activo.\\
 
-// merkle tree (paper?)
+\textbf{Merkle Tree}\cite{merkle1987digital}: Es un árbol hash donde los nodos padres más altos son, a su vez, hashes de sus respectivos hijos. La ventaja principal es que cada rama del árbol puede ser comprobada de forma independiente, sin la necesidad de descargar todo el conjunto de datos.\\
 
-Consiste en comparar todas las réplicas de cada dato que existe o debería existir y actualizarlos a la versión más reciente mediante el uso de Merkle Trees.
+La implementación de Anti-Entropia\cite{golay1949notes} en Cassandra, proceso encargado de comparar todas las réplicas de cada dato que existe en el clúster y actualizarlos a la versión más reciente, genera un Merkle Tree por cada column family durante el proceso de compactación, los cuales se almacenan solo hasta enviarlos a los nodos vecinos. 
 
-Un Merkle tree es un árbol de hash donde los nodos padres más altos en el árbol son los hashes de sus respectivos hijos. La ventaja principal de árbol de Merkle es que cada rama del árbol se puede comprobar de forma independiente , sin la necesidad de descargar todo el conjunto de datos.
-
-La implementación de Anti-Entropia de Cassandra genera un Merkle tree por cada column family a la hora de la compactación y se almacenan solo hasta enviarlos a los nodos vecinos. 
-
-Implica enviar un exceso de datos por la red pero ahorra en operaciones I/O del disco local, lo cual es preferible para conjuntos de datos muy grandes.
+La praxis descrita implica enviar un exceso de datos por la red pero ahorra en operaciones I/O del disco local, lo cual es preferible para conjuntos de datos muy grandes.\\
 
 \subsubsection{Sin punto único de fallo}
 
-//replicacion factor + diapositivas
+La ejecución de una consulta es considerada satisfactoria si el clúster cumple con los requisitos de consistencia especificados en la misma. Esta simple premisa se embarulla en un entorno real en donde los nodos de la infraestructura pueden cambiar de estado en cualquier instante y además, seguir cumpliendo con los requisitos de consistencia, dando como resultado el no poder actualizar las réplicas que residen en los nodos caídos. Cassandra implementa varios mecanismos con el objetivo de tener que evitar cancelar las consultas en dicho escenario.\\
 
-///
+\textbf{Rapid Read Protection}\footnote{\url{http://www.datastax.com/dev/blog/rapid-read-protection-in-cassandra-2-0-2}}: Cualquier consulta contra el clúster requiere de al menos una IP de las máquinas que lo componen para así establecer una comunicación. Dichos nodos son denominados coordinadores y cumplen con la labor de identificar el nodo menos ocupado entre los que contienen una réplica del dato requerido y redirigir la consulta hacia él.\\
 
-A la hora de definir un keyspace dos atributos estrechamente relacionados han de ser especificados: Replication Factor y Replica Placement Strategy(). El primero, consiste en un número que indica cuantas copias de un mismo registro se han de almacenar en la infraestructura. Cada nodo posee una réplica para un cierto rango de datos y si uno de ellos falla, otro que posea dicha réplica puede responder a la petición sin tener que interrumpir el servicio. El segundo, define cómo se han de repartir los registros replicados por el anillo, ofreciendo distintas opciones dependiendo si los nodos del clúster se encuentran alojados en un único datacenter o repartidos entre varios.\\
+Si al resolver la redirección el nodo destino no se halla disponible, la técnica Rapid Read Protection permite al coordinador escoger otro nodo candidato y volver a redirigir la petición hacia este último, evitando así tener que devolver un timeout o mensaje de error al cliente.
 
-El atributo Replica Placement Strategy cobra especial interés al operar sobre un clúster cuyos nodos están distribuidos en punto geográficos lejanos, ya que permite almacenar cada réplica en diferentes puntos del globo. De esa manera, se consigue minimizar la latencia de las peticiones recibidas desde diferentes puntos del plantea y además, proteger la base de datos de una posible caída a nivel de datacenter debido a diversos catástrofes.\\ 
+\textbf{Hinted Handoff}\footnote{\url{http://www.datastax.com/dev/blog/modern-hinted-handoff}}: Cuando se realiza una escritura y un nodo que debería de almacenar una réplica del dato a persistir se encuentra inoperativo el coordinador se encarga de almacenar dicho dato en una tabla especial con el objetivo de enviarlo a los nodos correspondientes cuando estos vuelvan a estar activos.\\
 
-Si un componente de Cassandra tiene especial importancia en su funcionamiento es el ColumFamily. En una base de datos relacional como MySQL, las tablas son diseñadas con el objetivo de minimizar la redundancia de los datos almacenados en ella, siguiendo para lograr dicho objetivo un proceso de normalización[]. En cambio, al operar con Cassandra, ocurre exactamente lo contrario. Las tablas se construyen buscando una respuesta rápida a las consultas sin importar que ello implique tener que almacenar datos redundante en la base de datos.\\
+Una vez que un nodo descubre a través de chismes que un nodo para el que contiene consejos se ha recuperado, enviará la fila de datos correspondientes a cada pista para el objetivo.\\
 
-patition key etc
+////
 
+Once a node discovers via gossip that a node for which it holds hints has recovered, it will send the data row corresponding to each hint to the target.
 
-
-\begin{figure}[h]
-	\centering
-	\includegraphics[width=0.5\textwidth]{Ilustraciones/cassandra_token.png}
-	\caption{Particionamiento en Cassandra}
-	\label{fig:cassandra_token}
-\end{figure}
-
-consecuencia: restriccion en las consultas que se pueden realizar
+/////
 
 \subsection{Cassandra Query Lenguage (CQL)}
 
-permite conectarse al cualquier nodo del cluter (homogeneidad)
+// pensado para agrupar y devolver en una sola consulta
+// Curva de aprendizaje
+
+El código encargado de tratar las consultas que llegan al clúster de Cassandra está generado mediante Apache Thrift\cite{slee2007thrift}, una interfaz para implementar llamadas a procedimientos remotos\cite{nelson1981remote} con compatibilidad entre diferentes lenguajes. Dicha interfaz permite definir las funciones con sus respectivos parámetros y generar el código correspondiente para cualquier lenguaje. En el caso particular de Cassandra, el código ejecutado en los nodos está implementado en Java, pero gracias a Thrift actualmente existen {APIs} en más de 10 lenguajes que permiten acceder a él\footnote{\url{http://db-engines.com/en/system/Cassandra}}.
+
 
 Apache Cassandra posee su propio lenguaje de consultas, el denominado Cassandra Query Lenguage (CQL). Su sintaxis guarda una gran similitud con la de SQL, lo cual facilita, de forma notoria, el salto que supone pasar de trabajar con bases de datos relacionales a distribuidos.\\
 
 Aún siendo sintácticamente  tan parecido a SQL, presenta ciertas restricciones debido a que es un lenguaje de consultas de una base de datos distribuida. Por ejemplo, no ofrece la posibilidad de realizar operaciones como JOIN y es totalmente necesario especificar todas los atributos que componen la clave primaria a la hora de realizar cualquier consulta de filtrado o de actualización en la tabla. La única operación que no cumple esta restricción es un select que contenga la clausula where, ya que, al definir la clave primaria Cassandra indexa de forma automática todos sus componente, posibilitando más tarde  hacer uso de ellos en este caso concreto.
-
-Otra de las peculiaridades que presenta CQL es el hecho de ofrecer dos modos distintos de realizar un update. El primero de todos es el mencionado en el párrafo anterior. El segundo posibilita actualizar una columna realizando un insert repitiendo el valor de las claves primarias de una columna ya existente en la base de datos. Esta segunda forma es cómoda a la par de peligrosa porque Cassandra no notifica si una clave primaria ya existe en la base de datos o no, pudiendo un insert desencadenar en un update no deseado.  
-
+  
 \section{Apache Spark}
 
 Apache Spark[9] es un proyecto open source de computación en clúster. Desde el principio fue diseñado para poder ejecutar algoritmos iterativos en memoria sin la necesidad de almacenar en disco los resultados intermedios generados durante el proceso. Esta peculiaridad permite que los procesamientos llevados a cabo con Spark puedan llegar a ser, en algunos casos concretos, 100 veces más rápidos que los de MapReduce[10].\\
@@ -128,11 +119,11 @@ La base del proyecto es el denominado Spark Core. Proporciona envío distribuido
 
 \subsection{Funcionamiento}
 
-Para el funcionamiento de Spark, es condición sine qua non que los nodos de la infraestructura tengan acceso a la totalidad de los datos que se desea tratar. Ello implica que para procesar un fichero de 50GB, cada nodo tendría que poseer una copia del mismo almacenado en su disco. Esta praxis es inviable, ya que más allá de los problemas de consistencia que generaría, para nada es eficiente ocupar la memoria de todos los nodos con información redundante y procesar el fichero entero cuando en realidad se va a hacer uso de una pequeña porción de dichos datos en cada ejecución.\\
+Para el funcionamiento de Spark, es condición sine qua non que los nodos de la infraestructura tengan acceso a la totalidad de los datos que se desea tratar. Ello implica que para procesar un fichero de 25GB, cada nodo tendría que poseer una copia del mismo almacenado en su disco. Esta praxis es inviable, ya que más allá de los problemas de consistencia que generaría, para nada es eficiente ocupar la memoria de todos los nodos con información redundante y procesar el fichero entero cuando en realidad se va a hacer uso de una pequeña porción de dichos datos en cada ejecución.\\
 
 Las bases de datos distribuidas como Cassandra solventan los problemas anteriormente mencionados. Se encargan de distribuir los datos entre diferentes nodos del clúster, ofrecen la posibilidad de acceder a ellos desde cualquier punto y mantienen la consistencia de los mismos a cambio de sufrir una pequeña latencia en el caso de requerir información almacenada en otro nodo de la infraestructura.\\ 
 
-Al ejecutar una aplicación que opera con Spark, un componente denominado driver es lanzado. Debido a la necesidad de obtener recursos (CPU y memoria) para llevar a cabo la computación que se le ha encomendado, se comunica con un nodo del clúster que, mediante especificación previa, adopta el rol de maestro. Éste pregunta a todos los nodos que conforman la infraestructura sobre la cantidad de recursos disponibles que poseen y así asignarles los executors correspondiente. Las máquinas que alojen al menos un executor pasan a denominarse worker y a partir de este momento, cada executor podrá comunicarse directamente con el Driver para poder recibir las tareas que éste le envíe.\\
+Al ejecutar una aplicación que opera con Spark, un componente denominado driver es lanzado. Debido a la necesidad de obtener recursos (CPU y memoria) para llevar a cabo la computación que se le ha encomendado, se comunica con un nodo del clúster que, mediante especificación previa, adopta el rol de maestro. Éste pregunta a todos los nodos que conforman la infraestructura sobre la cantidad de recursos disponibles que poseen y así asignarles los executors correspondiente. Las máquinas que alojen al menos un executor pasan a denominarse worker y a partir de este momento, podrán comunicarse directamente con el Driver para poder recibir las tareas que éste le envíe.\\
 
 Un executor es una unidad de trabajo que se encarga de computar las tareas que le encomienda el driver. El número de executors que puede albergar cada worker está directamente relacionado con el número de procesadores que este posee. De la misma forma, es posible repartir la memoria RAM que dispone el nodo worker entre varios executors. Spark permite modificar ambos parámetros programáticamente permitiendo así poder amoldarse a las particularidades de cada ejecución.\\
 
