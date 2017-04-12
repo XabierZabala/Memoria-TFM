@@ -17,6 +17,39 @@
 \endgroup
 
 \sortlist[entry]{nty/global/}
+  \entry{chandra1996unreliable}{article}{}
+    \name{author}{2}{}{%
+      {{hash=CTD}{%
+         family={Chandra},
+         family_i={C\bibinitperiod},
+         given={Tushar\bibnamedelima Deepak},
+         given_i={T\bibinitperiod\bibinitdelim D\bibinitperiod},
+      }}%
+      {{hash=TS}{%
+         family={Toueg},
+         family_i={T\bibinitperiod},
+         given={Sam},
+         given_i={S\bibinitperiod},
+      }}%
+    }
+    \list{publisher}{1}{%
+      {ACM}%
+    }
+    \strng{namehash}{CTDTS1}
+    \strng{fullhash}{CTDTS1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{C}
+    \field{sortinithash}{C}
+    \field{number}{2}
+    \field{pages}{225\bibrangedash 267}
+    \field{title}{Unreliable failure detectors for reliable distributed
+  systems}
+    \field{volume}{43}
+    \field{journaltitle}{Journal of the ACM (JACM)}
+    \field{year}{1996}
+  \endentry
+
   \entry{chang2008bigtable}{article}{}
     \name{author}{9}{}{%
       {{hash=CF}{%
@@ -197,6 +230,79 @@
     \field{year}{2007}
   \endentry
 
+  \entry{demers1987epidemic}{inproceedings}{}
+    \name{author}{9}{}{%
+      {{hash=DA}{%
+         family={Demers},
+         family_i={D\bibinitperiod},
+         given={Alan},
+         given_i={A\bibinitperiod},
+      }}%
+      {{hash=GD}{%
+         family={Greene},
+         family_i={G\bibinitperiod},
+         given={Dan},
+         given_i={D\bibinitperiod},
+      }}%
+      {{hash=HC}{%
+         family={Hauser},
+         family_i={H\bibinitperiod},
+         given={Carl},
+         given_i={C\bibinitperiod},
+      }}%
+      {{hash=IW}{%
+         family={Irish},
+         family_i={I\bibinitperiod},
+         given={Wes},
+         given_i={W\bibinitperiod},
+      }}%
+      {{hash=LJ}{%
+         family={Larson},
+         family_i={L\bibinitperiod},
+         given={John},
+         given_i={J\bibinitperiod},
+      }}%
+      {{hash=SS}{%
+         family={Shenker},
+         family_i={S\bibinitperiod},
+         given={Scott},
+         given_i={S\bibinitperiod},
+      }}%
+      {{hash=SH}{%
+         family={Sturgis},
+         family_i={S\bibinitperiod},
+         given={Howard},
+         given_i={H\bibinitperiod},
+      }}%
+      {{hash=SD}{%
+         family={Swinehart},
+         family_i={S\bibinitperiod},
+         given={Dan},
+         given_i={D\bibinitperiod},
+      }}%
+      {{hash=TD}{%
+         family={Terry},
+         family_i={T\bibinitperiod},
+         given={Doug},
+         given_i={D\bibinitperiod},
+      }}%
+    }
+    \list{organization}{1}{%
+      {ACM}%
+    }
+    \strng{namehash}{DA+1}
+    \strng{fullhash}{DAGDHCIWLJSSSHSDTD1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{D}
+    \field{sortinithash}{D}
+    \field{booktitle}{Proceedings of the sixth annual ACM Symposium on
+  Principles of distributed computing}
+    \field{pages}{1\bibrangedash 12}
+    \field{title}{Epidemic algorithms for replicated database maintenance}
+    \field{year}{1987}
+  \endentry
+
   \entry{gilbert2002brewer}{article}{}
     \name{author}{2}{}{%
       {{hash=GS}{%
@@ -228,6 +334,72 @@
     \field{volume}{33}
     \field{journaltitle}{ACM SIGACT News}
     \field{year}{2002}
+  \endentry
+
+  \entry{golay1949notes}{article}{}
+    \name{author}{1}{}{%
+      {{hash=GMJ}{%
+         family={Golay},
+         family_i={G\bibinitperiod},
+         given={Marcel\bibnamedelima JE},
+         given_i={M\bibinitperiod\bibinitdelim J\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{GMJ1}
+    \strng{fullhash}{GMJ1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{G}
+    \field{sortinithash}{G}
+    \field{number}{6}
+    \field{pages}{657\bibrangedash 657}
+    \field{title}{Notes on digital coding}
+    \field{volume}{37}
+    \field{journaltitle}{Proceedings of the Institute of Radio Engineers}
+    \field{year}{1949}
+  \endentry
+
+  \entry{hayashibara2004spl}{inproceedings}{}
+    \name{author}{4}{}{%
+      {{hash=HN}{%
+         family={Hayashibara},
+         family_i={H\bibinitperiod},
+         given={Naohiro},
+         given_i={N\bibinitperiod},
+      }}%
+      {{hash=DX}{%
+         family={Defago},
+         family_i={D\bibinitperiod},
+         given={Xavier},
+         given_i={X\bibinitperiod},
+      }}%
+      {{hash=YR}{%
+         family={Yared},
+         family_i={Y\bibinitperiod},
+         given={Rami},
+         given_i={R\bibinitperiod},
+      }}%
+      {{hash=KT}{%
+         family={Katayama},
+         family_i={K\bibinitperiod},
+         given={Takuya},
+         given_i={T\bibinitperiod},
+      }}%
+    }
+    \list{organization}{1}{%
+      {IEEE}%
+    }
+    \strng{namehash}{HN+1}
+    \strng{fullhash}{HNDXYRKT1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{H}
+    \field{sortinithash}{H}
+    \field{booktitle}{Reliable Distributed Systems, 2004. Proceedings of the
+  23rd IEEE International Symposium on}
+    \field{pages}{66\bibrangedash 78}
+    \field{title}{The/spl phi/accrual failure detector}
+    \field{year}{2004}
   \endentry
 
   \entry{lakshman2010cassandra}{article}{}
@@ -318,6 +490,32 @@
     \field{year}{2011}
   \endentry
 
+  \entry{merkle1987digital}{inproceedings}{}
+    \name{author}{1}{}{%
+      {{hash=MRC}{%
+         family={Merkle},
+         family_i={M\bibinitperiod},
+         given={Ralph\bibnamedelima C},
+         given_i={R\bibinitperiod\bibinitdelim C\bibinitperiod},
+      }}%
+    }
+    \list{organization}{1}{%
+      {Springer}%
+    }
+    \strng{namehash}{MRC1}
+    \strng{fullhash}{MRC1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{M}
+    \field{sortinithash}{M}
+    \field{booktitle}{Conference on the Theory and Application of Cryptographic
+  Techniques}
+    \field{pages}{369\bibrangedash 378}
+    \field{title}{A digital signature based on a conventional encryption
+  function}
+    \field{year}{1987}
+  \endentry
+
   \entry{nambiartowards}{article}{}
     \name{author}{1}{}{%
       {{hash=NR}{%
@@ -335,6 +533,29 @@
     \field{sortinithash}{N}
     \field{title}{Towards an Industry Standard for Benchmarking Big Data
   Workloads}
+  \endentry
+
+  \entry{nelson1981remote}{report}{}
+    \name{author}{1}{}{%
+      {{hash=NBJ}{%
+         family={Nelson},
+         family_i={N\bibinitperiod},
+         given={Bruce\bibnamedelima Jay},
+         given_i={B\bibinitperiod\bibinitdelim J\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{NBJ1}
+    \strng{fullhash}{NBJ1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{N}
+    \field{sortinithash}{N}
+    \field{title}{Remote procedure call}
+    \list{institution}{1}{%
+      {Carnegie-Mellon Univ. Dept. Comput. Sci.}%
+    }
+    \field{type}{techreport}
+    \field{year}{1981}
   \endentry
 
   \entry{rabl2012solving}{article}{}
@@ -442,6 +663,40 @@
     \field{year}{2012}
   \endentry
 
+  \entry{slee2007thrift}{article}{}
+    \name{author}{3}{}{%
+      {{hash=SM}{%
+         family={Slee},
+         family_i={S\bibinitperiod},
+         given={Mark},
+         given_i={M\bibinitperiod},
+      }}%
+      {{hash=AA}{%
+         family={Agarwal},
+         family_i={A\bibinitperiod},
+         given={Aditya},
+         given_i={A\bibinitperiod},
+      }}%
+      {{hash=KM}{%
+         family={Kwiatkowski},
+         family_i={K\bibinitperiod},
+         given={Marc},
+         given_i={M\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{SMAAKM1}
+    \strng{fullhash}{SMAAKM1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{S}
+    \field{sortinithash}{S}
+    \field{number}{8}
+    \field{title}{Thrift: Scalable cross-language services implementation}
+    \field{volume}{5}
+    \field{journaltitle}{Facebook White Paper}
+    \field{year}{2007}
+  \endentry
+
   \entry{bdes:2013}{misc}{}
     \list{publisher}{1}{%
       {NewVantage Partners LLC}%
@@ -507,6 +762,80 @@
     \field{pages}{13\bibrangedash 24}
     \field{title}{Shark: SQL and rich analytics at scale}
     \field{year}{2013}
+  \endentry
+
+  \entry{zaharia2012resilient}{inproceedings}{}
+    \name{author}{9}{}{%
+      {{hash=ZM}{%
+         family={Zaharia},
+         family_i={Z\bibinitperiod},
+         given={Matei},
+         given_i={M\bibinitperiod},
+      }}%
+      {{hash=CM}{%
+         family={Chowdhury},
+         family_i={C\bibinitperiod},
+         given={Mosharaf},
+         given_i={M\bibinitperiod},
+      }}%
+      {{hash=DT}{%
+         family={Das},
+         family_i={D\bibinitperiod},
+         given={Tathagata},
+         given_i={T\bibinitperiod},
+      }}%
+      {{hash=DA}{%
+         family={Dave},
+         family_i={D\bibinitperiod},
+         given={Ankur},
+         given_i={A\bibinitperiod},
+      }}%
+      {{hash=MJ}{%
+         family={Ma},
+         family_i={M\bibinitperiod},
+         given={Justin},
+         given_i={J\bibinitperiod},
+      }}%
+      {{hash=MM}{%
+         family={McCauley},
+         family_i={M\bibinitperiod},
+         given={Murphy},
+         given_i={M\bibinitperiod},
+      }}%
+      {{hash=FMJ}{%
+         family={Franklin},
+         family_i={F\bibinitperiod},
+         given={Michael\bibnamedelima J},
+         given_i={M\bibinitperiod\bibinitdelim J\bibinitperiod},
+      }}%
+      {{hash=SS}{%
+         family={Shenker},
+         family_i={S\bibinitperiod},
+         given={Scott},
+         given_i={S\bibinitperiod},
+      }}%
+      {{hash=SI}{%
+         family={Stoica},
+         family_i={S\bibinitperiod},
+         given={Ion},
+         given_i={I\bibinitperiod},
+      }}%
+    }
+    \list{organization}{1}{%
+      {USENIX Association}%
+    }
+    \strng{namehash}{ZM+1}
+    \strng{fullhash}{ZMCMDTDAMJMMFMJSSSI1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{Z}
+    \field{sortinithash}{Z}
+    \field{booktitle}{Proceedings of the 9th USENIX conference on Networked
+  Systems Design and Implementation}
+    \field{pages}{2\bibrangedash 2}
+    \field{title}{Resilient distributed datasets: A fault-tolerant abstraction
+  for in-memory cluster computing}
+    \field{year}{2012}
   \endentry
 
   \entry{zaharia2010spark}{article}{}

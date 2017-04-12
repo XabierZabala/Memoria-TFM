@@ -9,13 +9,13 @@
 
 \section{Apache Cassandra}
 
-Apache Cassandra es una base de datos distribuida que permite operar sobre grandes volúmenes de datos del tipo clave/valor. Concebida en el 2008 por los ingenieros de Facebook basándose en otros sistemas de almacenamientos distribuidos como Dynamo (Amazon) \cite{decandia2007dynamo} y BigTable (Google) \cite{chang2008bigtable}, se caracteriza por ofrecer una  disponibilidad total y mayor escalabilidad lineal en comparación a otras bases de datos NoSQL.  Para ello, se basa en un conjunto de nodos homogéneos dentro de una red en anillo que se comunican mediante un protocolo P2P de replicación asíncrona, lo cual permite realizar operaciones de baja latencia para todos los clientes sin necesidad de un servidor maestro.\\
+Apache Cassandra es una base de datos distribuida que permite operar sobre grandes volúmenes de datos del tipo clave/valor. Concebida en el 2008 por los ingenieros de Facebook basándose en otros sistemas de almacenamientos distribuidos como Dynamo\cite{decandia2007dynamo} y BigTable \cite{chang2008bigtable}, se caracteriza por ofrecer una  disponibilidad total y mayor escalabilidad lineal en comparación a otras bases de datos NoSQL\cite{nambiartowards}.  Para ello, se basa en un conjunto de nodos homogéneos dentro de una red en anillo que se comunican mediante un protocolo P2P de replicación asíncrona, lo cual permite realizar operaciones de baja latencia para todos los clientes sin necesidad de un servidor maestro.\\
 
 Hoy en día, es utilizada por infinidad de aplicaciones en negocios modernos, siendo la base de datos elegida por un tercio de las compañías que conforman la Fortune 100 \footnote{\url{http://fortune.com/2015/04/14/datastax-hp-sales-partnership/}}. Claro ejemplo de ello son empresas mundialmente conocidas como Apple, Facebook o NetFlix, los cuales utilizan Apache Cassandra como parte de su entramado tecnológico desde hace ya unos años. Cabe destacar que su uso no se limita al mundo empresarial. Muestra de ello es la acogida que ha tenido en el ámbito de la investigación, formando parte en experimentos punteros a nivel mundial como algunos de los realizados en el CERN \cite{sicoe2012persistent}.\\
 
 \subsection{Funcionamiento}
 
-Las bases de datos NoSQL, en su mayoría, han sido concebidas para lidiar con un conjunto especifico de problemas. Debido a ello, para entender el funcionamiento de Apache Cassandra se ha decidido resaltar las peculiaridades que le distinguen de los demás sistemas de almacenamiento no relacionales.
+Las bases de datos NoSQL, en su mayoría, han sido concebidas para lidiar con un conjunto especifico de problemas. Debido a ello, para entender el funcionamiento de Cassandra cabe resaltar las peculiaridades que la distinguen de los demás sistemas de almacenamiento no relacionales.
 
 \subsubsection{Base de datos distribuida de alta disponibilidad}
 
@@ -29,15 +29,15 @@ El Teorema de Brewer \cite{gilbert2002brewer}, también conocido como Teorema CA
 
 Para una base de datos distribuida que promete la disponibilidad completa, el Teorema de Brewer implica la incapacidad de garantizar la consistencia total de los datos que almacena y la necesidad de esperar un tiempo indeterminado para que las réplicas de un registro modificado se actualicen correctamente.\\
 
-Para lidiar con dicha restricción, Cassandra ofrece la posibilidad de afinar el nivel de consistencia \footnote{\url{https://docs.datastax.com/en/cassandra/2.1/cassandra/dml/dml_config_consistency_c.html}} en cada consulta sacrificando para ello parte de la disponibilidad. Así, las consultas de mayor disponibilidad responden con el dato ofrecido por la primera réplica sin siquiera cotejar la existencia de una versión actualizada del mismo, mientras que las consultas de mayor consistencia pueden corren el riesgo de fallar si algún nodo caído provoca que no se pueda satisfacer el nivel de consistencia requerido. Por tanto, queda en manos del diseñador el trabajo de encontrar el equilibrio entre ambas características, siendo la naturaleza de los datos a tratar un factor determinante para ello.
+Para lidiar con dicha restricción, Cassandra ofrece la posibilidad de afinar el nivel de consistencia \footnote{\url{https://docs.datastax.com/en/cassandra/2.1/cassandra/dml/dml_config_consistency_c.html}} en cada consulta, sacrificando para ello parte de la disponibilidad. Así, las consultas de mayor disponibilidad corren el riesgo de ofrecer un dato obsoleto mientras que las de mayor consistencia pueden fallar si algún nodo caído provoca que no se pueda satisfacer el nivel de consistencia requerido.\\
 
 \subsubsection{Optimizado para escrituras}
 
 Una de las características a destacar de Cassandra es el elevado ratio de escrituras por segundo que es capaz de realizar, superando notoriamente a otras bases de datos NoSQL en este apartado \cite{rabl2012solving}.
 
-Al ejecutar una consulta que desemboca en una escritura, los registros son almacenados en dos estructuras denominadas CommitLog y Memtable. El primero, es un fichero donde se adjuntan los registros recibidos, mientras que el segundo, es una cache en memoria que apila dichos registros hasta llegar a su capacidad máxima. Cuando ambas estructuras finalizan de almacenar los datos, Cassandra considera que la consulta ha sido ejecutado satisfactoriamente pudiendo pasar a procesar otras operaciones.\\
+Al ejecutar una consulta que desemboca en una escritura, los registros son almacenados en dos estructuras denominadas CommitLog\footnote{\url{https://wiki.apache.org/cassandra/Durability}} y Memtable. El primero, es un fichero donde se adjuntan los registros recibidos, mientras que el segundo, es una cache en memoria que apila dichos registros. Cuando ambas estructuras finalizan de almacenar los datos, Cassandra considera que la consulta ha sido ejecutado satisfactoriamente pudiendo pasar a procesar otras operaciones.\\
 
-Cuando la Memtable se llena empieza un proceso de vaciado en el cual, primero, se dilucida el nodo destinatario de cada registro. Después, dichos registros son escritos de forma secuencial en estructuras inmutables denominadas SSTable, ficheros que representan físicamente el contenido de una tabla en Cassandra. Si esta operación es interrumpida, se utiliza la información almacenada en el CommitLog para recuperar las escrituras perdidas. Finalmente, cuando todos los registros han sido transferidos a su correspondiente SSTable, el CommitLog es purgado.\\
+Cuando la Memtable\footnote{\url{https://wiki.apache.org/cassandra/MemtableSSTable}} se llena empieza un proceso de vaciado en el cual, primero, se dilucida el nodo destinatario de cada registro. Después, dichos registros son escritos de forma secuencial en estructuras inmutables denominadas SSTable, ficheros que representan físicamente el contenido de una tabla. Si esta operación es interrumpida, se utiliza la información almacenada en el CommitLog para recuperar las escrituras perdidas. Finalmente, cuando todos los registros han sido transferidos a su correspondiente SSTable, el CommitLog es purgado.\\
 
 \begin{figure}[h]
 	\centering
@@ -46,13 +46,13 @@ Cuando la Memtable se llena empieza un proceso de vaciado en el cual, primero, s
 	\label{fig:almacenamiento_cassandra}
 \end{figure}
 
-Debido a la naturaleza inmutable de las SSTable, cada vez que la Memtable se vacía un nuevo fichero es generado para representar una misma tabla. Ello puede acarrear problemas de eficiencia a la hora de consultar la información de dicha tabla, ya que será totalmente necesario leer todos los ficheros correspondientes. Para sobreponerse a este inconveniente, Cassandra posee un mecanismo llamado compactación que unifica las SSTable que representan una misma tabla eliminando los ficheros restantes.\\
+Debido a la naturaleza inmutable de las SSTable, cada vez que la Memtable se vacía un nuevo fichero es generado para representar una tabla ya existente. Ello puede acarrear problemas de eficiencia a la hora de consultar la información de dicha tabla, ya que será totalmente necesario leer todos los ficheros correspondientes. Para sobreponerse a este inconveniente, Cassandra posee un mecanismo llamado compactación que, entre otras acciones, unifica las SSTable que representan una misma tabla eliminando los ficheros restantes.\\
 
 \subsubsection{Replicación asíncrona sin maestro}
 
-Las bases de datos distribuidas ofrecen la posibilidad de replicar los datos que se almacenan en ella, asegurando una respuesta satisfactoria a las peticiones aún habiendo nodos inactivos en la infraestructura. Ello implica la necesidad de conocer el estado de las réplicas y otras maquinas por parte de cada nodo del sistema, que por lo general, se resuelve mediante un modelo maestro-esclavo.\\
+Las bases de datos distribuidas ofrecen la posibilidad de replicar los datos que se almacenan en ellas, pero dicha opción implica la necesidad de conocer continuamente, por parte de todos nodo del sistema, el estado de cada réplica. Por lo general, el mencionado inconveniente se resuelve mediante un modelo maestro-esclavo.\\
 
-En Cassandra, gracias a un conjunto de mecanismos peer-to-peer, cada nodo es capaz de obtener dicha información de forma local sin depender de un nodo maestro, obteniendo un clúster totalmente homogéneo.\\ 
+En Cassandra, no obstante, gracias a un conjunto de mecanismos que se presentan a continuación, cada nodo es capaz de obtener dicha información de forma local sin depender de un nodo maestro, obteniendo un clúster totalmente homogéneo.\\ 
 
 \textbf{Gossip Protocol}\cite{demers1987epidemic}: Protocolo de comunicación peer-to-peer que intercambia el estado del propio nodo y de aquellos que conoce de forma periódica.\\
 
@@ -62,60 +62,45 @@ Cada mensaje Gossip tiene una versión asociada a él, gracias al cual el nodo q
 
 \textbf{Failure Detector}\cite{chandra1996unreliable}: Conjunto de métodos que usando mensajes Gossip sugieren de forma local si otro nodo del sistema esta caído o en estado transitorio.\\
 
-Entre todos los métodos existentes, Cassandra utiliza el Accrual Failure Detector\cite{hayashibara2004spl}. Además ofrece la posibilidad de configurar un umbral por cada nodo que tenga en cuenta el rendimiento de red, carga de trabajo, u otras variables. Al cotejar el valor ofrecido por el detector con dicho umbral, Cassandra es capaz de dilucidar si un nodo esta caído, y en caso afirmativo, redireccionar las peticiones a otro activo.\\
+Dentro de la extensa gama de métodos existentes, Cassandra utiliza el Accrual Failure Detector\cite{hayashibara2004spl}.\\ 
+
+Además ofrece la posibilidad de configurar un umbral por cada nodo que tenga en cuenta el rendimiento de red, carga de trabajo, u otras variables. Al cotejar el valor ofrecido por el detector con dicho umbral, Cassandra es capaz de dilucidar si un nodo esta caído, y en caso afirmativo, redireccionar las peticiones a otro activo.\\
 
 \textbf{Merkle Tree}\cite{merkle1987digital}: Es un árbol hash donde los nodos padres más altos son, a su vez, hashes de sus respectivos hijos. La ventaja principal es que cada rama del árbol puede ser comprobada de forma independiente, sin la necesidad de descargar todo el conjunto de datos.\\
 
-La implementación de Anti-Entropia\cite{golay1949notes} en Cassandra, proceso encargado de comparar todas las réplicas de cada dato que existe en el clúster y actualizarlos a la versión más reciente, genera un Merkle Tree por cada column family durante el proceso de compactación, los cuales se almacenan solo hasta enviarlos a los nodos vecinos. 
+La implementación de Anti-Entropia\cite{golay1949notes} en Cassandra, proceso encargado de comparar todas las réplicas de cada dato que existe en el clúster y actualizarlos a la versión más reciente, genera un Merkle Tree por cada Column Family durante el proceso de compactación, los cuales se almacenan solo hasta enviarlos a los nodos vecinos. 
 
 La praxis descrita implica enviar un exceso de datos por la red pero ahorra en operaciones I/O del disco local, lo cual es preferible para conjuntos de datos muy grandes.\\
 
 \subsubsection{Sin punto único de fallo}
 
-La ejecución de una consulta es considerada satisfactoria si el clúster cumple con los requisitos de consistencia especificados en la misma. Esta simple premisa se embarulla en un entorno real en donde los nodos de la infraestructura pueden cambiar de estado en cualquier instante y además, seguir cumpliendo con los requisitos de consistencia, dando como resultado el no poder actualizar las réplicas que residen en los nodos caídos. Cassandra implementa varios mecanismos con el objetivo de tener que evitar cancelar las consultas en dicho escenario.\\
+La ejecución de una consulta es considerada satisfactoria si el clúster cumple con los requisitos de consistencia especificados en la misma. Esta simple premisa se embarulla en un entorno real en donde los nodos de la infraestructura pueden cambiar de estado en cualquier instante y además, seguir cumpliendo con los requisitos de consistencia, dando como resultado el no poder actualizar las réplicas que residen en los nodos caídos.\\ 
 
-\textbf{Rapid Read Protection}\footnote{\url{http://www.datastax.com/dev/blog/rapid-read-protection-in-cassandra-2-0-2}}: Cualquier consulta contra el clúster requiere de al menos una IP de las máquinas que lo componen para así establecer una comunicación. Dichos nodos son denominados coordinadores y cumplen con la labor de identificar el nodo menos ocupado entre los que contienen una réplica del dato requerido y redirigir la consulta hacia él.\\
+Cassandra implementa varios mecanismos con el objetivo de evitar la cancelación de las consultas en dicho escenario:\\
 
-Si al resolver la redirección el nodo destino no se halla disponible, la técnica Rapid Read Protection permite al coordinador escoger otro nodo candidato y volver a redirigir la petición hacia este último, evitando así tener que devolver un timeout o mensaje de error al cliente.
+\textbf{Rapid Read Protection}\footnote{\url{http://www.datastax.com/dev/blog/rapid-read-protection-in-cassandra-2-0-2}}: 
+El nodo del clúster que recibe una consulta es denominado coordinador y cumple con el cometido de identificar la máquina menos ocupada entre los que contienen una réplica del registro requerido y redirigir la consulta hacia ella.\\
 
-\textbf{Hinted Handoff}\footnote{\url{http://www.datastax.com/dev/blog/modern-hinted-handoff}}: Cuando se realiza una escritura y un nodo que debería de almacenar una réplica del dato a persistir se encuentra inoperativo el coordinador se encarga de almacenar dicho dato en una tabla especial con el objetivo de enviarlo a los nodos correspondientes cuando estos vuelvan a estar activos.\\
+Si en ese preciso instante el nodo electo deja de estar disponible, la técnica Rapid Read Protection permite al coordinador escoger otro nodo entre los candidatos y redirigir la petición hacia este último, evitando así tener que devolver un mensaje de error al cliente.\\
 
-Una vez que un nodo descubre a través de chismes que un nodo para el que contiene consejos se ha recuperado, enviará la fila de datos correspondientes a cada pista para el objetivo.\\
-
-////
-
-Once a node discovers via gossip that a node for which it holds hints has recovered, it will send the data row corresponding to each hint to the target.
-
-/////
+\textbf{Hinted Handoff}\footnote{\url{http://www.datastax.com/dev/blog/modern-hinted-handoff}}: Al persistir una escritura, técnica que almacena en una tabla interna del nodo coordinador los registros que no han podido ser replicados a otras máquinas. Cuando recibe un mensaje Gossip indicando que dichas máquinas vuelven a estar activas, se encarga del envío de los registros correspondientes.\\
 
 \subsection{Cassandra Query Lenguage (CQL)}
 
-// pensado para agrupar y devolver en una sola consulta
-// Curva de aprendizaje
+El código encargado de tratar las consultas que llegan al clúster está generado mediante Apache Thrift\cite{slee2007thrift}, una interfaz para implementar llamadas a procedimientos remotos\cite{nelson1981remote} que ofrece la posibilidad de conectarse a Cassandra utilizando diversos lenguajes de programación.\\
 
-El código encargado de tratar las consultas que llegan al clúster de Cassandra está generado mediante Apache Thrift\cite{slee2007thrift}, una interfaz para implementar llamadas a procedimientos remotos\cite{nelson1981remote} con compatibilidad entre diferentes lenguajes. Dicha interfaz permite definir las funciones con sus respectivos parámetros y generar el código correspondiente para cualquier lenguaje. En el caso particular de Cassandra, el código ejecutado en los nodos está implementado en Java, pero gracias a Thrift actualmente existen {APIs} en más de 10 lenguajes que permiten acceder a él\footnote{\url{http://db-engines.com/en/system/Cassandra}}.
+No obstante, la gran curva de aprendizaje que requería amoldarse a la sintaxis generada por Thrift actuaba de muro para un profesional acostumbrado a trabajar con SQL. Para evitar este inconveniente, los desarrolladores han optado por su propio lenguaje de consultas, el denominado Cassandra Query Lenguage (CQL).\\
 
 
-Apache Cassandra posee su propio lenguaje de consultas, el denominado Cassandra Query Lenguage (CQL). Su sintaxis guarda una gran similitud con la de SQL, lo cual facilita, de forma notoria, el salto que supone pasar de trabajar con bases de datos relacionales a distribuidos.\\
-
-Aún siendo sintácticamente  tan parecido a SQL, presenta ciertas restricciones debido a que es un lenguaje de consultas de una base de datos distribuida. Por ejemplo, no ofrece la posibilidad de realizar operaciones como JOIN y es totalmente necesario especificar todas los atributos que componen la clave primaria a la hora de realizar cualquier consulta de filtrado o de actualización en la tabla. La única operación que no cumple esta restricción es un select que contenga la clausula where, ya que, al definir la clave primaria Cassandra indexa de forma automática todos sus componente, posibilitando más tarde  hacer uso de ellos en este caso concreto.
+Aún siendo sintácticamente  tan parecido a SQL, presenta ciertas restricciones debido a que es un lenguaje de consultas de una base de datos distribuida. Por ejemplo, no ofrece la posibilidad de realizar operaciones como JOIN y es totalmente necesario especificar todas los atributos que componen la clave primaria a la hora de realizar cualquier consulta de filtrado o de actualización en la tabla. La única operación que no cumple esta restricción es un select que contenga la clausula where, ya que, al definir la clave primaria Cassandra indexa de forma automática todos sus componente, posibilitando más tarde  hacer uso de ellos en este caso concreto.\\
   
 \section{Apache Spark}
 
-Apache Spark[9] es un proyecto open source de computación en clúster. Desde el principio fue diseñado para poder ejecutar algoritmos iterativos en memoria sin la necesidad de almacenar en disco los resultados intermedios generados durante el proceso. Esta peculiaridad permite que los procesamientos llevados a cabo con Spark puedan llegar a ser, en algunos casos concretos, 100 veces más rápidos que los de MapReduce[10].\\
+Apache Spark\cite{zaharia2010spark} es un proyecto open source de computación en clúster. Desde el principio fue diseñado para poder ejecutar algoritmos iterativos en memoria sin la necesidad de almacenar en disco los resultados intermedios generados durante el proceso. Esta peculiaridad permite que los procesamientos llevados a cabo con Spark puedan llegar a ser, en algunos casos concretos, 100 veces más rápidos que los de MapReduce\cite{dean2008mapreduce}.\\
 
 A mediados de 2014, coincidiendo con el lanzamiento de la primera versión, alcanzó la cifra de 465 colaboradores, convirtiéndolo en el proyecto más activo entre los relacionados con el Big Data dentro de la Apache Software Fundation.\\
 
-Apache Spark está compuesto por múltiples y variados componentes que pueden ser utilizados de forma conjunta.\\
-
-\begin{figure}[h]
-	\centering
-	\includegraphics[width=0.5\textwidth]{Ilustraciones/spark_ecosystem.png}
-	\caption{Ecosistema Spark}
-	\label{fig:ipanel}
-\end{figure}
-
-La base del proyecto es el denominado Spark Core. Proporciona envío distribuido de tareas, planificación y funciones básicas de entrada salida. La abstracción fundamental de programación se llama Resilient Distributed Datasets (RDD)[11], una colección lógica de datos particionados a través de las máquinas que se expone mediante una API integrada en lenguajes como Java, Python y Scala.\\
+La base del proyecto es el denominado Spark Core. Proporciona envío distribuido de tareas, planificación y funciones básicas de entrada salida. La abstracción fundamental de programación se llama Resilient Distributed Datasets\cite{zaharia2012resilient}, una colección lógica de datos particionados a través de las máquinas que se expone mediante una API integrada en lenguajes como Java, Python y Scala.\\
 
 \subsection{Funcionamiento}
 
