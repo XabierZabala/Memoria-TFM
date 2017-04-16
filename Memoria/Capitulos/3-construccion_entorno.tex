@@ -7,13 +7,17 @@
 \chapter{Entorno de pruebas: Construcción}
 \label{entorno_pruebas}
 
-En las próximas líneas se detallan las directrices seguidas a la hora de confeccionar los entornos de prueba posteriormente utilizados para cuantificar el rendimientos ofrecido por las tecnologías analizadas.\\
+En el presente capítulo se detallan las directrices seguidas para confeccionar los entornos de prueba posteriormente utilizados para cuantificar el rendimientos ofrecido por las tecnologías analizadas.\\
 
-Para ello, se empezará por especificar las características físicas y la confección de los dispositivos utilizados para erigir dichos entornos:\\
+ Por un lado, se describe la construcción de un entorno centralizado compuesto por un único nodo que alberga una instancia de MySQL y por el otro, la de uno distribuido, formado por tres nodos homogéneos sobre el cual operan Apache Cassandra y Apache Spark en consonancia.\\
+
+Para el desarrollo de este estudio la mayoría de las configuraciones a realizar son triviales y carentes de interés, por lo que se ha decidido esquematizar la puesta a punto de elementos secundarios y enfatizar en la configuración de Cassandra y Spark.\\
 
 \section{Características de las máquinas físicas}
 
-\textit{Ordenador portátil}: Terminal encargado de lanzar diversas peticiones contra el servidor y recolectar los resultados computados por este cuantificando el tiempo transcurrido entre ambos eventos.\\ 
+Características de los dispositivos que conforman la infraestructura física sobre la cual se van a erigir los entornos de prueba:\\
+
+\textit{Ordenador portátil}: Terminal encargado de lanzar diversas peticiones contra el servidor y recolectar los resultados computados por este además de cuantificar el tiempo transcurrido entre ambos eventos.\\ 
 
 \begin{itemize}
 	\item Procesador: Intel(R) Core(TM) i-5 4200M CPU @ 2.50 GHz
@@ -23,7 +27,7 @@ Para ello, se empezará por especificar las características físicas y la confe
 	\item Adaptador Red: Qualcomm Atheros AR8172/8176/8178 PCI-E Fast Ethernet Controller (NDIS 6.30)
 \end{itemize}
 
-\textit{Ordenador de sobremesa}: Terminal que adquiere el rol de servidor dentro del entramado. Se encarga del tratamiento de los datos mediante el uso de las tecnología que se analizan en el presente proyecto.\\
+\textit{Ordenador de sobremesa}: Terminal que adquiere el rol de servidor dentro del entramado. Se encarga del almacenamiento y tratamiento de los datos mediante el uso de las tecnología que se analizan en el presente proyecto.\\
 
 \begin{itemize}
 	\item Procesador: AMD FX(tm)-8350 Eight-Core Processor 4.00GHz
@@ -41,74 +45,180 @@ El switch,  a su vez, está conectado a un \textit{router} que le proporciona ac
 
 Las máquinas virtuales juegan un papel vital en el desarrollo de las pruebas. Gracias a ellas, es posible aislar completamente ambos entornos dentro del ordenador de sobremesa y además, permiten la creación de un clúster sin necesidad de adquirir más dispositivos.\\
  
-Con el objetivo de no realizar las mismas configuraciones básicas reiteradamente, se ha decidido crear una máquina virtual básica y una vez configurada, clonarla tantas veces como instancias hagan falta para llevar a cabo las pruebas. Al considerar esta configuración un procedimiento trivial y carente de especial interés en el desarrollo del presente proyecto, los entresijos han sido omitidos, describiendo solamente la motivación de cada paso.\\
+Con el objetivo de no realizar las mismas configuraciones básicas reiteradamente, se ha decidido crear una máquina virtual básica y una vez configurada, clonarla tantas veces como instancias hagan falta.\\
+
+A continuación se describen los pasos seguidos para confeccionar la máquina virtual base:\\
 
 \begin{enumerate}
 	
-	\item \textit{Crear la máquina virtual básica}:\\\\Instancia creada mediante VirtualBox utilizando una imagen de Ubuntu Server 16.04 LTS. Se le ha asignado una memoria física de 75 GB y mantenido tanto el número de procesadores como la memoria RAM que se le asigna por defecto, ya que estas dos últimas características son modificables posteriormente.\\ 
+	\item \textit{Crear la máquina virtual básica}:\\\\Instancia creada mediante VirtualBox utilizando una imagen de Ubuntu Server 16.04 LTS. Se le ha asignado una memoria física de 75 GB y mantenido los valores por defecto del resto de las características, ya que estas pueden ser modificadas posteriormente.
 	
-	\item \textit{Asignar una IP estática}:\\\\Todos los clones realizados sobre la instancia básica operarán como servidores, por lo que no es de recibo que su IP pueda variar cada vez que el servicio de red o la máquina misma se reinicien. Para evitar cualquier inconveniente de este estilo, es totalmente necesario configurar una interfaz de red con una IP estática por la cual se podrá acceder a la máquina.\\
+	\item \textit{Asignar una IP estática}:\\\\La mayoría los clones realizados sobre la instancia básica operan como servidores, por lo que no es de recibo que su IP pueda variar cada vez que el servicio de red o la máquina misma se reinicien. Para evitar cualquier inconveniente de este estilo, es totalmente necesario configurar una interfaz de red con una IP estática por la cual se podrá acceder a la máquina.
 	
 	\item \textit{Cambiar el adaptador de red a modo puente}:\\\\Al crear una máquina virtual con VirtualBox, el adaptador de red predefinido es el NAT. Ello implica que dicha máquina se encontrará aislada en una red lógica y solo podrá acceder a otros dispositivos pasando por la máquina física y haciendo uso de su IP.\\
-	Modificando el adaptador de red al modo puente, se consigue extender la red privada hasta el nodo virtual eliminando así toda dependencia con la máquina física en cuanto a comunicaciones se refiere, posibilitando que acceda al resto de las máquinas que residen en la misma red privada.\\
+	Modificando el adaptador de red al modo puente, se consigue extender la red privada hasta el nodo virtual eliminando así toda dependencia con la máquina física, posibilitando que se pueda comunicar con el resto de las máquinas que residen en la misma red privada.
 	
-	\item \textit{Instalar Java 8}:\\\\El software que se va a arrancar en las instancias clonadas se ejecuta sobre la Máquina Virtual de Java(JVM), por lo que es necesario tener una versión de Java instalada en la máquina virtual base.\\
-	
-	\begin{lstlisting}[language=bash]
-	sudo add-apt-repository ppa:webupd8team/java
-	sudo apt-get update
-	sudo apt-get install oracle-java8-installer
-	\end{lstlisting}
-	
-	\item \textit{Instalar SSH Server}:\\\\Aunque no se considere estrictamente necesario llevar a cabo este último paso, es de gran ayuda poder acceder a las máquinas virtuales mediante SSH y transferir archivos utilizando SFTP.\\
+	\item \textit{Instalar Java 8}:\\\\Todo software que se va a arrancar en las instancias clonadas se va a ejecutar sobre la Máquina Virtual de Java(JVM), por lo que es necesario tener una versión de Java instalada en la máquina virtual base.
 	
 	\begin{lstlisting}[language=bash]
-	sudo apt install openssh-server
+	$ sudo add-apt-repository ppa:webupd8team/java
+	$ sudo apt-get update
+	$ sudo apt-get install oracle-java8-installer
 	\end{lstlisting}
 
 \end{enumerate}
 
-Una vez terminado de confeccionar la máquina virtual básica, es aconsejable calcular ciertas métricas como la latencia y el número de saltos que se dan por la red hasta llegar al nodo destino, ya que pueden aflorar anomalías existentes en la configuración.\\ 
+Una vez terminado de confeccionar la máquina virtual básica, es aconsejable calcular ciertas métricas como la latencia y el número de saltos que se dan por la red hasta llegar al nodo destino, ya que pueden aflorar errores realizado durante la configuración.\\ 
 
 Ejecutando el comando \textit{tracert} en el ordenador portátil y especificando como parámetro la IP correspondiente a la máquina virtual recién confeccionada, se han obtenido latencias inferiores a 1ms y un único salto entre ambos nodos, lo cual implica que los paquetes enviados llegan a su destino casi al instante y sin salir de la red privada.\\
 
 \section{Entorno centralizado}
 
-emular el entorno que actualmente datik posee y el rendimiento que da
+El objetivo del entorno centralizado es imitar la infraestructura utilizada por Datik a la hora de ejecutar el proceso Cálculo de Indicadores. Dicha infraestructura consta de un servidor en la nube que alberga una instancia de MySQL Server y un proceso que actúa como cliente, accediendo a ella para realizar consultas y computar posteriormente los registros obtenidos.\\
+
+\subsection{Emulando el servidor}
+
+La creación y confección del nodo servidor para el entorno de pruebas centralizado se resume en los siguientes pasos:\\
 
 \begin{enumerate}
-	\item Nested item 1
-	\item Nested item 2
+	
+\item \textit{Clonar la máquina virtual base}:\\\\ Crear una copia de la instancia creada en el apartado anterior y asignar los siguientes parámetros:\\
+
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{|l||l|l|l|}
+		
+		\hline
+		
+		& IP Privada & Procesadores & Memoria RAM \\
+		
+		\hline
+		\hline
+		
+		Nodo MySQL & 192.168.0.100 & 6 & 24 GB \\
+		
+		\hline
+		
+	\end{tabular}
+	\caption{Descripción del nodo centralizado}
+	\label{nodo-mysql}
+\end{table}
+
+\item \textit{Descargar e instalar la última versión de MySQL}:\\\\ Acceder a la máquina virtual recientemente clonada y ejecutar los comandos que aparecen a continuación para descargar la última versión existente de MySQL, la 5.7 en el momento que se llevo a cabo el presente proyecto.\\
+
+\begin{lstlisting}[language=bash]
+$ sudo apt update
+$ sudo apt upgrade
+$ sudo apt install mysql-server
+\end{lstlisting}
+
+El mismo proceso de instalación se encarga de crear un script de inicio en la carpeta \textit{etc/init.d/} y ejecutar el proceso, por lo que MySQL debería de estar operativo con los pasos ya realizados. En caso contrario, es necesario arrancarlo manualmente:\\
+
+\begin{lstlisting}[language=bash]
+$ sudo systemctl start mysql
+\end{lstlisting}
+
+\item \textit{Crear un esquema}:\\\\ Para realizar cualquier operación sobre MySQL es necesario identificarse contra el servidor utilizando para ello  el único usuario existente, 'root', y la contraseña que se le ha asignado a este durante el proceso de instalación.\\
+
+Una vez dentro, se ha creado un esquema o base de datos denominado nyt2015 con el fin de albergar los datos que se analizarán posteriormente.\\
+
+\begin{lstlisting}[language=bash]
+$ mysql -u root -p passwd
+$ CREATE DATABASE nyt2015;
+\end{lstlisting}
+
+\item \textit{Posibilitar acceso desde la máquina remota}:\\\\ Un proceso alojado en el ordenador portátil va a estar capacitado para realizar consultas y computar posteriormente los registros obtenidos.\\
+
+Las aplicaciones que se conectan a la base de datos no deben acceder a ella mediante el usuario 'root' por motivos de seguridad, por lo que es necesario crear un nuevo usuario y especificar los permisos que este tendrá sobre el esquema generado en el paso anterior. Además, teniendo en cuenta que el nuevo usuario solo podrá conectarse desde el ordenador portátil, no esta de más que se especifique la IP de dicha máquina para restringir el acceso desde cualquier otra máquina.\\
+
+\begin{lstlisting}[language=bash]
+$ sudo CREATE USER 'xabier'@'192.168.0.10' IDENTIFIED BY 'passwd';
+$ sudo GRANT ALL ON nyt2015.* TO 'xabier'@'192.168.0.10';
+\end{lstlisting}
+
+Al estar trabajando sobre máquinas virtuales alojadas en una red propia, todos los puertos se encuentran abiertos por defecto, pero en caso de existir algún cortafuegos que protegiera el servidor sería necesario abrir el acceso al puerto donde escucha MySQL, el 3306 por defecto, a la máquina que desea comunicarse con el.\\ 
+
 \end{enumerate}
 
+\subsection{Emulando el cliente}
+
+Emular un proceso cliente en el entorno centralizado es tan simple como instalar la última versión del MySQL Workbench\footnote{\url{https://www.mysql.com/products/workbench/}} sobre el ordenador portátil (no hace falta máquina virtual alguna) y crear una nueva conexión con el servidor especificando la IP de este junto al usuario y contraseña creados en el anterior apartado.\\
+
+En capítulos futuros se especifican las consultas realizadas contra el servidor centralizado y los resultados obtenidos.\\
 
 \section{Entorno distribuido}
 
+Infraestructura en forma de clúster alojada en el ordenar de sobremesa sobre la cual se almacena y procesa mediante Apache Cassandra y Apache Spark el mismo conjunto de datos tratado en el entorno centralizado.\\ 
+
+El ordenar portátil, por su parte, se encarga de ejecutar el programa que especifica el procesamiento que ha de llevar a cabo el clúster y cuantificar el tiempo transcurrido en dicha tarea.\\
+
+\subsection{Servidor}
+
+En las siguientes líneas se detalla la configuración de los nodos que conforman el clúster y la puesta a punto de las tecnologías que operan sobre él.\\
+
 \begin{enumerate}
-	\item Nested item 1
-	\item Nested item 2
+	
+\item \textit{Clonar la máquina virtual base}:\\\\El primer paso consiste en clonar la máquina virtual base las veces como nodos vayan a conformar el clúster. En este particular caso se crean 3 copias.\\
+
+Además de configurar la IP, el número de procesadores y la memoria RAM disponible para cada nodo, es necesario hacer lo propio con el hostname. Apache Cassandra recurre a este atributo para conocer la IP de una máquina cuando ciertos elementos del fichero de configuración no son especificados y en el caso de Spark, el proceso driver utiliza los hostname para establecer la conexión con otros nodos de la infraestructura y requerir sus recursos de cara a una futura computación.\\
+
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{|l||l|l|l|l|}
+		
+		\hline
+		
+		& IP Privada & Procesadores & Memoria RAM & Hostname \\
+		
+		\hline
+		\hline
+		
+		Nodo 1 & 192.168.0.101 & 2 & 8 GB & nodo1 \\
+		
+		\hline
+		
+		Nodo 2 & 192.168.0.102 & 2 & 8 GB & nodo2 \\
+		
+		\hline
+		
+		Nodo 3 & 192.168.0.103 & 2 & 8 GB & nodo3 \\
+		
+		\hline
+		
+	\end{tabular}
+	\caption{Descripción de los nodos que componen el clúster}
+	\label{nodos-cluster}
+\end{table}
+
+Cabe destacar que la suma de recursos físicos destinados a la creación del clúster es idéntica a los recursos destinados para erigir el servidor del entorno centralizado.\\ 
+
+\item \textit{Resolver hostnames a IPs}:\\\\Los hostname recién configurados no sirven de nada si no es posible asociarlos a una IP concreta. Dicho trabajo lo suele realizar, generalmente, un DNS, pero al tratarse de una red privada que no dispone de dicho recurso hay que recurrir al fichero \textit{/etc/hosts} donde se han de especificar la IP privada y el hostname de la propia máquina y el resto que conforman el clúster.\\
+
+\item \textit{Descargar Apache Cassandra}:\\\\Puede ser instalada mediante paquetes deb o rpm pero en este proyecto se ha optado por descargar el archivo binario.\\
+
+
+
+--team versiones recientes etc
+
+\begin{lstlisting}[language=bash]
+$ wget https://archive.apache.org/dist/cassandra/2.1.8/apache-cassandra-2.1.8-bin.tar.gz
+\end{lstlisting}
+
+\item \textit{Descargar Apache Spark}:
+
+--team versiones recientes etc // de forma similar con cassandra la version no es la ultima
+
+\begin{lstlisting}[language=bash]
+$ wget http://d3kbcqa49mib13.cloudfront.net/spark-1.4.1-bin-hadoop2.6.tgz
+\end{lstlisting}
+	
 \end{enumerate}
 
-A continuación se detallan los pasos más relevantes llevados a cabo para construir y configurar el entorno distribuido o clusterizado. Instalar las máquinas virtuales que operan cual nodos y dotarlos de un sistema operativo se ha considerado un procedimiento trivial y carente de interés por lo cual estos pasos han sido omitidos.\\ 
+\subsubsection{Configuración de Apache Cassandra}
 
+Cassandra puede ser instalada mediante paquetes deb o rpm pero en este proyecto no se ha optado por ninguna de esas vías. Al haber elegido la instalación manual, será necesario crear los siguientes directorios en cada uno de los nodos para que el archivo de configuración cassandra.yaml pueda guardar y acceder a la información generada durante la ejecución:
 
-
-///Configuración de los fichero etc/hosts
-
-Para finalizar, es indispensable que cada máquinas conozca a las otras que componen el cluster para que estos actúen de forma  cooperativa. Dicha información les será transmitida mediante el fichero /etc/hosts.
-
-En el siguiente recuadro se puede apreciar la apariencia que han de tener los ficheros /etc/hosts de todas las máquinas del cluster:
-
-192.168.1.201 master
-192.168.1.202 slave1
-192.168.1.203 slave2
-
-El motivo por el cual unos pasos atrás se ha asignado un hostname a cada máquina virtual sido para, mediante este fichero, relacionar cada host con su respectiva IP. A priori, no parece que sea estrictamente necesario realizar esta configuración, ya que una dirección IP es elemento suficiente para identificar un terminal en la red, pero a la larga ofrece diversas ventajas. Por un lado  ventajas operativas: un nombre es más fácil de relacionar a un nodo gracias a la semántica inherente a el, algo que no pasa con una IP, que a la postre, cambia si el nodo es trasladado de una red a otra. Por otro lado, las ventajas funcionales como las que se van a poder observar en el siguiente apartado; por ejemplo, que algunas variables de Apache Cassandra, en caso de no ser configurados, recurren a este fichero para conocer la IP de una máquina. 
-
-\subsection{Configuración de Apache Cassandra}
-
-Cassandra puede ser instalada mediante paquetes deb o rpm pero en este proyecto no se ha optado por ninguna de esa vía. Al haber elegido la instalación manual, será necesario crear los siguientes directorios en cada uno de los nodos para que el archivo de configuración cassandra.yaml pueda guardar y acceder a la información generada durante la ejecución:
-
+-- asegurar que los siguientes directorios existen y tienen permisos para el usuario que ejecuta el proceso cassandra
 
 %\begin{itemize}
 %	\item /var/lib/cassandra/data
@@ -160,28 +270,54 @@ Establece el modo en el que Cassandra localiza nodos y envía peticiones de enru
 	 
 Dichos atributos han sido configurados de la siguiente manera en el fichero cassandra.yaml de cada nodo del cluster: 
 
-%BigData_Master	BigData_Slave1	BigData_Slave2
-%cluster_name	BigDataCluster	BigDataCluster	BigDataCluster
-%initial_token	0	3074457345618258602	6148914691236517205
-%seed_provider	192.168.1.201	192.168.1.201	192.168.1.201
-%listen_address	192.168.1.201	192.168.1.202	192.168.1.203
-%rpc_address	0.0.0.0	0.0.0.0	0.0.0.0
-%endpoint_snitch	RackInferringSnitch	RackInferringSnitch	RackInferringSnitch
-%Tabla 5. Configuración de los nodos Cassandra
-
-%Para terminar con la configuración de Cassandra, es conveniente entender los valores asignados a los atributos initial_token y seed_provider. 
-
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{|l||l|l|l|}
+		
+		\hline
+		
+		Atributo & Nodo 1 & Nodo 2 & Nodo 3 \\
+		
+		\hline
+		\hline
+		
+		cluster name & Test Cluster & Test Cluster & Test Cluster \\
+		
+		\hline
+		
+		num token & 256 & 256 & 256 \\
+		
+		\hline
+		
+		seed provider & 192.168.0.102 & 192.168.0.101 & 192.168.0.101 \\ 
+		              & 192.168.0.103 & 192.168.0.103 & 192.168.0.102 \\ 
+		
+		\hline
+		
+		listen address & 192.168.0.101 & 192.168.0.102 & 192.168.0.103 \\
+		
+		\hline
+		
+		rpc address & 192.168.0.101 & 192.168.0.102 & 192.168.0.103 \\
+		
+		\hline
+		
+		endpoint snitch & SimpleSnitch & SimpleSnitch & SimpleSnitch \\
+		
+		\hline
+		
+	\end{tabular}
+	\caption{Configuración de los nodos Cassandra}
+	\label{configuracion-nodos-cassandra}
+\end{table}
 
 Cassandra ofrece herramientas como nodetool para comprobar que este ha sido instalado de forma correcta a través del cluster.
 
 // mencionar como comprobar mediante nodetool que todo ha ido bien
 
 
-\subsection{Configuración de Apache Spark}
+\subsubsection{Configuración de Apache Spark}
 
-///Cambiar los hostname de las máquinas
-
-Asignar nombre univoco a cada máquina es otro de los pasos que ha de realizarse. Ello se logra modificando el fichero /etc/hostname y cambiando el valor que tiene por defecto (ubuntu) por el nombre con el que se quiera bautizar.
 
 La configuración de Apache Spark puede ser realizada tanto de forma manual como automática, pero por la sencillez y comodidad de ofrece esta vez se ha elegido configurarlo de la segunda manera.
 
@@ -189,3 +325,6 @@ Apache Spark ofrece una serie de scripts como start-all y stop-all que ejecutado
 
 Para que estos scripts funcionen de forma correcta será necesario hacer una pequeña configuración. Dentro de la carpeta conf de todos los nodos de la infraestructura se ha de crear un fichero llamado slaves, y dentro, especificar el hostname de las maquinas que vayan a trabajar como tal.
 
+\subsection{Cliente}
+
+-- conector cassandra spark 
