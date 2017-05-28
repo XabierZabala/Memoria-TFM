@@ -17,6 +17,27 @@
 \endgroup
 
 \sortlist[entry]{nty/global/}
+  \entry{bang20082}{article}{}
+    \name{author}{1}{}{%
+      {{hash=BJJ}{%
+         family={Bang-Jensen},
+         family_i={B\bibinitperiod-J\bibinitperiod},
+         given={J{\o}rgen},
+         given_i={J\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{BJJ1}
+    \strng{fullhash}{BJJ1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{B}
+    \field{sortinithash}{B}
+    \field{pages}{32\bibrangedash 34}
+    \field{title}{2.1 Acyclic Digraphs}
+    \field{journaltitle}{Digraphs: Theory, Algorithms and Applications}
+    \field{year}{2008}
+  \endentry
+
   \entry{chandra1996unreliable}{article}{}
     \name{author}{2}{}{%
       {{hash=CTD}{%
@@ -707,6 +728,33 @@
     \field{howpublished}{Big Data Executive Survey 2013 Boston}
     \field{title}{The State of Big Data in the Large Corporate World}
     \field{year}{2013}
+  \endentry
+
+  \entry{thulasiraman19925}{article}{}
+    \name{author}{2}{}{%
+      {{hash=TK}{%
+         family={Thulasiraman},
+         family_i={T\bibinitperiod},
+         given={K},
+         given_i={K},
+      }}%
+      {{hash=SM}{%
+         family={Swamy},
+         family_i={S\bibinitperiod},
+         given={MNS},
+         given_i={M\bibinitperiod},
+      }}%
+    }
+    \strng{namehash}{TKSM1}
+    \strng{fullhash}{TKSM1}
+    \field{labelnamesource}{author}
+    \field{labeltitlesource}{title}
+    \field{sortinit}{T}
+    \field{sortinithash}{T}
+    \field{pages}{118}
+    \field{title}{5.7 Acyclic Directed Graphs}
+    \field{journaltitle}{Graphs: Theory and Algorithms}
+    \field{year}{1992}
   \endentry
 
   \entry{xin2013shark}{inproceedings}{}

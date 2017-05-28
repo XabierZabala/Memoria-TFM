@@ -1,5 +1,5 @@
 %----------------------------------------------------%
-%          ENTORNO DE PRUEBAS: CONSTRUCCION          %
+%                    ALMACENAMIENTO                  %
 %----------------------------------------------------%
 
 \pagestyle{fancy}
@@ -7,19 +7,204 @@
 \chapter{Almacenamiento y consulta de datos}
 \label{almacenamiento_datos}
 
-En el presente capítulo se detallan las directrices seguidas a la hora de confeccionar los entornos de prueba posteriormente utilizados para cuantificar el rendimientos ofrecido por las tecnologías analizadas.\\
+El almacenamiento y la retribución de los datos constituyen el grueso del presente capítulo. Primero, se expone la naturaleza de los registros que conforman el conjunto de datos y se describen las consultas que se desean realizar sobre este. Después, se presenta el diseño de las tablas utilizadas para almacenar dichos datos, incidiendo especialmente en la correspondiente a Apache Cassandra debido a las peculiaridades que presenta. Para finalizar, se exponen los objetivos seguidos a la hora de definir cada una de las consultas y entender mejor así la relación existente entre los elementos que conforman el entorno distribuido.
 
-Para el desarrollo de este estudio la mayoría de las configuraciones a realizar son triviales y carentes de interés, por lo que se ha decidido esquematizar la puesta a punto de elementos secundarios y enfatizar en la configuración de Cassandra y Spark.\\
+\section{Descripción del Dataset}
 
-\section{Dataset a tratar}
+Para cuantificar los beneficios aportados por las tecnologías propuestas, se ha decidido utilizar un dataset público de aproximadamente 25 GB que recoge la información de los trayectos realizados por los taxis amarillos de Nueva York durante el año 2015\footnote{\url{http://www.nyc.gov/html/tlc/html/about/trip_record_data.shtml}}, ya que los datos actualmente almacenados por Datik se encuentran sujetos a una cláusula de confidencialidad.\\
 
-\section{Definición de las consultas}
+El conjunto de datos está compuesto aproximadamente por 146 millones de registros en formato CSV, los cuales se hallan divididos en 12 ficheros de texto, uno por cada mes del año. La tabla \ref{atributos_trip} de la página \pageref{atributos_trip} ofrece una breve descripción de los atributos que representan un registro o viaje: 
 
-\section{Creación de las tablas y almacenamiento de datos}
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{|l||l|}
+		
+		\hline
+		
+		\textbf{VendorID} & Código referente proveedor de telefonía que facilita los registros.\\
+		                  & \textbf{1= Creative Mobile Technologies, LLC; 2= VeriFone Inc.} \\
+		
+		\hline
+		 
+		\textbf{tpep\_pickup\_datetime} & La fecha y hora en que se activa el medidor. \\
+		
+		\hline
+		 
+		\textbf{tpep\_dropoff\_datetime} & La fecha y hora en que se desactiva el medidor. \\
+		
+		\hline
+		 
+		\textbf{Passenger\_count} & Número de pasajeros en el vehículo. \\ 
+		
+		\hline
+		 
+		\textbf{Trip\_distance} & La distancia de viaje transcurrida en millas según el taxímetro. \\
+		
+		\hline
+		 
+		\textbf{Pickup\_longitude} & Longitud en la que el medidor se activa. \\
+		
+		\hline
+		 
+		\textbf{Pickup\_latitude} & Latitud en la que el medidor se activa. \\
+		
+		\hline
+		
+		\textbf{RateCodeID} & El código de tarifa vigente al final del viaje. \\
+		                    & \textbf{1= Tarifa estándar} \\
+		                    & \textbf{2= JFK} \\
+		                    & \textbf{3= Newark} \\
+		                    & \textbf{4= Nassau or Westchester} \\
+		                    & \textbf{5= Precio negociado} \\
+		                    & \textbf{6= Viaje de Grupo} \\
+		
+		\hline
+		 
+		\textbf{Store\_and\_fwd\_flag} & Indica si el registro refrente al viaje se \\
+		                               & mantuvo en la memoria del vehículo por falta \\
+		                               & de conexión con el servidor. \\
+					                   & \textbf{Y= store and forward trip} \\
+						               & \textbf{N= not a store and forward trip} \\
+	
+		
+		\hline
+		 
+		\textbf{Dropoff\_longitude} & Longitud en la que se desactiva el medidor. \\
+		
+		\hline
+		 
+		\textbf{Dropoff\_latitude} & Latitud en la que se desactiva el medidor. \\
+		
+		\hline
+		
+		\textbf{Payment\_type} &  Código numérico que indica la forma de pago del pasajero. \\
+					           & \textbf{1= Tarjeta de crédito} \\
+					           & \textbf{2= Efectivo} \\
+					           & \textbf{3= Sin cargo} \\
+					           & \textbf{4= Pleito} \\
+					           & \textbf{5= Desconocido} \\
+					           & \textbf{6= Viaje cancelado} \\
+		
+		\hline
+		 
+		\textbf{Fare\_amount} & La tarifa de tiempo y distancia calculada por el contador. \\
+		
+		\hline
+		
+		\textbf{Extra} & Varios extras y recargos. Actualmente, sólo incluye \\
+		               & los \$0.50 de hora punta y \$1 de cargos por la noche. \\
+		
+		\hline
+		 
+		\textbf{MTA\_tax} & Impuesto de \$0.50 que se activa automáticamente basado en \\
+		                  & el contador. \\
+		
+		\hline
+	
+		\textbf{Improvement\_surcharge} & \$0.30 de recargo al finalizar el trayecto. \\
+		
+		\hline
+		
+		\textbf{Tip\_amount} & Éste campo es rellenado automáticamente al pagar con \\
+		                     & tarjeta de crédito. \\
+		
+		\hline
+		 
+		\textbf{Tolls\_amount} & Importe total de todos los peajes pagados durante el viaje.  \\
+		
+		\hline
+		 
+		\textbf{Total\_amount} & La cantidad total cobrada a los pasajeros. \\
+		
+		\hline
+		
+	\end{tabular}
+	\caption{Atributos que componen un Viaje}
+	\label{atributos_trip}
+\end{table}
+
+\subsection{Definición de las consultas}
+\label{definicion_consultas}
+
+A la hora de diseñar las tablas en cualquier base de datos NoSQL uno de los aspectos a tener en cuenta son las consultas que se van a ejecutar contra ellas. Debido a la naturaleza distribuida que la mayoría posee de forma inherente, la sintaxis disponible para especificar las consultas se ve drásticamente reducida en pro de una escalabilidad infinita y tiempos de respuesta rápidos.\\
+
+En la tabla \ref{consultas_codigos} de la página \pageref{consultas_codigos} de presentan las consultas que se van a ejecutar contra ambos entornos. El objetivo que se persigue al lanzar cada una de ellas es especificado en el apartado \ref{objetivo_consultas} de este mismo capítulo:\\
+
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{|l|l|l|}
+		
+		\hline
+		
+		\textbf{ID Consulta} & \textbf{Descripción} \\
+		
+		\hline
+		\hline
+		
+		\textbf{QUERY01} & Obtener los datos registrados por la compañía Creative Mobile \\ 
+		                 & Technologies en el día 2015-03-10 entre las horas 06:00 y 18:00.\\
+		
+		\hline
+		
+		\textbf{QUERY02} & Los 10 días con mayor número de store \& foward durante el mes de abril \\ 
+		                 & ordenados de forma descendente.\\ 
+		
+		\hline
+		
+		\textbf{QUERY03} & Utilizando los datos de julio y agosto, entre los viajes más largos que \\ 
+		                 & la media el porcentaje de pagos que se han realizado con tarjeta de crédito \\
+		                 & y en efectivo.\\
+		
+		\hline
+		
+		\textbf{QUERY04} & Calcular la media aritmética de los atributos passenger\_count,\\
+		                 & trip\_distance y total\_amount en los viajes de octubre. \\
+		
+		\hline
+		
+	\end{tabular}
+	\caption{Descripción de las consultas}
+	\label{consultas_codigos}
+\end{table}
+
+\section{Creación de las tablas}
+
+Las consultas que se desean ejecutar contra Cassandra no son el único elemento a tener en cuenta a la hora de crear una tabla. Otro factor de vital relevancia es controlar el tamaño que puede llegar a tener una partición, ya que al superar unos pocos centenares de MB se corre el riesgo de ralentizar la consulta y si esta tarda más de 10 segundos Cassandra lo cancela y devuelve un error al proceso cliente que le había requerido los datos.\\
+
+MySQL por su parte, no impone restricción alguna, por lo que primero se creará la tabla correspondiente a Cassandra y después se construirá uno equivalente en la base de datos centralizada.
+
+\subsection{Entorno distribuido}
+
+\subsubsection{Análisis de las consultas a manejar}
+
+Explicar la movida de las particiones
+// Explicar el limite de lasparticiones y como puede rebasar los 10 segundos dedicados para las consultas
+
+\subsubsection{Calcular el tamaño de la partición}
+
+// Explicar la movida de las formulas
+
 
 \subsection{Entorno centralizado}
 
-\section{Entorno distribuido}
+// Indexacion tambien
+
+\subsection{Objetivo de las consultas}
+\label{objetivo_consultas}
+
+Anteriormente se ha mencionado que Cassandra y Spark forman un gran binomio, pero no se ha especificado en ningún momento de qué manera y en qué circunstancias es beneficioso el uso de Spark a la hora de procesar los datos almacenados en Cassandra. De la misma forma, se ha hecho referencia al conector Spark/Cassandra que ofrece funcionalidades suplementarias para facilitar el uso conjunto de ambas tecnologías, pero tampoco se han especificado sus ventajas.\\
+
+El objetivo de las consultas definidas en el recuadro \ref{consultas_codigos} de la página \pageref{consultas_codigos}, más allá de obtener información valiosa sobre diferentes eventos, es evidenciar las limitaciones que presentan las tecnologías propuestas, comprender hasta que punto pueden llegar operando por sí solas y entender cómo se apoyan entre ellas para obtener una mejora sustancial, en comparación a herramientas tradicionales, a la hora de procesar conjuntos hercúleos de datos.\\
+
+\begin{itemize}
+	\item \textbf{QUERY01}: Consulta idílica para Cassandra ya que ataca directamente el contenido de una única partición. Se quiere comprobar que es más rápido obtener datos mediante el sistema de particionado de Cassandra que utilizando los indices de MySQL.
+	
+	\item \textbf{QUERY02}: Se desean filtrar los datos mediante una columna que no es parte de la Partion Key, cosa que no es posible en Cassandra. Se opta por realizar una consulta contra Cassandra para que echa mano de Spark Aun metiendo un nuevo elemento sigue siendo mas rapido, conector y filtrado
+	\item \textbf{QUERY03}:// Potencial de iterar sobre memoria
+	\item \textbf{QUERY04}:// Prueba semejante a calculo de indicadores
+\end{itemize}
+
+
 
 
 

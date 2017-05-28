@@ -12,23 +12,26 @@
 \BOOKMARK [1][-]{section.3.1}{Caracter\355sticas de las m\341quinas f\355sicas}{chapter.3}% 12
 \BOOKMARK [1][-]{section.3.2}{Confecci\363n de las m\341quinas virtuales}{chapter.3}% 13
 \BOOKMARK [1][-]{section.3.3}{Entorno centralizado}{chapter.3}% 14
-\BOOKMARK [2][-]{subsection.3.3.1}{Emulando el servidor}{section.3.3}% 15
+\BOOKMARK [2][-]{subsection.3.3.1}{Servidor}{section.3.3}% 15
 \BOOKMARK [2][-]{subsection.3.3.2}{Emulando el cliente}{section.3.3}% 16
 \BOOKMARK [1][-]{section.3.4}{Entorno distribuido}{chapter.3}% 17
-\BOOKMARK [2][-]{subsection.3.4.1}{Servidor}{section.3.4}% 18
+\BOOKMARK [2][-]{subsection.3.4.1}{Servidor distribuido}{section.3.4}% 18
 \BOOKMARK [2][-]{subsection.3.4.2}{Cliente}{section.3.4}% 19
 \BOOKMARK [0][-]{chapter.4}{Almacenamiento y consulta de datos}{}% 20
-\BOOKMARK [1][-]{section.4.1}{Dataset a tratar}{chapter.4}% 21
-\BOOKMARK [1][-]{section.4.2}{Definici\363n de las consultas}{chapter.4}% 22
-\BOOKMARK [1][-]{section.4.3}{Creaci\363n de las tablas y almacenamiento de datos}{chapter.4}% 23
-\BOOKMARK [2][-]{subsection.4.3.1}{Entorno centralizado}{section.4.3}% 24
-\BOOKMARK [1][-]{section.4.4}{Entorno distribuido}{chapter.4}% 25
-\BOOKMARK [0][-]{chapter.5}{Procesamiento y Resultados}{}% 26
-\BOOKMARK [1][-]{section.5.1}{Procesamiento de datos}{chapter.5}% 27
-\BOOKMARK [2][-]{subsection.5.1.1}{Entorno centralizado}{section.5.1}% 28
-\BOOKMARK [2][-]{subsection.5.1.2}{Entorno distribuido}{section.5.1}% 29
-\BOOKMARK [1][-]{section.5.2}{Resultados}{chapter.5}% 30
-\BOOKMARK [0][-]{chapter.6}{Conclusiones y trabajos futuros}{}% 31
-\BOOKMARK [1][-]{section.6.1}{Conclusiones}{chapter.6}% 32
-\BOOKMARK [1][-]{section.6.2}{Trabajos futuros}{chapter.6}% 33
-\BOOKMARK [0][-]{chapter*.6}{Bibliograf\355a y Referencias}{}% 34
+\BOOKMARK [1][-]{section.4.1}{Descripci\363n del Dataset}{chapter.4}% 21
+\BOOKMARK [2][-]{subsection.4.1.1}{Definici\363n de las consultas}{section.4.1}% 22
+\BOOKMARK [1][-]{section.4.2}{Creaci\363n de las tablas}{chapter.4}% 23
+\BOOKMARK [2][-]{subsection.4.2.1}{Entorno distribuido}{section.4.2}% 24
+\BOOKMARK [2][-]{subsection.4.2.2}{Entorno centralizado}{section.4.2}% 25
+\BOOKMARK [2][-]{subsection.4.2.3}{Objetivo de las consultas}{section.4.2}% 26
+\BOOKMARK [0][-]{chapter.5}{Procesamiento y Resultados}{}% 27
+\BOOKMARK [1][-]{section.5.1}{Procesamiento de datos}{chapter.5}% 28
+\BOOKMARK [2][-]{subsection.5.1.1}{Entorno centralizado}{section.5.1}% 29
+\BOOKMARK [2][-]{subsection.5.1.2}{Entorno distribuido}{section.5.1}% 30
+\BOOKMARK [1][-]{section.5.2}{Resultados}{chapter.5}% 31
+\BOOKMARK [2][-]{subsection.5.2.1}{Inserciones}{section.5.2}% 32
+\BOOKMARK [2][-]{subsection.5.2.2}{Consultas de Lectura}{section.5.2}% 33
+\BOOKMARK [0][-]{chapter.6}{Conclusiones y trabajos futuros}{}% 34
+\BOOKMARK [1][-]{section.6.1}{Conclusiones}{chapter.6}% 35
+\BOOKMARK [1][-]{section.6.2}{Trabajos futuros}{chapter.6}% 36
+\BOOKMARK [0][-]{chapter*.12}{Bibliograf\355a y Referencias}{}% 37
