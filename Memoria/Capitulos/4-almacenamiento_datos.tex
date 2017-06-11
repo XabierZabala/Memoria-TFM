@@ -7,7 +7,7 @@
 \chapter{Almacenamiento y consulta de datos}
 \label{almacenamiento_datos}
 
-El almacenamiento y la retribución de los datos constituyen el grueso del presente capítulo. Primero, se expone la naturaleza de los registros que conforman el conjunto de datos y se describen las consultas que se desean realizar sobre este. Después, se presenta el diseño de las tablas utilizadas para almacenar dichos datos, incidiendo especialmente en la correspondiente a Apache Cassandra debido a las peculiaridades que presenta. Para finalizar, se exponen los objetivos seguidos a la hora de definir cada una de las consultas y entender mejor así la relación existente entre los elementos que conforman el entorno distribuido.
+El almacenamiento y la retribución de los datos constituyen el grueso del presente capítulo. Primero, se expone la naturaleza de los registros que conforman el conjunto de datos y se describen las consultas que se desean realizar sobre este. Después, se presenta el diseño de las tablas utilizadas para almacenar dichos datos, incidiendo especialmente en la correspondiente a Apache Cassandra debido a las peculiaridades que presenta. Para finalizar, se exponen los criterios seguidos a la hora de elegir las consultas ya mencionadas en detrimento a otras posibles candidatas.
 
 \section{Descripción del Dataset}
 
@@ -126,7 +126,7 @@ El conjunto de datos está compuesto aproximadamente por 146 millones de registr
 \subsection{Definición de las consultas}
 \label{definicion_consultas}
 
-A la hora de diseñar las tablas en cualquier base de datos NoSQL uno de los aspectos a tener en cuenta son las consultas que se van a ejecutar contra ellas. Debido a la naturaleza distribuida que la mayoría posee de forma inherente, la sintaxis disponible para especificar las consultas se ve drásticamente reducida en pro de una escalabilidad infinita y tiempos de respuesta rápidos.\\
+A la hora de diseñar las tablas en cualquier base de datos NoSQL uno de los aspectos a tener en cuenta son las consultas que se van a ejecutar contra ellas. Debido a la naturaleza distribuida que la mayoría poseen de forma inherente, la sintaxis disponible para especificar las consultas se ve drásticamente reducida en pro de una escalabilidad infinita y tiempos de respuesta rápidos.\\
 
 En la tabla \ref{consultas_codigos} de la página \pageref{consultas_codigos} de presentan las consultas que se van a ejecutar contra ambos entornos. El objetivo que se persigue al lanzar cada una de ellas es especificado en el apartado \ref{objetivo_consultas} de este mismo capítulo:\\
 
@@ -169,39 +169,211 @@ En la tabla \ref{consultas_codigos} de la página \pageref{consultas_codigos} de
 
 \section{Creación de las tablas}
 
-Las consultas que se desean ejecutar contra Cassandra no son el único elemento a tener en cuenta a la hora de crear una tabla. Otro factor de vital relevancia es controlar el tamaño que puede llegar a tener una partición, ya que al superar unos pocos centenares de MB se corre el riesgo de ralentizar la consulta y si esta tarda más de 10 segundos Cassandra lo cancela y devuelve un error al proceso cliente que le había requerido los datos.\\
+Las consultas que se desean ejecutar contra Cassandra no son el único elemento a tener en cuenta a la hora de crear una tabla. Otro factor de vital relevancia es el tamaño que puede llegar a ocupar una partición, ya que un volumen elevado puede llegar a ralentizar la consulta de sobremanera e incluso impedir que esta pueda finalizarse satisfactoriamente.\\
 
-MySQL por su parte, no impone restricción alguna, por lo que primero se creará la tabla correspondiente a Cassandra y después se construirá uno equivalente en la base de datos centralizada.
+MySQL por su parte, no impone restricción alguna, por lo que primero se creará la tabla correspondiente a entorno distribuido, se validará su diseño y después se construirá uno equivalente en la base de datos centralizada.
 
 \subsection{Entorno distribuido}
 
-\subsubsection{Análisis de las consultas a manejar}
+\subsubsection{Análisis de las consultas a realizar}
 
-Explicar la movida de las particiones
-// Explicar el limite de lasparticiones y como puede rebasar los 10 segundos dedicados para las consultas
+Al igual que en  muchos sistemas de almacenamiento, Cassandra utiliza el concepto de clave primaria para identificar de forma unívoca los registros persistidos dentro de una tabla. Dicha clave primaria está compuesta por dos elementos totalmente diferenciados: la \textit{partition key} y el \textit{clustering column}.\\
+
+Mientras que el \textit{clustring column} solamente sirve para ordenar los datos almacenados en una partición, la \textit{partition key} presenta notorias implicaciones a la hora de insertar registros y consultar los ya almacenados.\\ 
+
+Por un lado, al ejecutar una inserción, es utilizada para dilucidar en que nodo del clúster se ha de almacenar el registro. Por otro lado, a la hora de realizar una consulta  de lectura, Cassandra obliga a especificar los atributos que conforman la \textit{partition key} para, como su nombre indica, delimitar en qué partición se han de buscar lo datos requeridos y ofrecer de esa manera una respuesta rápida sin importar el volumen de los datos almacenados.\\
+
+En el caso de operar simplemente con Cassandra, cada tabla debería de estar orientado a responder, de la forma más rápida posible, a una consulta concreta. Esta práctica implica denormalizar los datos que se desean persistir, esto es, almacenar un mismo registro en más de una tabla y lo que es peor, tener que modificar la base de datos cada vez que una nueva consulta es requerida.\\
+
+En cambio, gracias a herramientas como Spark, toda limitación anteriormente descrita desaparece ya que es suficiente con obtener un subconjunto representativo de los datos para después filtrarlos en memoria. Una de la mayores ventajas que ofrece es la posibilidad de centrarse en la estructura del dataset sin tener que vivir atemorizado por los constantes cambios que pudiesen suceder a nivel de consultas.\\
+
+Teniendo en cuenta todo lo expuesto y la naturaleza del dataset, parece conveniente crear una tabla cuya \textit{partition key} sea la combinación entre el identificador de la compañía (ofrece la opción de analizar los datos generados por cada compañía y comparar el servicio) y el día del viaje (se quieren calcular los indicadores por día, ergo particionemos los registros por día!). Además, se ha optado por ordenar los registros por la fecha de inicio del servicio, siendo por ende, el atributo \textit{tpep\_pickup\_datetime} parte del \textit{clustering column}.\\
+
+\clearpage
+
+Para finalizar, debido a que la combinación de atributos definidos hasta el momento no aseguran que un registro sea unívoco, un nuevo elemento denominado idTrip de tipo UUID\footnote{\url{https://en.wikipedia.org/wiki/Universally_unique_identifier}} ha sido añadido a cada elemento del dataset y definido como parte de la \textit{primary key}. 
+
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{|l|}
+		
+		\hline
+		\\
+		((vendor\_id, dia), tpep\_pickup\_datetime, idTrip) \\
+		\\
+		\hline
+		
+	\end{tabular}
+	\caption{Primary key de la tabla de Cassandra}
+	\label{primary_key_cassandra}
+\end{table}
 
 \subsubsection{Calcular el tamaño de la partición}
 
-// Explicar la movida de las formulas
+La definición de un tabla en Cassandra no finaliza al especificar qué atributos conforman la \textit{partition key} correspondiente. Como ya se ha mencionado con anterioridad, las consultas de esta base de datos atacan directamente una partición concreta y en determinadas situaciones un tamaño descontrolado de la misma puede causar que el sistema de almacenamiento no sea capaz de responder a la petición en el tiempo máximo establecido, 10 segundos, haciendo que la consulta falle.\\
 
+A continuación, se definen unos simples criterios para evitar que, debido a dichas situaciones, las consultas fallen en un futuro:
+
+\begin{itemize}
+	
+	\item \textbf{Número de valores}: Una partición ha de tener como mucho 2000 millones de valores almacenados.
+	
+	Las columnas que conforman la \textit{partition key} de la tabla, al contrario que las columnas regulares, se almacenan solo una vez en el disco. Por ello, la combinación de las columnas regulares y la cantidad de elementos almacenados es clave para calcular el número de valores de una partición. 
+	
+	Para obtener el dato del número de registros que puede llegar a almacenar una partición de la tabla, se ha dado por sentado que ambas compañías generan una cantidad de registros sustancialmente parecida.
+	
+	\begin{table}[h!]
+		\centering
+		\begin{tabular}{l}
+			
+			\\
+		
+			\includegraphics[width=0.5\textwidth]{Ilustraciones/formula_number_value.png}
+			
+			\\
+			
+		\end{tabular}
+	\end{table}
+	
+	\clearpage
+	
+	\textbf{Nv} = Número de  valores\\
+	\textbf{Nr} = Número de registros\\
+	\textbf{Nc} = Número de columnas\\
+	\textbf{Npk} = Número de columnas en la Primary Key\\
+	\textbf{Ns} = Número de columnas estáticas\\
+	
+	Aplicando la fórmula recientemente presentada podemos observar cómo la tabla diseñada respeta holgadamente la restricción de 2.000 millones de valores por partición de Cassandra. 
+	
+	\begin{table}[h!]
+		\centering
+		\begin{tabular}{|l|}
+			
+			\hline
+			\\
+			
+			(146.000.000 / 365/2) * (20 - 4 - 0) + 0 = 3.200.000\\
+			
+			\\
+			\hline
+			
+		\end{tabular}
+	\end{table}
+	
+	\item \textbf{Tamaño de Partición}: El tamaño máximo que puede adquirir una partición no ha de superar unos pocos centenares de MB.
+	
+	\begin{table}[h!]
+		\centering
+		\begin{tabular}{l}
+			
+			\\
+			
+			\includegraphics[width=1\textwidth]{Ilustraciones/formula_partition_size.png}
+			
+			\\
+			
+		\end{tabular}
+	\end{table}
+	
+	\textbf{sizeof(Cki)} = Tamaño de las columnas Partition Key\\
+	\textbf{sizeof(Csj)} = Tamaño de las columnas Estáticas\\
+	\textbf{Nr} = Número de registros\\
+	\textbf{(sizeof(Crk) + sizeof(Cct))} = Columna clustering + columnas comunes\\
+	\textbf{Nv} = Número de valores (Obtenido en la fórmula anterior)\\
+	
+	Aplicando la fórmula según los bytes utilizados para representar cada tipo de dato\footnote{\url{http://docs.datastax.com/en/cql/3.1/cql/cql_reference/cql_data_types_c.html}}:\\
+	
+	\textbf{sizeof(Cki)} = 4 byte + 10 byte = 14 byte\\
+	\textbf{sizeof(Csj)} = 0 byte\\
+	\textbf{Nr}= 200.000\\
+	\textbf{(sizeof(Crk) + sizeof(Cct))} =  ((8+16) + 8) + ((8+16) + 4) + ((8+16) + 8) + ((8+16) + 8) + 
+	((8+16) + 8) + ((8+16) + 4) + ((8+16) + 1) + ((8+16) + 8) + ((8+16) + 8) + ((8+16) + 4) + 
+	((8+16) + 8) + ((8+16) + 8) + ((8+16) +8) + ((8+16) + 8) + ((8+16) + 8) + ((8+16) + 8) + 
+	((8+16) + 8) = 525 byte\\
+	\textbf{8Nv} = 8 * 3.200.000 = 25.600.000 byte\\
+	
+	Tal y como se puede observar en el recuadro que se presenta a continuación, cada partición de la tabla diseñada albergará a lo sumo 130 MB de datos, volumen aceptable para poder realizar las consultas sobre él sin miedo a recibir error alguno como respuesta.
+	
+	\begin{table}[h!]
+		\centering
+		\begin{tabular}{|l|}
+			
+			\hline
+			\\
+			
+			14 byte + 0 byte + 200.000 * 525 byte + 25.600.000 byte = 130.600.014 byte = 130 MB
+			
+			\\
+			\hline
+			
+		\end{tabular}
+	\end{table}
+	
+\end{itemize}
+
+Una vez que la tabla diseñada haya superado ambas pruebas es el momento de crearlo físicamente en la base de datos, ya que ofrece todas las garantías necesarias para tener la absoluta certeza sobre su correcto funcionamiento.
 
 \subsection{Entorno centralizado}
 
-// Indexacion tambien
+Con el objetivo de guardar la máxima similitud con la tabla de Cassandra, se ha optado por utilizar el \textit{primary key} de esta última en MySQL.\\
+
+Además, a sabiendas de que la consulta MYSQL02 ataca directamente el atributo 'store\_fwd' se ha creado un indice secundario sobre este con la idea de acelerar el cómputo.\\
+
+\begin{table}[h!]
+	\centering
+	\begin{tabular}{|l||l|l|}
+		
+		\hline
+		
+		Tipo & Nombre & Tipo Dato \\
+		
+		\hline
+		\hline
+		
+		PK & vendorID & Integer \\
+		
+		\hline
+		
+		PK & dia & Varchar \\
+		
+		\hline
+		
+		PK & tpep\_pickup\_datetime & Datetime \\
+		
+		\hline
+		
+		PK & tripID & Varchar \\
+		
+		\hline
+		
+		IDX & store\_fwd & Char \\
+		
+		\hline
+		
+		... &            &      \\
+		
+		\hline
+		
+	\end{tabular}
+\end{table}
 
 \subsection{Objetivo de las consultas}
 \label{objetivo_consultas}
 
-Anteriormente se ha mencionado que Cassandra y Spark forman un gran binomio, pero no se ha especificado en ningún momento de qué manera y en qué circunstancias es beneficioso el uso de Spark a la hora de procesar los datos almacenados en Cassandra. De la misma forma, se ha hecho referencia al conector Spark/Cassandra que ofrece funcionalidades suplementarias para facilitar el uso conjunto de ambas tecnologías, pero tampoco se han especificado sus ventajas.\\
+Anteriormente se ha mencionado que Cassandra y Spark forman un gran binomio, pero no se ha especificado en ningún momento de qué manera y en qué circunstancias es beneficioso el uso de Spark a la hora de procesar los datos almacenados en Cassandra.\\
 
 El objetivo de las consultas definidas en el recuadro \ref{consultas_codigos} de la página \pageref{consultas_codigos}, más allá de obtener información valiosa sobre diferentes eventos, es evidenciar las limitaciones que presentan las tecnologías propuestas, comprender hasta que punto pueden llegar operando por sí solas y entender cómo se apoyan entre ellas para obtener una mejora sustancial, en comparación a herramientas tradicionales, a la hora de procesar conjuntos hercúleos de datos.\\
 
 \begin{itemize}
+	
 	\item \textbf{QUERY01}: Consulta idílica para Cassandra ya que ataca directamente el contenido de una única partición. Se quiere comprobar que es más rápido obtener datos mediante el sistema de particionado de Cassandra que utilizando los indices de MySQL.
 	
-	\item \textbf{QUERY02}: Se desean filtrar los datos mediante una columna que no es parte de la Partion Key, cosa que no es posible en Cassandra. Se opta por realizar una consulta contra Cassandra para que echa mano de Spark Aun metiendo un nuevo elemento sigue siendo mas rapido, conector y filtrado
-	\item \textbf{QUERY03}:// Potencial de iterar sobre memoria
-	\item \textbf{QUERY04}:// Prueba semejante a calculo de indicadores
+	\item \textbf{QUERY02}: Se desean filtrar los datos mediante una columna que no es parte de la Partion Key, cosa que no es posible en Cassandra y además atacar varias de las particiones existentes. ¿Qué de bien se coordinan las tecnologías analizadas en el presente proyecto para seguir ofreciendo una mejora sustancial de tiempo en situaciones adversas?
+	
+	\item \textbf{QUERY03}: Consulta que reutiliza los registros anteriormente cargados en memoria para computar diversas operaciones sobre estos. Se quiere comprobar la veracidad de los supuestos beneficios que Spark ofrece en cómputos de esta índole.
+	
+	\item \textbf{QUERY04}: Consulta cuyo único objetivo es calcular varias medias para así simular un funcionamiento simplificado del proceso Cálculo de Indicadores.  
+	
 \end{itemize}
 
 

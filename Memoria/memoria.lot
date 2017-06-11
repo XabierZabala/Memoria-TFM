@@ -10,7 +10,7 @@
 \defcounter {refsection}{0}\relax 
 \contentsline {table}{\numberline {1}{\ignorespaces Descripci\IeC {\'o}n del nodo centralizado\relax }}{18}{table.caption.4}
 \defcounter {refsection}{0}\relax 
-\contentsline {table}{\numberline {2}{\ignorespaces Descripci\IeC {\'o}n de los nodos que componen el cl\IeC {\'u}ster\relax }}{19}{table.caption.5}
+\contentsline {table}{\numberline {2}{\ignorespaces Descripci\IeC {\'o}n de los nodos que componen el cl\IeC {\'u}ster\relax }}{20}{table.caption.5}
 \defcounter {refsection}{0}\relax 
 \contentsline {table}{\numberline {3}{\ignorespaces Configuraci\IeC {\'o}n de los nodos Cassandra\relax }}{22}{table.caption.6}
 \defcounter {refsection}{0}\relax 
@@ -25,6 +25,8 @@
 \contentsline {table}{\numberline {7}{\ignorespaces Atributos que componen un Viaje\relax }}{26}{table.caption.10}
 \defcounter {refsection}{0}\relax 
 \contentsline {table}{\numberline {8}{\ignorespaces Descripci\IeC {\'o}n de las consultas\relax }}{27}{table.caption.11}
+\defcounter {refsection}{0}\relax 
+\contentsline {table}{\numberline {9}{\ignorespaces Primary key de la tabla de Cassandra\relax }}{29}{table.caption.12}
 \defcounter {refsection}{0}\relax 
 \addvspace {10\p@ }
 \defcounter {refsection}{0}\relax 

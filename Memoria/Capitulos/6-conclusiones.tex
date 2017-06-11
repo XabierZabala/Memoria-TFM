@@ -4,41 +4,18 @@
 
 \pagestyle{fancy}
 
-\chapter{Conclusiones y trabajos futuros}
+\chapter{Conclusiones}
 \label{conclusiones}
 
+Tal y como se ha podido apreciar durante el transcurso de la presente tesina, muchas son las ventajas ofrecidas por el uso conjunto de Apache Cassandra y Apache Spark. Entre ellas, cabe resaltar la posibilidad de operar sin punto único de fallo, escalar tanto en almacenamiento como procesamiento prácticamente hasta el infinito y además, mejorar de forma inequívoca, los tiempos de respuesta ofrecidos por MySQL cuando se opera sobre un dataset de volumen considerable.\\
 
+No obstante, existen una seria de inconvenientes a la hora de empezar a gozar de las ventajas descritas en el anterior párrafo.\\
 
-\section{Conclusiones}
+Utilizar este tipo de tecnologías supone un cambio de paradigma enorme en la forma de tratar la información y por ende requiere una inversión de tiempo considerable en la formación del personal y en migrar la arquitectura ya existente.\\
 
-Tal y como se ha podido apreciar durante el transcurso de la presente tesina, muchas son las ventajas ofrecidas por las tecnologías Apache Cassandra y Apache Spark. Entre ellas, cabe resaltar la posibilidad de operar sin punto único de fallo y escalar tanto en almacenamiento como procesamiento superando, además, inequívocamente, los tiempos de respuesta ofrecidos por MySQL.\\
+Si de antemano el cambio de paradigma puede repeler a usuarios encallados en bases de datos tradicionales que por diversas circunstancias no encuentran el momento idóneo para dar el salto, la inmadurez de las tecnologías utilizadas en el entorno distribuido no ayuda mucho a disipar las dudas. Al tratarse de software creado recientemente, las actualizaciones son constantes y es difícil mantener una versión estable en entornos de producción.\\
 
-Entramado
+Siguiendo al hilo del mantenimiento, a día de hoy no existe herramienta gratuita alguna que facilite el mantenimiento del clúster, por lo que si no se desea pagar suma elevada de dinero a compañías que ofrecen dicho servicio, es totalmente necesario contar con personal cualificado en mantenimiento de sistemas, algo inviable para empresas pequeñas.\\
 
-por un lado el cambio de paradigma que supone
-
--Añadir la experiencia adquirida durante este ultimo año y medio trabajando en producción
-
-- Dificil de crear nuevas consultas por que necesita un gran desarrollo, en entornos de constante evolucion pues malamente...
-
--Cassandra y Spark son tecnologias muy jovenes con un futuro enorme,constante evolucion..., pero en produccion... lo cual hacen que la implantación sea lenta y lleno de baches
-
-- se necesita formar a mucho personal
-
-- se abre un nevo horizonte
-
-- Falta de herramiesntas para gestionar
-
-\section{Trabajos futuros}
-
-//
-Calcular los tiempos de insercion correctos aplicando los cambios pertinentes en el disco (ha desvirtuado los resultados obtenidos lo cual es una pena)
-
-// algo sobre spark
-
-//
-Se considera de especial interes... 
-probar el cluster de mysql añadiendo las restricciones que tiene cassandra y comparar el resultado ofrecido por ambos
-40 años a sus espalda tiene mysql, 
-igual para una empresa como datik ofrece mas seguridad y estabilidad esta otra solucion (por probar que no quede)
+En un futuro muy cercano se augura que los inconvenientes recién descritos se irán disipando y que todo tipo de usuario será capaz de sacar provecho a las incuestionables ventajas que ofrecen tanto las tecnologías analizas en presente proyecto, como sus homólogas. No cabe duda alguna que el Big Data es la revolución del presente que impulsa la evolución hacía el futuro.
 

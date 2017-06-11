@@ -9,15 +9,15 @@
 
 Conocedores de la problemática a solventar y de las tecnologías que se desean utilizar para ello, es momento de detallar la confección de los entornos de prueba utilizados para medir el rendimiento de dichas tecnologías.\\
 
-En las siguientes páginas, se describe, por un lado, la construcción de un entorno centralizado compuesto por un único nodo que alberga un proceso MySQL, cuyo objetivo es imitar la infraestructura monolítica que impera en Datik. Por el otro lado, se expone el ensamblaje de un entorno distribuido, formado por tres nodos homogéneos sobre los cuales operan Apache Cassandra y Apache Spark en consonancia.\\
+En las siguientes páginas, se describe, por un lado, la construcción de un entorno centralizado compuesto por un único nodo que alberga instancia de MySQL Server, cuyo objetivo es imitar la infraestructura monolítica que impera en Datik. Por el otro lado, se expone el ensamblaje de un entorno distribuido, formado por tres nodos homogéneos sobre los cuales operan Apache Cassandra y Apache Spark en consonancia.\\
 
 Dichos nodos son erigidos mediante máquinas virtuales que operan sobre distintos dispositivos. Los procesos clientes se alojan en un ordenador portátil mientras que las instancias relativas a los servidores se ejecutan sobre un ordenador de sobremesa, logrando así neutralizar toda diferencia que pudiese existir en cuanto a hardware. Para dar comienzo a este tercer capítulo, se describen las características físicas de los dispositivos recién mencionados.
+
+\clearpage
 
 \section{Características de las máquinas físicas}
 
 \textbf{Ordenador portátil}: Terminal que alberga los procesos cliente encargados de lanzar diversas peticiones contra el servidor y recolectar los resultados computados por este, además de cuantificar el tiempo transcurrido entre ambos eventos.
-
-\clearpage
 
 \begin{itemize}
 	\item Procesador: Intel(R) Core(TM) i-5 4200M CPU @ 2.50 GHz
@@ -41,33 +41,33 @@ Ambas máquinas se encuentran enlazadas a un \textit{switch} tp-link-tl-sf1008d 
 
 El switch, a su vez, está conectado a un \textit{router} que proporciona acceso al exterior de la red privada, el cual sólo será utilizado para descargar contenido relativo a los preparativos de las pruebas.
 
+\clearpage
+
 \section{Confección de las máquinas virtuales}
  
 Con el objetivo de no realizar las mismas configuraciones reiteradamente, se ha decidido crear una máquina virtual básica siguiendo los pasos que se describen a continuación y tras su puesta a punto, clonarla tantas veces como instancias hagan falta.
 
 \begin{enumerate}
 	
-	\item \textbf{Crear la máquina virtual}: Crear una instancia mediante VirtualBox utilizando la imagen de Ubuntu Server 16.04 LTS y 75 GB de memoria física. El resto de las características no han sido modificadas ya que es posible reasignar su valor posteriormente.
+	\item \textbf{Crear la máquina virtual}: Instancia creada mediante VirtualBox utilizando la imagen de Ubuntu Server 16.04 LTS y 75 GB de memoria física. El resto de las características no han sido especificadas ya que es posible reasignar su valor en cualquier momento.
 	
 	\item \textbf{Asignar una IP estática}: La mayoría de los clones generados sobre esta máquina adquieren el rol de servidor, por lo que no es de recibo que su IP pueda variar cada vez que el servicio de red o la máquina misma se reinicien. Para evitar cualquier inconveniente de este estilo, es totalmente necesario configurar una interfaz de red con una IP estática.
 	
 	\item \textbf{Cambiar el adaptador de red a modo puente}: Al crear una máquina virtual con VirtualBox, el adaptador de red predefinido es el NAT. Ello implica que dicha máquina se encontrará aislada en una red lógica y solo podrá acceder a otros dispositivos pasando por la máquina física y haciendo uso de su IP.\\
 	
-	Modificando el adaptador de red al modo puente se consigue extender la red privada hasta el nodo virtual, eliminando así toda dependencia con la máquina física y posibilitando la comunicación con el resto de las máquinas que residen en la misma red privada.
+	Modificando el adaptador de red al modo puente se consigue extender la red privada hasta el nodo virtual, eliminando así toda dependencia con la máquina física y posibilitando la comunicación con el resto de los dispositivos que residen en la misma red privada.
 	
-	\item \textbf{Instalar Java 8}: Las tecnologías que se desean probar en las futuras pruebas se ejecutan sobre la Máquina Virtual de Java(JVM), por lo que es necesario tener una versión de Java instalada en la máquina virtual base. Se ha seleccionado la versión 8 para la instalación.
+	\item \textbf{Instalar Java 8}: Las tecnologías que se desean probar en las futuras pruebas se ejecutan sobre la Máquina Virtual de Java(JVM), por lo que es necesario instalar una versión de Java para su funcionamiento. Entre todas las disponibles se ha optado por la versión 8.
 	
-	\item \textbf{Habilitar conexiones SSH}: Instalar OpenSSH Server para posibilitar la transmisión de archivos entre las máquinas virtuales.
-
 \end{enumerate}
 
 Una vez terminado de confeccionar la máquina virtual básica, es aconsejable ejecutar el comando \textit{tracert} y comprobar ciertas métricas como la latencia y el número de saltos que se dan por la red hasta llegar a otro nodo de la infraestructura. Siguiendo este simple consejo es posible identificar errores relacionados con la configuración y solucionarlos con mayor celeridad.
 
+\clearpage
+
 \section{Entorno centralizado}
 
 El objetivo del entorno centralizado es imitar la infraestructura utilizada por Datik para ejecutar el proceso Cálculo de Indicadores. Dicha infraestructura consta de un servidor en la nube que alberga una instancia de MySQL Server y un proceso que actúa como cliente. Este último realiza consultas contra la base de datos y computa los registros obtenidos para calcular los indicadores deseados.
-
-\clearpage
 
 \subsection{Servidor}
 
@@ -99,11 +99,9 @@ La creación y confección del nodo servidor para el entorno de pruebas centrali
 
 \item \textbf{Descargar e instalar la última versión de MySQL}: Acceder a la máquina virtual recientemente clonada e instalar la última versión de MySQL Server, la 5.7, mediante Advanced Packaging Tool (APT) de Ubuntu.
 
-\item \textbf{Crear un esquema}: Identificarse contra MySQL Server utilizando el único usuario existente por el momento, 'root', y la contraseña que se le ha asignado en el anterior paso para crear el esquema encargado de almacenar los datos.
+\item \textbf{Crear un esquema}: Identificarse contra MySQL Server utilizando el único usuario existente por el momento, 'root', y la contraseña que se le ha asignado durante la instalación para crear el esquema encargado de almacenar los datos.
 
-\item \textbf{Posibilitar acceso desde la máquina remota}: Permitir que el proceso cliente alojado en el ordenador portátil pueda realizar las consultas pertinentes.\\
-
-Las aplicaciones que se conectan a la base de datos no deben acceder a ella mediante el usuario 'root' por motivos de seguridad, por lo que se recomienda crear un nuevo usuario y especificar los permisos que este tendrá sobre el esquema creado en el paso anterior.
+\item \textbf{Posibilitar acceso desde la máquina remota}:  Por motivos de seguridad, las aplicaciones que se conectan a la base de datos no deberían de acceder a ella mediante el usuario 'root', por lo que se recomienda crear un nuevo usuario y especificar los permisos que este ha de tener sobre el esquema creado en el paso anterior.
 
 \item \textbf{Abrir los puertos necesarios}: Al estar trabajando sobre máquinas virtuales alojadas en una red propia, todos los puertos se encuentran abiertos por defecto, pero en caso de existir algún cortafuegos que protegiera el servidor, sería necesario abrir el acceso al puerto donde escucha MySQL, el 3306 por defecto.
 
@@ -111,11 +109,11 @@ Las aplicaciones que se conectan a la base de datos no deben acceder a ella medi
 
 \subsection{Emulando el cliente}
 
-Emular un proceso cliente en el entorno centralizado es tan simple como instalar la última versión del MySQL Workbench\footnote{\url{https://www.mysql.com/products/workbench/}} sobre el ordenador portátil (no hace falta máquina virtual alguna) y crear una nueva conexión con el servidor especificando la IP junto al usuario y contraseña generados en el anterior apartado.
+Emular un proceso cliente en el entorno centralizado es tan simple como instalar la última versión del MySQL Workbench\footnote{\url{https://www.mysql.com/products/workbench/}} sobre el ordenador portátil (no hace falta máquina virtual alguna) y crear una nueva conexión con el servidor especificando la IP junto al usuario y contraseña correspondientes.
 
 \section{Entorno distribuido}
 
-Infraestructura en forma de clúster alojada en el ordenar de sobremesa sobre la cual se almacena y procesa el mismo conjunto de datos que en el entorno centralizado utilizando para ello Apache Cassandra y Apache Spark.\\ 
+Infraestructura cuyo núcleo es un clúster compuesto por tres nodos virtuales alojados en el ordenar de sobremesa erigido con el objetivo de almacenar y procesar el dataset de prueba.\\ 
 
 Un proceso cliente residente en el ordenar portátil, por su parte, se encarga de ejecutar el programa que especifica el procesamiento que ha de llevar a cabo el clúster y cuantificar el tiempo transcurrido en dicha tarea.
 
@@ -125,9 +123,9 @@ En las siguientes líneas se detalla la configuración de los nodos que conforma
 
 \begin{enumerate}
 	
-\item \textbf{Clonar la máquina virtual base}: Clonar la máquina virtual base las veces como nodos vayan a conformar la infraestructura. En éste particular caso se crean 3 copias.\\
+\item \textbf{Clonar la máquina virtual base}: Clonar la máquina virtual base tantas veces como nodos vayan a conformar la infraestructura. En éste particular caso se crean 3 copias.\\
 
-Además de configurar la IP, el número de procesadores y la memoria RAM disponible para cada nodo, es necesario hacer lo propio con el hostname. Apache Cassandra recurre a este atributo para conocer la IP de una máquina cuando ciertos elementos del fichero de configuración no son especificados y en el caso de Spark, el proceso \textit{driver} utiliza los hostname para establecer la conexión con otros nodos de la infraestructura. El cuadro \ref{nodos-cluster} de la página \pageref{nodos-cluster} resume la inicialización de dichos atributos.\\
+Además de configurar la IP, el número de procesadores y la memoria RAM disponible para cada uno, es necesario hacer lo propio con el hostname. Apache Cassandra recurre a este atributo para conocer la IP de una máquina cuando ciertos elementos del fichero de configuración no son especificados y en el caso de Spark, el proceso \textit{driver} utiliza los hostname para establecer la conexión con otros nodos de la infraestructura. El cuadro \ref{nodos-cluster} de la página \pageref{nodos-cluster} resume la asignación de dichos atributos.\\
 
 \begin{table}[h!]
 	\centering
@@ -165,13 +163,13 @@ Cabe destacar que la suma de recursos físicos destinados a la creación del cl�
 
 Siendo un proyecto de código abierto relativamente reciente, las nuevas versiones y actualizaciones son lanzadas frecuentemente para arreglar bugs e implementar funcionalidades nuevas. Debido a ello, es imposible trabajar con la última versión, por lo que se ha decidido utilizar la 2.1.8 para el desarrollo del presente proyecto.
 
-\item \textbf{Descargar Apache Spark}: Es necesario tener en cuenta la compatibilidad con la versión de Cassandra ya descargada. Aunque en principio se trata de dos proyectos totalmente independientes, existen conectores que buscan facilitar un uso conjunto de estas tecnologías. Analizando la tabla de compatibilidades\footnote{\url{https://github.com/datastax/spark-cassandra-connector}} ofrecida por el conector seleccionado para el presente proyecto, se ha decidido descargar la versión 1.4.1 de Spark.
+\item \textbf{Descargar Apache Spark}: Es necesario tener en cuenta la compatibilidad con la versión de Cassandra ya descargada. Aunque en principio se trata de dos proyectos totalmente independientes, existen conectores que buscan facilitar un uso conjunto de estas tecnologías. Analizando la tabla de compatibilidades\footnote{\url{https://github.com/datastax/spark-cassandra-connector}} ofrecida por DataStax, dueña del conector seleccionado para el presente proyecto, se ha decidido descargar la versión 1.4.1 de Spark.
 	
 \end{enumerate}
 
 \subsubsection{Configuración de Apache Cassandra}
 
-Una vez descomprimido el archivo binario, es necesario acceder al fichero \textit{cassandra.yaml} alojado dentro de la carpeta \textit{conf} y modificar, en cada uno de los nodos que conforman el clúster, los atributos que se definen a continuación:
+El fichero que alberga todos los atributos configurables de Cassandra es el denominado  \textit{cassandra.yaml} y se encuentra alojado dentro de la carpeta \textit{conf}. Es necesario modificar en cada uno de los nodos que conforman el clúster, los atributos que se definen a continuación:
 
 \begin{itemize}
 
@@ -203,8 +201,6 @@ No obstante, remover o añadir nuevos nodos en el sistema implica volver a calcu
 	 
 \end{itemize}
 	 
-Dichos atributos han sido configurados en el fichero \textit{cassandra.yaml} de cada nodo del clúster en la manera que se especifica en el cuadro \ref{configuracion-nodos-cassandra} de la página \pageref{configuracion-nodos-cassandra}. 
-
 \begin{table}[h!]
 	\centering
 	\begin{tabular}{|l||l|l|l|}
@@ -246,7 +242,7 @@ Dichos atributos han sido configurados en el fichero \textit{cassandra.yaml} de 
 	\label{configuracion-nodos-cassandra}
 \end{table}
 
-Una vez configurado cada nodo, es necesario abrir los puertos detallados en el cuadro \ref{puertos-cassandra} de la página \pageref{puertos-cassandra} para que los procesos Cassandra ejecutados en dichas máquinas funcionen de forma cooperativa:
+Una vez habiendo configurado cada nodo de la forma indica en el cuadro \ref{configuracion-nodos-cassandra} de la página \pageref{configuracion-nodos-cassandra}, es necesario abrir los puertos detallados en el cuadro \ref{puertos-cassandra} de la página \pageref{puertos-cassandra} para que los procesos Cassandra puedan comunicarse entre los diferentes nodos que conforman el clúster.\\
 
 \begin{table}[h!]
 	\centering
@@ -284,19 +280,19 @@ Una vez configurado cada nodo, es necesario abrir los puertos detallados en el c
 	\label{puertos-cassandra}
 \end{table}
 
-Para finalizar, es necesario arrancar los nodos uno a uno mediante el script \textit{cassandra.sh} que Cassandra mismo facilita dentro de la carpeta \textit{/bin} y comprobar que funcionan de forma cooperativa mediante la herramienta \textit{nodetool}\footnote{\url{http://docs.datastax.com/en/archived/cassandra/2.0/cassandra/tools/toolsNodetool_r.html}} alojada en la misma carpeta. 
+Para finalizar, es necesario arrancar los nodos uno a uno mediante el script \textit{cassandra.sh} que Cassandra mismo facilita dentro de la carpeta \textit{/bin} y comprobar que el clúster funciona correctamente utilizando la herramienta \textit{nodetool}\footnote{\url{http://docs.datastax.com/en/archived/cassandra/2.0/cassandra/tools/toolsNodetool_r.html}}.
 
 \subsubsection{Configuración de Apache Spark}
 
-Spark utiliza la memoria RAM de forma intensiva, por lo que se recomienda encarecidamente instalarlo en un clúster totalmente aislado al de Cassandra. No obstante, debido a que los recursos disponibles para el presente proyecto son limitados, no se ha podido seguir la recomendación y Spark ha sido instalado de tal forma que ambas tecnologías comparten nodo.\\
+Spark utiliza la memoria RAM de forma intensiva, por lo que se recomienda encarecidamente instalarlo en un clúster totalmente aislado al de Cassandra. No obstante, debido a que los recursos disponibles para lleva adelante el presente proyecto son limitados, no se ha podido seguir la recomendación y Spark ha sido instalado de tal forma que ambas tecnologías comparten nodo.\\
 
 Al tratarse de un entorno de pruebas donde la cantidad de datos a manipular se encuentra predefinida, la instalación realizada no supone problema alguno y además ofrece diversas ventajas como el no tener que volver a configurar nuevas máquinas dentro del entramado, pudiendo pasar directamente a especificar las configuraciones relativas a Spark:
+
+\clearpage
 
 \begin{enumerate}
 	
 \item \textbf{Definir nodos esclavos}: El nodo maestro de Spark necesita saber qué máquinas están dispuestas a ofrecer sus recursos para un futuro procesamiento y poder alojar en ellas los \textit{worker} pertinentes. Para ello es necesario especificar las IP de dichos nodos en el fichero \textit{/conf/slaves}. Se ha de crear el directorio en caso de que no exista.
-
-\clearpage
 
 \item \textbf{Acceso entre máquinas mediante las claves RSA}: Spark sigue una arquitectura maestro/esclavo donde el maestro necesita conectarse a los esclavos para comunicar las operaciones que estos han de ejecutar. Para automatizar el proceso y evitar tener que introducir la contraseña cada vez que se quiera ejecutar algo, es necesario garantizar el acceso entre máquinas mediante las claves RSA.\\
 
@@ -342,7 +338,7 @@ Antes de iniciar el proceso es necesario cerciorarse de que los puertos mostrado
 	\label{puertos-spark}
 \end{table}
 
-Para finalizar, solo queda lanzar el proceso Spark mediante el script \textit{start-all} disponible en la carpeta \textit{sbin}.
+Para finalizar, solo hace falta lanzar el proceso Spark mediante el script \textit{start-all} disponible en la carpeta \textit{sbin}.
 
 \clearpage
 
